@@ -185,7 +185,7 @@ export const FamilyView = () => {
                                 <div className="absolute right-[-10px] bottom-[-10px] opacity-10">
                                     <AlertCircle size={80} />
                                 </div>
-                                <div className="relative z-10 flex justify-between items-start">
+                                <div className="relative z-10 flex flex-col gap-3">
                                     <div>
                                         <p className="text-red-200 text-[10px] font-bold uppercase tracking-widest">Saldo Vencido</p>
                                         <h2 className="text-2xl font-bold text-white mt-1">
@@ -193,9 +193,11 @@ export const FamilyView = () => {
                                         </h2>
                                         <p className="text-xs text-red-100/70 mt-0.5">Fecha límite excedida por 4 días</p>
                                     </div>
-                                    <Button size="sm" className="bg-white text-[var(--color-red-lebanese)] hover:bg-white/90 shadow-none border-0" onClick={() => navigate('/payment')}>
-                                        Pagar
-                                    </Button>
+                                    <div className="flex justify-end">
+                                        <Button size="sm" className="bg-white text-[var(--color-red-lebanese)] hover:bg-white/90 shadow-none border-0 px-6" onClick={() => navigate('/payment')}>
+                                            Pagar Adeudo
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
 

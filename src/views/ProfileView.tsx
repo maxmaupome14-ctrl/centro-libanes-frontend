@@ -27,24 +27,24 @@ export const ProfileView = () => {
         {
             title: 'Cuenta',
             items: [
-                { icon: CreditCard, label: 'Estado de Cuenta', desc: 'Pagos y facturación' },
-                { icon: Shield, label: 'Datos de Membresía', desc: `No. ${user.member_number} · ${user.role}` },
-                { icon: Bell, label: 'Notificaciones', desc: 'Alertas y avisos' },
+                { action: () => navigate('/family'), icon: CreditCard, label: 'Estado de Cuenta', desc: 'Pagos y facturación' },
+                { action: () => alert('Visualizando datos...'), icon: Shield, label: 'Datos de Membresía', desc: `No. ${user.member_number} · ${user.role}` },
+                { action: () => alert('Mostrando notificaciones...'), icon: Bell, label: 'Notificaciones', desc: 'Alertas y avisos' },
             ]
         },
         {
             title: 'Configuración',
             items: [
-                { icon: Lock, label: 'Seguridad', desc: 'PIN y contraseña' },
-                { icon: Smartphone, label: 'Biometría', desc: 'Face ID / Touch ID' },
-                { icon: Globe, label: 'Idioma', desc: 'Español' },
+                { action: () => alert('Ajustes de seguridad...'), icon: Lock, label: 'Seguridad', desc: 'PIN y contraseña' },
+                { action: () => alert('Configurando biometría...'), icon: Smartphone, label: 'Biometría', desc: 'Face ID / Touch ID' },
+                { action: () => alert('Cambiando idioma...'), icon: Globe, label: 'Idioma', desc: 'Español' },
             ]
         },
         {
             title: 'Soporte',
             items: [
-                { icon: HelpCircle, label: 'Ayuda', desc: 'Centro de soporte' },
-                { icon: FileText, label: 'Términos y Condiciones', desc: 'Políticas del club' },
+                { action: () => alert('Abriendo centro de soporte...'), icon: HelpCircle, label: 'Ayuda', desc: 'Centro de soporte' },
+                { action: () => alert('Mostrando políticas...'), icon: FileText, label: 'Términos y Condiciones', desc: 'Políticas del club' },
             ]
         }
     ];
@@ -81,10 +81,9 @@ export const ProfileView = () => {
                         background: 'linear-gradient(135deg, #002D1C, #005A36)',
                         boxShadow: '0 8px 24px rgba(0,60,36,0.2)',
                     }}>
-                    <img src="/logo.png" alt="" className="h-8 w-auto opacity-60" />
                     <div className="flex-1">
-                        <p className="text-[10px] text-white/30 tracking-[2px] uppercase">Credencial Digital</p>
-                        <p className="text-white font-bold tracking-[4px] text-lg">{user.member_number}</p>
+                        <p className="text-[10px] text-white/50 tracking-[2px] uppercase mb-0.5">Credencial Digital</p>
+                        <p className="text-white font-bold tracking-[5px] text-xl">{user.member_number}</p>
                     </div>
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
@@ -104,6 +103,7 @@ export const ProfileView = () => {
                             return (
                                 <button
                                     key={item.label}
+                                    onClick={item.action}
                                     className={`w-full flex items-center gap-3.5 p-4 text-left hover:bg-[var(--color-surface-hover)] transition-colors ${i < section.items.length - 1 ? 'border-b border-[var(--color-border)]' : ''
                                         }`}
                                 >
