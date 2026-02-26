@@ -87,20 +87,26 @@ export const CatalogView = () => {
         if (!user || !selectedItem || !selectedDate || !selectedTime) return;
         setIsBooking(true);
         try {
-            const endHour = String(parseInt(selectedTime.split(':')[0]) + 1).padStart(2, '0') + ':00';
-            const payload: any = {
-                date: selectedDate,
-                start_time: selectedTime,
-                end_time: endHour,
-            };
-            // Only send service_id for actual Service items (not activities)
-            if (selectedItem.type === 'service') {
-                payload.service_id = selectedItem.id;
-            } else if (selectedItem.type === 'resource') {
-                payload.resource_id = selectedItem.id;
+            if (selectedItem.type === 'activity') {
+                // Activities use the enrollment endpoint, date/time is just UI selected
+                await api.post('/enrollments', { activity_id: selectedItem.id });
+            } else {
+                // Services and resources use the reservation endpoint
+                const endHour = String(parseInt(selectedTime.split(':')[0]) + 1).padStart(2, '0') + ':00';
+                const payload: any = {
+                    date: selectedDate,
+                    start_time: selectedTime,
+                    end_time: endHour,
+                };
+
+                if (selectedItem.type === 'service') {
+                    payload.service_id = selectedItem.id;
+                } else if (selectedItem.type === 'resource') {
+                    payload.resource_id = selectedItem.id;
+                }
+
+                await api.post('/reservations/book', payload);
             }
-            // For activities, we just book without a FK reference
-            await api.post('/reservations/book', payload);
             setBookingStep('success');
         } catch (err: any) {
             alert('Error: ' + (err.response?.data?.error || err.message));
@@ -296,45 +302,62 @@ export const CatalogView = () => {
                                     </div>
 
                                     {/* Date picker */}
-                                    <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase mb-2">Selecciona fecha</p>
-                                    <div className="flex gap-2 overflow-x-auto scrollbar-none pb-2 mb-5">
-                                        {next7Days.map((d) => (
-                                            <button
-                                                key={d.value}
-                                                onClick={() => setSelectedDate(d.value)}
-                                                className={`shrink-0 w-[60px] py-3 rounded-xl flex flex-col items-center gap-1 border transition-all ${selectedDate === d.value
-                                                    ? 'bg-[var(--color-gold)] text-[var(--color-bg)] border-[var(--color-gold)]'
-                                                    : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
-                                                    }`}
-                                            >
-                                                <span className="text-[10px] font-medium uppercase">{d.day}</span>
-                                                <span className="text-lg font-bold leading-none">{d.num}</span>
-                                                <span className="text-[10px] font-medium uppercase">{d.month}</span>
-                                            </button>
-                                        ))}
-                                    </div>
+                                    {selectedItem.type !== 'activity' && (
+                                        <>
+                                            <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase mb-2">Selecciona fecha</p>
+                                            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-2 mb-5">
+                                                {next7Days.map((d) => (
+                                                    <button
+                                                        key={d.value}
+                                                        onClick={() => setSelectedDate(d.value)}
+                                                        className={`shrink-0 w-[60px] py-3 rounded-xl flex flex-col items-center gap-1 border transition-all ${selectedDate === d.value
+                                                            ? 'bg-[var(--color-gold)] text-[var(--color-bg)] border-[var(--color-gold)]'
+                                                            : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+                                                            }`}
+                                                    >
+                                                        <span className="text-[10px] font-medium uppercase">{d.day}</span>
+                                                        <span className="text-lg font-bold leading-none">{d.num}</span>
+                                                        <span className="text-[10px] font-medium uppercase">{d.month}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
 
-                                    {/* Time picker */}
-                                    <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase mb-2">Selecciona horario</p>
-                                    <div className="grid grid-cols-4 gap-2 mb-6">
-                                        {timeSlots.map((t) => (
-                                            <button
-                                                key={t}
-                                                onClick={() => setSelectedTime(t)}
-                                                className={`py-2.5 rounded-lg text-sm font-semibold border transition-all ${selectedTime === t
-                                                    ? 'bg-[var(--color-gold)] text-[var(--color-bg)] border-[var(--color-gold)]'
-                                                    : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
-                                                    }`}
-                                            >
-                                                {t}
-                                            </button>
-                                        ))}
-                                    </div>
+                                            {/* Time picker */}
+                                            <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase mb-2">Selecciona horario</p>
+                                            <div className="grid grid-cols-4 gap-2 mb-6">
+                                                {timeSlots.map((t) => (
+                                                    <button
+                                                        key={t}
+                                                        onClick={() => setSelectedTime(t)}
+                                                        className={`py-2.5 rounded-lg text-sm font-semibold border transition-all ${selectedTime === t
+                                                            ? 'bg-[var(--color-gold)] text-[var(--color-bg)] border-[var(--color-gold)]'
+                                                            : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+                                                            }`}
+                                                    >
+                                                        {t}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {selectedItem.type === 'activity' && (
+                                        <div className="mb-6 p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+                                            <p className="text-sm text-[var(--color-text-secondary)] mb-2">
+                                                Al inscribirte a esta actividad tendrás acceso garantizado durante el mes en curso. Revisa los horarios disponibles.
+                                            </p>
+                                            {selectedItem.schedule_display && (
+                                                <div className="text-xs font-semibold px-3 py-2 bg-[var(--color-bg)] rounded-lg">
+                                                    ⏰ {selectedItem.schedule_display}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
 
                                     <Button
                                         size="lg"
                                         className="w-full"
-                                        disabled={!selectedDate || !selectedTime}
+                                        disabled={selectedItem.type !== 'activity' && (!selectedDate || !selectedTime)}
                                         onClick={() => setBookingStep('confirm')}
                                     >
                                         <CalendarDays size={18} />
@@ -345,7 +368,9 @@ export const CatalogView = () => {
 
                             {bookingStep === 'confirm' && (
                                 <div className="p-5 pb-8">
-                                    <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>Confirmar Reserva</h2>
+                                    <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+                                        {selectedItem.type === 'activity' ? 'Confirmar Inscripción' : 'Confirmar Reserva'}
+                                    </h2>
 
                                     <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-4 space-y-3 mb-6">
                                         <div className="flex justify-between">
@@ -360,12 +385,16 @@ export const CatalogView = () => {
                                         <div className="h-px bg-[var(--color-border)]" />
                                         <div className="flex justify-between">
                                             <span className="text-xs text-[var(--color-text-tertiary)]">Fecha</span>
-                                            <span className="text-sm font-medium">{new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+                                            <span className="text-sm font-medium">
+                                                {selectedItem.type === 'activity' ? 'Mensualidad' : new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
+                                            </span>
                                         </div>
                                         <div className="h-px bg-[var(--color-border)]" />
                                         <div className="flex justify-between">
                                             <span className="text-xs text-[var(--color-text-tertiary)]">Horario</span>
-                                            <span className="text-sm font-medium">{selectedTime} - {String(parseInt(selectedTime) + 1).padStart(2, '0')}:00</span>
+                                            <span className="text-sm font-medium">
+                                                {selectedItem.type === 'activity' ? 'Múltiples Sesiones' : `${selectedTime} - ${String(parseInt(selectedTime) + 1).padStart(2, '0')}:00`}
+                                            </span>
                                         </div>
                                         <div className="h-px bg-[var(--color-border)]" />
                                         <div className="flex justify-between">
@@ -390,9 +419,14 @@ export const CatalogView = () => {
                                     <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
                                         <Check size={32} className="text-emerald-400" />
                                     </div>
-                                    <h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>¡Reserva Confirmada!</h2>
+                                    <h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>
+                                        {selectedItem.type === 'activity' ? '¡Inscripción Exitosa!' : '¡Reserva Confirmada!'}
+                                    </h2>
                                     <p className="text-sm text-[var(--color-text-tertiary)] mt-2 max-w-[280px] mx-auto">
-                                        Tu reserva para <span className="text-[var(--color-text-primary)] font-semibold">{selectedItem.name}</span> ha sido registrada exitosamente.
+                                        {selectedItem.type === 'activity'
+                                            ? <>Tu inscripción a <span className="text-[var(--color-text-primary)] font-semibold">{selectedItem.name}</span> ha sido registrada exitosamente.</>
+                                            : <>Tu reserva para <span className="text-[var(--color-text-primary)] font-semibold">{selectedItem.name}</span> ha sido registrada exitosamente.</>
+                                        }
                                     </p>
                                     <Button className="w-full mt-6" onClick={closeBooking}>
                                         Listo
