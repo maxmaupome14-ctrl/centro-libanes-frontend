@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ElementType } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import {
@@ -129,7 +129,7 @@ const EventsTab = () => {
                     >
                         <div className="flex justify-between items-center mb-2">
                             <h3 className="font-bold text-white font-mono tracking-wider">{editing ? 'EDITAR EVENTO' : 'NUEVO EVENTO'}</h3>
-                            <button onClick={() => setShowForm(false)} className="text-slate-400 hover:text-white"><X size={18} /></button>
+                            <button onClick={() => setShowForm(false)} aria-label="Cerrar formulario" className="text-slate-400 hover:text-white"><X size={18} /></button>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -290,7 +290,7 @@ export const AdminView = () => {
         <div className="flex h-screen bg-[#020617] overflow-hidden text-slate-300">
 
             {/* ── Sidebar ── */}
-            <div className="w-64 bg-[#0B1120] border-r border-[#1E293B] flex flex-col hidden md:flex">
+            <div className="w-64 bg-[#0B1120] border-r border-[#1E293B] flex-col hidden md:flex">
                 <div className="h-16 flex items-center px-6 border-b border-[#1E293B]">
                     <ShieldCheck className="text-[var(--color-gold)] mr-2" size={24} />
                     <span className="font-bold text-lg font-display tracking-widest uppercase text-white">Centro Control</span>
@@ -461,16 +461,16 @@ export const AdminView = () => {
 
             {/* Mobile Nav Fallback */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0B1120] border-t border-slate-800 flex justify-around items-center px-4 z-50">
-                <button onClick={() => setActiveTab('dashboard')} className={`p-2 rounded-xl transition ${activeTab === 'dashboard' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
+                <button aria-label="God View" onClick={() => setActiveTab('dashboard')} className={`p-2 rounded-xl transition ${activeTab === 'dashboard' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
                     <LayoutDashboard size={22} />
                 </button>
-                <button onClick={() => setActiveTab('eventos')} className={`p-2 rounded-xl transition ${activeTab === 'eventos' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
+                <button aria-label="Eventos" onClick={() => setActiveTab('eventos')} className={`p-2 rounded-xl transition ${activeTab === 'eventos' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
                     <Megaphone size={22} />
                 </button>
-                <button onClick={() => setActiveTab('membresias')} className={`p-2 rounded-xl transition ${activeTab === 'membresias' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
+                <button aria-label="Membresías" onClick={() => setActiveTab('membresias')} className={`p-2 rounded-xl transition ${activeTab === 'membresias' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
                     <Users size={22} />
                 </button>
-                <button onClick={() => setActiveTab('config')} className={`p-2 rounded-xl transition ${activeTab === 'config' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
+                <button aria-label="Sistema" onClick={() => setActiveTab('config')} className={`p-2 rounded-xl transition ${activeTab === 'config' ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
                     <Settings size={22} />
                 </button>
             </div>
@@ -478,7 +478,15 @@ export const AdminView = () => {
     );
 };
 
-const MetricCard = ({ title, value, icon: Icon, trend, color = "text-[var(--color-gold)]" }: any) => {
+interface MetricCardProps {
+    title: string;
+    value: string | number;
+    icon: ElementType;
+    trend: string;
+    color?: string;
+}
+
+const MetricCard = ({ title, value, icon: Icon, trend, color = "text-[var(--color-gold)]" }: MetricCardProps) => {
     // Generate glow color based on the text color class passed
     const isRed = color.includes('red');
     const glowColor = isRed ? 'rgba(239, 68, 68, 0.2)' : 'rgba(201, 168, 76, 0.2)';

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, AlertCircle, Check } from 'lucide-react';
 
@@ -20,7 +20,7 @@ let _nextId = 0;
 
 export const useToast = () => useContext(ToastContext);
 
-export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
     const [toasts, setToasts] = useState<Toast[]>([]);
 
     const showToast = useCallback((message: string, type: ToastType = 'error') => {
