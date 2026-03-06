@@ -28,6 +28,15 @@ const StaffRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.user_type !== 'employee') return <Navigate to="/" replace />;
+  if (user?.role !== 'administrador') return <Navigate to="/employee" replace />;
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -50,8 +59,8 @@ function App() {
           <Route path="/notifications" element={<NotificationsView />} />
         </Route>
 
-        {/* Admin Route - requires staff employee login */}
-        <Route path="/admin" element={<StaffRoute><AdminView /></StaffRoute>} />
+        {/* Admin Route - requires administrador role */}
+        <Route path="/admin" element={<AdminRoute><AdminView /></AdminRoute>} />
       </Routes>
     </ToastProvider>
     </BrowserRouter>

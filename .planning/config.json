@@ -1,0 +1,21 @@
+{
+  "project": "centro-libanes",
+  "version": "1.0.0",
+  "created": "2026-03-06",
+  "workflow": {
+    "require_tests": false,
+    "require_commits_per_phase": true,
+    "auto_research": false,
+    "language": "es/en mixed (UI spanish, code english)"
+  },
+  "stack": {
+    "frontend": "react-typescript-vite",
+    "styling": "tailwindcss-v4",
+    "state": "zustand",
+    "backend": "nodejs-prisma-postgresql",
+    "hosting_frontend": "vercel",
+    "hosting_backend": "railway"
+  },
+  "current_milestone": "M1 — Demo-Ready",
+  "current_phase": null
+}

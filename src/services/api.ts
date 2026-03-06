@@ -27,6 +27,11 @@ api.interceptors.response.use(
             localStorage.removeItem('auth_user');
             window.location.href = '/login';
         }
+        if (error.response?.status === 403 && error.response?.data?.error === 'suspension') {
+            if (window.location.pathname !== '/' && window.location.pathname !== '/payment') {
+                window.location.href = '/';
+            }
+        }
         return Promise.reject(error);
     }
 );
