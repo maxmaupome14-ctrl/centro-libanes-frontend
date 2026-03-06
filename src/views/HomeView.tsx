@@ -147,11 +147,15 @@ export const HomeView = () => {
                         {/* Middle: Photo + Name */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 24 }}>
                             <div style={{
-                                width: 52, height: 52, borderRadius: 26, overflow: 'hidden',
+                                width: 52, height: 52, borderRadius: 26,
                                 border: '2px solid rgba(255,255,255,0.15)', flexShrink: 0,
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                                background: 'rgba(201,168,76,0.15)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}>
-                                <img src="/demo-avatar.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <span style={{ color: '#C9A84C', fontWeight: 700, fontSize: 18 }}>
+                                    {user.first_name?.[0] ?? ''}{user.last_name?.[0] ?? ''}
+                                </span>
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>Socio</p>
@@ -170,7 +174,7 @@ export const HomeView = () => {
                                 </p>
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10, letterSpacing: 1 }}>DESDE 2018</p>
+                                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10, letterSpacing: 1 }}>CENTRO LIBANÉS</p>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 5, justifyContent: 'flex-end' }}>
                                     <span className="relative flex h-1.5 w-1.5">
                                         <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />

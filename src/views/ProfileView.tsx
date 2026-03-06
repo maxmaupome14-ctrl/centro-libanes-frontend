@@ -29,7 +29,7 @@ export const ProfileView = () => {
     const fadeUp = (delay: number) => ({
         initial: { opacity: 0, y: 12 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.4, delay, ease: "easeOut" as any },
+        transition: { duration: 0.4, delay, ease: "easeOut" },
     });
 
     const menuSections = [
@@ -63,8 +63,10 @@ export const ProfileView = () => {
 
             {/* ── Profile Header ── */}
             <motion.div {...fadeUp(0)} className="px-5 pt-6 pb-4 flex items-center gap-4">
-                <div className="w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-[var(--color-border-strong)] shadow-lg shrink-0">
-                    <img src="/demo-avatar.jpg" alt="" className="w-full h-full object-cover" />
+                <div className="w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-[var(--color-border-strong)] shadow-lg shrink-0 bg-[var(--color-surface-hover)] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[var(--color-gold)]">
+                        {user.first_name?.[0] ?? ''}{user.last_name?.[0] ?? ''}
+                    </span>
                 </div>
                 <div className="flex-1 min-w-0">
                     <h1 className="text-xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: 'var(--font-display)' }}>
