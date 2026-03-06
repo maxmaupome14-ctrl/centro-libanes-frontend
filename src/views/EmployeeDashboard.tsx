@@ -69,7 +69,7 @@ export const EmployeeDashboard = () => {
                     <img src="/logo.png" alt="" className="h-5 w-auto object-contain" />
                     <span className="text-[11px] font-semibold text-[var(--color-text-tertiary)] tracking-wider uppercase">Staff</span>
                 </div>
-                <button onClick={handleLogout} className="w-8 h-8 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center cursor-pointer">
+                <button onClick={handleLogout} aria-label="Cerrar Sesión" className="w-8 h-8 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center cursor-pointer">
                     <LogOut size={14} className="text-[var(--color-text-tertiary)]" />
                 </button>
             </div>

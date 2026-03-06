@@ -81,6 +81,7 @@ export const NotificationsView = () => {
                 <div className="relative z-10 flex items-center gap-3">
                     <button
                         onClick={() => navigate(-1)}
+                        aria-label="Volver"
                         className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0 cursor-pointer hover:bg-white/20 transition-colors"
                     >
                         <ChevronLeft size={18} className="text-white" />
@@ -141,10 +142,10 @@ export const NotificationsView = () => {
                                                 : 'border-[var(--color-border-strong)] hover:border-[var(--color-gold)]/40'
                                         }`}
                                     >
-                                        <div className="flex gap-3.5 p-4">
+                                        <div className="relative flex gap-3.5 p-4">
                                             {/* Unread dot */}
                                             {!notif.is_read && (
-                                                <div className="absolute mt-1.5 ml-[-6px] w-1.5 h-1.5 rounded-full bg-[var(--color-gold)]" />
+                                                <div className="absolute top-3 left-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-gold)]" />
                                             )}
                                             <div
                                                 className="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center"
