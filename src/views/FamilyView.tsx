@@ -17,7 +17,7 @@ export const FamilyView = () => {
         const state = location.state as { tab?: string } | null;
         const tab = state?.tab;
         if (tab && ['family', 'statement', 'approvals'].includes(tab)) {
-            setActiveTab(tab);
+            setActiveTab(tab as 'family' | 'statement' | 'approvals');
         }
     }, [location.key]);
     const [familyMembers, setFamilyMembers] = useState<any[]>([]);
