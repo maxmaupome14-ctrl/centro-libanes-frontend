@@ -20,13 +20,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const StaffRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuthStore((state) => state.user);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (user?.user_type !== 'employee') return <Navigate to="/" replace />;
-  return <>{children}</>;
-};
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthStore((state) => state.user);
