@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 /* ── Cedar Tree SVG (watermark for the credential card) ── */
 const CedarWatermark = () => (
-    <svg viewBox="0 0 100 120" fill="none" className="absolute right-6 bottom-4 h-[110px] opacity-[0.06] pointer-events-none">
+    <svg viewBox="0 0 100 120" fill="none" className="absolute right-6 bottom-4 h-[110px] opacity-[0.13] pointer-events-none">
         <path d="M50 0L35 20H42L28 38H38L20 60H35L15 82H40L30 100H70L60 82H85L65 60H80L62 38H72L58 20H65L50 0Z" fill="white" />
         <rect x="45" y="100" width="10" height="18" fill="white" rx="2" />
     </svg>
@@ -86,7 +86,11 @@ export const HomeView = () => {
 
             {/* ═══════════ GREETING ═══════════ */}
             <motion.div {...f(0)} style={{ padding: '12px 24px 20px' }}>
-                <p style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>Bienvenido de vuelta</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <img src="/logo.png" alt="Centro Libanés" style={{ height: 22, width: 'auto', objectFit: 'contain', opacity: 0.7 }} />
+                    <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)', letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 500 }}>Centro Libanés</span>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginBottom: 3 }}>Bienvenido de vuelta</p>
                 <h1 style={{ fontSize: 26, fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                     {user.first_name} {user.last_name}
                 </h1>
@@ -121,13 +125,16 @@ export const HomeView = () => {
                     <div style={{ position: 'relative', zIndex: 1 }}>
                         {/* Top: Club name + badge */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div>
-                                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 500 }}>
-                                    Centro Libanés
-                                </p>
-                                <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginTop: 3 }}>
-                                    Club Deportivo y Social
-                                </p>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <img src="/logo.png" alt="Centro Libanés" style={{ height: 28, width: 'auto', objectFit: 'contain', opacity: 0.9 }} />
+                                <div>
+                                    <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 600 }}>
+                                        Centro Libanés
+                                    </p>
+                                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, marginTop: 1 }}>
+                                        Club Deportivo y Social
+                                    </p>
+                                </div>
                             </div>
                             <span style={{
                                 background: 'rgba(255,255,255,0.12)',
