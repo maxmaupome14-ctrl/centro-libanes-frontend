@@ -86,10 +86,7 @@ export const HomeView = () => {
 
             {/* ═══════════ GREETING ═══════════ */}
             <motion.div {...f(0)} style={{ padding: '12px 24px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    <img src="/logo.png" alt="Centro Libanés" style={{ height: 22, width: 'auto', objectFit: 'contain', opacity: 0.7 }} />
-                    <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)', letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 500 }}>Centro Libanés</span>
-                </div>
+                <img src="/logo.png" alt="Centro Libanés" style={{ height: 26, width: 'auto', objectFit: 'contain', opacity: 0.6, marginBottom: 10 }} />
                 <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginBottom: 3 }}>Bienvenido de vuelta</p>
                 <h1 style={{ fontSize: 26, fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                     {user.first_name} {user.last_name}
