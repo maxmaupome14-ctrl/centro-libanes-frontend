@@ -12,7 +12,7 @@ export const MobileLayout = () => {
 
     return (
         <div className="app-container flex flex-col h-screen">
-            <main ref={mainRef} className="flex-1 overflow-y-auto" style={{ paddingBottom: '80px' }}>
+            <main ref={mainRef} className="flex-1 overflow-y-auto" style={{ paddingBottom: '120px' }}>
                 <Outlet />
             </main>
             <BottomNav />
