@@ -11,8 +11,8 @@ export const MobileLayout = () => {
     }, [location.pathname]);
 
     return (
-        <div className="app-container flex flex-col min-h-screen">
-            <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <div className="app-container flex flex-col h-screen">
+            <main ref={mainRef} className="flex-1 overflow-y-auto" style={{ paddingBottom: '80px' }}>
                 <Outlet />
             </main>
             <BottomNav />
