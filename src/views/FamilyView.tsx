@@ -26,6 +26,9 @@ export const FamilyView = () => {
     const [approvals, setApprovals] = useState<any[]>([]);
     const [loadingApprovals, setLoadingApprovals] = useState(true);
     const [actioningId, setActioningId] = useState<string | null>(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [addForm, setAddForm] = useState({ first_name: '', last_name: '', date_of_birth: '', role: 'hijo' });
+    const [addingMember, setAddingMember] = useState(false);
 
     useEffect(() => {
         const fetchFamily = async () => {
@@ -154,11 +157,51 @@ export const FamilyView = () => {
                                     </div>
                                 </div>
                             ))}
-                            {user.role === 'titular' && (
-                                <Button variant="outline" className="w-full py-5 border-dashed">
+                            {user.role === 'titular' && !showAddForm && (
+                                <Button variant="outline" className="w-full py-5 border-dashed" onClick={() => setShowAddForm(true)}>
                                     <UserPlus size={16} />
                                     Agregar Beneficiario
                                 </Button>
+                            )}
+                            {showAddForm && (
+                                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 space-y-3">
+                                    <p className="text-[11px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase">Nuevo Beneficiario</p>
+                                    {[
+                                        { key: 'first_name', placeholder: 'Nombre' },
+                                        { key: 'last_name', placeholder: 'Apellido' },
+                                        { key: 'date_of_birth', placeholder: 'Fecha de nacimiento', type: 'date' },
+                                    ].map(field => (
+                                        <input key={field.key} type={field.type || 'text'} placeholder={field.placeholder}
+                                            value={addForm[field.key as keyof typeof addForm]}
+                                            onChange={e => setAddForm(f => ({ ...f, [field.key]: e.target.value }))}
+                                            className="w-full bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-xl px-4 py-2.5 text-[13px] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-gold)]" />
+                                    ))}
+                                    <select value={addForm.role} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))}
+                                        className="w-full bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-xl px-4 py-2.5 text-[13px] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-gold)]">
+                                        <option value="hijo">Hijo/a</option>
+                                        <option value="conyugue">Cónyuge</option>
+                                        <option value="dependiente">Dependiente</option>
+                                    </select>
+                                    <div className="flex gap-2 pt-1">
+                                        <button onClick={() => setShowAddForm(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--color-border)] text-[12px] text-[var(--color-text-tertiary)] cursor-pointer">Cancelar</button>
+                                        <button disabled={addingMember || !addForm.first_name || !addForm.last_name}
+                                            onClick={async () => {
+                                                if (!user?.membership_id) return;
+                                                setAddingMember(true);
+                                                try {
+                                                    await api.post(`/membership/${user.membership_id}/beneficiaries`, addForm);
+                                                    const res = await api.get(`/membership/${user.membership_id}/beneficiaries`);
+                                                    setFamilyMembers(res.data);
+                                                    setShowAddForm(false);
+                                                    setAddForm({ first_name: '', last_name: '', date_of_birth: '', role: 'hijo' });
+                                                } catch { /* silently fail */ }
+                                                finally { setAddingMember(false); }
+                                            }}
+                                            className="flex-1 py-2.5 rounded-xl bg-[var(--color-gold)] text-[var(--color-bg)] text-[12px] font-semibold cursor-pointer disabled:opacity-50">
+                                            {addingMember ? 'Guardando...' : 'Guardar'}
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </motion.div>
                     )}

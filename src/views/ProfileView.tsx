@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
-    ChevronRight, LogOut, Bell, Shield, CreditCard,
-    HelpCircle, Lock, Smartphone, Globe, FileText
+    ChevronRight, LogOut, Bell, Shield, CreditCard, Globe
 } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -44,16 +43,7 @@ export const ProfileView = () => {
         {
             title: 'Configuración',
             items: [
-                { icon: Lock, label: 'Seguridad', desc: 'Próximamente', disabled: true },
-                { icon: Smartphone, label: 'Biometría', desc: 'Próximamente', disabled: true },
                 { icon: Globe, label: 'Idioma', desc: 'Español', disabled: true },
-            ]
-        },
-        {
-            title: 'Soporte',
-            items: [
-                { icon: HelpCircle, label: 'Ayuda', desc: 'Próximamente', disabled: true },
-                { icon: FileText, label: 'Términos y Condiciones', desc: 'Próximamente', disabled: true },
             ]
         }
     ] as const;
