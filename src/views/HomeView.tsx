@@ -82,10 +82,10 @@ export const HomeView = () => {
     });
 
     return (
-        <div className="pb-36">
+        <div>
 
             {/* ═══════════ GREETING ═══════════ */}
-            <motion.div {...f(0)} style={{ padding: '12px 24px 20px' }}>
+            <motion.div {...f(0)} style={{ padding: '32px 20px 20px' }}>
                 <p style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>Bienvenido de vuelta</p>
                 <h1 style={{ fontSize: 26, fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                     {user.first_name} {user.last_name}
@@ -192,8 +192,8 @@ export const HomeView = () => {
             </motion.div>
 
             {/* ═══════════ EVENTS ═══════════ */}
-            <motion.div {...f(0.1)} style={{ marginTop: 20 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px', marginBottom: 12 }}>
+            <motion.div {...f(0.1)} style={{ marginTop: 28 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: 14 }}>
                     <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-tertiary)', letterSpacing: 1, textTransform: 'uppercase' }}>Próximos Eventos</p>
                 </div>
 
@@ -257,7 +257,7 @@ export const HomeView = () => {
 
             {/* ═══════════ MAINTENANCE STATUS ═══════════ */}
             {maintenance && (
-                <motion.div {...f(0.1)} style={{ padding: '16px 20px 0' }}>
+                <motion.div {...f(0.1)} style={{ padding: '28px 20px 0' }}>
                     <div
                         className="bg-[var(--color-surface)] rounded-2xl border cursor-pointer"
                         style={{
@@ -290,7 +290,7 @@ export const HomeView = () => {
 
 
             {/* ═══════════ QUICK ACTIONS ═══════════ */}
-            <motion.div {...f(0.15)} style={{ padding: '24px 20px 0' }}>
+            <motion.div {...f(0.15)} style={{ padding: '28px 20px 0' }}>
                 <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-tertiary)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 14, paddingLeft: 4 }}>
                     Acceso Rápido
                 </p>
@@ -322,7 +322,7 @@ export const HomeView = () => {
             </motion.div>
 
             {/* ═══════════ CATEGORIES ═══════════ */}
-            <motion.div {...f(0.22)} style={{ padding: '24px 20px 0' }}>
+            <motion.div {...f(0.22)} style={{ padding: '28px 20px 0' }}>
                 <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-tertiary)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 14, paddingLeft: 4 }}>
                     Explorar
                 </p>
@@ -346,8 +346,8 @@ export const HomeView = () => {
             </motion.div>
 
             {/* ═══════════ FEATURED (Horizontal scroll) ═══════════ */}
-            <motion.div {...f(0.28)} style={{ marginTop: 24 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px', marginBottom: 14 }}>
+            <motion.div {...f(0.28)} style={{ marginTop: 28 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: 14 }}>
                     <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-tertiary)', letterSpacing: 1, textTransform: 'uppercase' }}>Destacados</p>
                     <button onClick={() => navigate('/reservations')} className="text-[11px] font-semibold text-[var(--color-gold)] flex items-center gap-0.5">
                         Ver todo <ChevronRight size={14} />
@@ -375,7 +375,7 @@ export const HomeView = () => {
             </motion.div>
 
             {/* ═══════════ RESERVATIONS ═══════════ */}
-            <motion.div {...f(0.33)} style={{ padding: '24px 20px 0' }}>
+            <motion.div {...f(0.33)} style={{ padding: '28px 20px 0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                     <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-tertiary)', letterSpacing: 1, textTransform: 'uppercase' }}>Próximas Reservas</p>
                     <button onClick={() => navigate('/reservations')} className="text-[11px] font-semibold text-[var(--color-gold)] flex items-center gap-0.5">
