@@ -48,7 +48,25 @@ function getItemStyle(item: any): { color: string; Icon: any; typeLabel: string 
 const DAY_ABBR: Record<string, string> = {
     lunes: 'Lun', martes: 'Mar', miércoles: 'Mié', miercoles: 'Mié',
     jueves: 'Jue', viernes: 'Vie', sábado: 'Sáb', sabado: 'Sáb', domingo: 'Dom',
+    monday: 'Lun', tuesday: 'Mar', wednesday: 'Mié', thursday: 'Jue',
+    friday: 'Vie', saturday: 'Sáb', sunday: 'Dom',
 };
+
+// Parses "monday 06:30-07:30, tuesday 06:30-07:30, ..." into grouped schedule lines
+function parseScheduleDisplay(raw: string): string[] {
+    if (!raw) return [];
+    const slots = raw.split(',').map(s => s.trim()).filter(Boolean);
+    const groups: Record<string, string[]> = {};
+    for (const slot of slots) {
+        const parts = slot.split(' ');
+        if (parts.length < 2) continue;
+        const day = DAY_ABBR[parts[0].toLowerCase()] || parts[0];
+        const time = parts[1].replace('-', '–');
+        if (!groups[time]) groups[time] = [];
+        if (!groups[time].includes(day)) groups[time].push(day);
+    }
+    return Object.entries(groups).map(([time, days]) => `${days.join(' · ')}  ${time}`);
+}
 
 function formatSchedule(schedules: Array<{ day: string; start: string; end: string }>): string {
     if (!schedules.length) return '';
@@ -268,11 +286,6 @@ export const CatalogView = () => {
                                         {item.time && (
                                             <span className="text-[11px] text-[var(--color-text-tertiary)] flex items-center gap-1">
                                                 <Clock size={10} />{item.time}
-                                            </span>
-                                        )}
-                                        {item.schedule_display && (
-                                            <span className="text-[11px] text-[var(--color-text-tertiary)] flex items-center gap-1">
-                                                <Clock size={10} />{item.schedule_display}
                                             </span>
                                         )}
                                     </>
@@ -598,16 +611,27 @@ export const CatalogView = () => {
                                                 })()}
                                             </div>
                                         ) : (
-                                            <div className="mb-6 p-4 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+                                            <div className="mb-6 space-y-3">
                                                 <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
                                                     Al inscribirte tendrás acceso durante el mes en curso en todos los horarios disponibles.
                                                 </p>
-                                                {selectedItem.schedule_display && (
-                                                    <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-[var(--color-text-primary)]">
-                                                        <Clock size={13} className="text-[var(--color-gold)]" />
-                                                        {selectedItem.schedule_display}
-                                                    </div>
-                                                )}
+                                                {selectedItem.schedule_display && (() => {
+                                                    const lines = parseScheduleDisplay(selectedItem.schedule_display);
+                                                    if (!lines.length) return null;
+                                                    return (
+                                                        <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-4">
+                                                            <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase mb-3">Horarios</p>
+                                                            <div className="space-y-2">
+                                                                {lines.map((line, i) => (
+                                                                    <div key={i} className="flex items-center gap-2 text-[12px] text-[var(--color-text-primary)] font-medium">
+                                                                        <Clock size={12} className="text-[var(--color-gold)] shrink-0" />
+                                                                        {line}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
                                             </div>
                                         )
                                     )}
