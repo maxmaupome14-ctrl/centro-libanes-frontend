@@ -111,8 +111,8 @@ export const PaymentView = () => {
                                             <CreditCard size={20} />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[13px] font-bold text-[var(--color-text-primary)]">Tarjeta Guardada</p>
-                                            <p className="text-[11px] text-[var(--color-text-tertiary)]">•••• •••• •••• 4242</p>
+                                            <p className="text-[13px] font-bold text-[var(--color-text-primary)]">Tarjeta de Crédito / Débito</p>
+                                            <p className="text-[11px] text-[var(--color-text-tertiary)]">Visa · Mastercard · AMEX</p>
                                         </div>
                                     </div>
                                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedMethod === 'card' ? 'border-[var(--color-gold)]' : 'border-[var(--color-border-strong)]'}`}>
@@ -203,7 +203,7 @@ export const PaymentView = () => {
                                 <div className="flex justify-between items-center py-1">
                                     <span className="text-[11px] text-[var(--color-text-tertiary)]">Método</span>
                                     <span className="text-[11px] font-semibold text-[var(--color-text-primary)]">
-                                        {selectedMethod === 'apple_pay' ? 'Apple Pay' : 'Terminada en 4242'}
+                                        {selectedMethod === 'apple_pay' ? 'Apple Pay' : 'Tarjeta de crédito'}
                                     </span>
                                 </div>
                             </div>
