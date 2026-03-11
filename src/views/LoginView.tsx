@@ -208,7 +208,7 @@ export const LoginView = () => {
                             maxLength={6}
                             inputMode="numeric"
                             className="w-full bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border-strong)] rounded-2xl h-14 text-center text-2xl font-bold tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-[var(--color-gold)]/50 focus:border-[var(--color-gold)] transition-all"
-                            placeholder="31505"
+                            placeholder="ej. 31505"
                             value={memberNum}
                             onChange={e => setMemberNum(e.target.value.replace(/\D/g, ''))}
                             onKeyDown={e => e.key === 'Enter' && memberNum && handleLookupMembership()}
