@@ -32,8 +32,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.1 }}
+                style={{ touchAction: 'manipulation' }}
                 className={cn(
-                    'inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 cursor-pointer',
+                    'inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 cursor-pointer select-none',
                     variants[variant],
                     sizes[size],
                     className

@@ -203,23 +203,25 @@ export const LoginView = () => {
                             Ingresa tu número de membresía
                         </p>
 
-                        <input
-                            type="text"
-                            maxLength={6}
-                            inputMode="numeric"
-                            className="w-full bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border-strong)] rounded-2xl h-14 text-center text-2xl font-bold tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-[var(--color-gold)]/50 focus:border-[var(--color-gold)] transition-all"
-                            placeholder="ej. 31505"
-                            value={memberNum}
-                            onChange={e => setMemberNum(e.target.value.replace(/\D/g, ''))}
-                            onKeyDown={e => e.key === 'Enter' && memberNum && handleLookupMembership()}
-                            autoFocus
-                        />
+                        <form onSubmit={e => { e.preventDefault(); if (memberNum) handleLookupMembership(); }} className="w-full">
+                            <input
+                                type="text"
+                                maxLength={6}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                className="w-full bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border-strong)] rounded-2xl h-14 text-center text-2xl font-bold tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-[var(--color-gold)]/50 focus:border-[var(--color-gold)] transition-all"
+                                placeholder="ej. 31505"
+                                value={memberNum}
+                                onChange={e => setMemberNum(e.target.value.replace(/\D/g, ''))}
+                                autoFocus
+                            />
 
-                        {error && <p className="text-[var(--color-red-lebanese)] text-sm mt-3">{error}</p>}
+                            {error && <p className="text-[var(--color-red-lebanese)] text-sm mt-3">{error}</p>}
 
-                        <Button size="lg" className="w-full mt-6" onClick={handleLookupMembership} disabled={isLoading || !memberNum} isLoading={isLoading}>
-                            Continuar
-                        </Button>
+                            <Button type="submit" size="lg" className="w-full mt-6" disabled={isLoading || !memberNum} isLoading={isLoading}>
+                                Continuar
+                            </Button>
+                        </form>
 
                         <button className="flex items-center justify-center gap-1.5 text-sm text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] mt-8 w-full transition-colors" onClick={goBack}>
                             <ChevronLeft size={16} /> Regresar
