@@ -116,14 +116,50 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| THEME-01..07 | TBD | Pending |
-| AUTH-01..05 | TBD | Pending |
-| PLAT-01..07 | TBD | Pending |
-| BOOK-01..09 | TBD | Pending |
-| PROF-01..04 | TBD | Pending |
-| QR-01..06 | TBD | Pending |
-| HOSP-01..04 | TBD | Pending |
+| THEME-01 | Phase 8 | Pending |
+| THEME-02 | Phase 8 | Pending |
+| THEME-03 | Phase 8 | Pending |
+| THEME-04 | Phase 8 | Pending |
+| THEME-05 | Phase 8 | Pending |
+| THEME-06 | Phase 8 | Pending |
+| THEME-07 | Phase 8 | Pending |
+| AUTH-01 | Phase 8 | Pending |
+| PLAT-01 | Phase 8 | Pending |
+| PLAT-02 | Phase 8 | Pending |
+| PLAT-06 | Phase 8 | Pending |
+| PLAT-07 | Phase 8 | Pending |
+| AUTH-02 | Phase 9 | Pending |
+| AUTH-03 | Phase 9 | Pending |
+| AUTH-04 | Phase 9 | Pending |
+| AUTH-05 | Phase 9 | Pending |
+| PROF-01 | Phase 9 | Pending |
+| PROF-02 | Phase 9 | Pending |
+| PROF-03 | Phase 9 | Pending |
+| PROF-04 | Phase 9 | Pending |
+| QR-01 | Phase 9 | Pending |
+| QR-02 | Phase 9 | Pending |
+| QR-03 | Phase 9 | Pending |
+| QR-04 | Phase 9 | Pending |
+| QR-05 | Phase 9 | Pending |
+| QR-06 | Phase 9 | Pending |
+| BOOK-01 | Phase 10 | Pending |
+| BOOK-02 | Phase 10 | Pending |
+| BOOK-03 | Phase 10 | Pending |
+| BOOK-04 | Phase 10 | Pending |
+| BOOK-05 | Phase 10 | Pending |
+| BOOK-06 | Phase 10 | Pending |
+| BOOK-07 | Phase 10 | Pending |
+| BOOK-08 | Phase 10 | Pending |
+| BOOK-09 | Phase 10 | Pending |
+| PLAT-03 | Phase 11 | Pending |
+| PLAT-04 | Phase 11 | Pending |
+| PLAT-05 | Phase 11 | Pending |
+| HOSP-01 | Phase 11 | Pending |
+| HOSP-02 | Phase 11 | Pending |
+| HOSP-03 | Phase 11 | Pending |
+| HOSP-04 | Phase 11 | Pending |
 
 ---
-*35 requirements across 7 categories for milestone v2.0*
+*42 requirements across 7 categories for milestone v2.0*
+*All 42 requirements mapped to phases 8–11*
 *Last updated: 2026-03-11*

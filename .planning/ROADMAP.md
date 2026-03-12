@@ -1,149 +1,176 @@
 # Centro Libanés — Roadmap
-## Milestone 1: Demo-Ready Soft Launch
 
 ---
 
-## Phase Overview
+## Milestone 1: Demo-Ready Soft Launch (COMPLETE)
 
-| # | Name | Goal | Depends On |
-|---|---|---|---|
-| 1 | Backend Audit | Know exactly what exists vs. what's missing | — |
-| 2 | Auth & Core Data Flow | Login works end-to-end with real DB | Phase 1 |
-| 3 | Reservations & Catalog | Members can book and view reservations | Phase 2 |
-| 4 | Lockers & Billing | Lockers bookable, statement shows real charges | Phase 2 |
-| 5 | Family, Payments & Notifications | Full account view with mock payment | Phase 4 |
-| 6 | Staff & Admin Wiring | Employee dashboard + Admin panel functional | Phase 2 |
-| 7 | Polish, Seed & Demo Prep | Real data seeded, edge cases handled, demo-ready | Phase 3–6 |
+Phases 1–7 delivered a working demo app wired to real backend data, deployed on Vercel + Railway.
 
----
-
-## Phase 1 — Backend Audit
-
-**Goal:** Map every endpoint that exists in the backend repo against every API call the frontend makes. Produce a gap list.
-
-**Steps:**
-1. Clone/pull `maxmaupome14-ctrl/centro-libanes-backend`
-2. List all Express routes (grep for `router.get`, `router.post`, etc.)
-3. List all API calls in the frontend (`src/services/api.ts` + all views)
-4. Create a comparison table: endpoint | exists | response shape matches frontend | notes
-5. Identify missing endpoints and mismatched response shapes
-
-**Output:** `.planning/research/backend-audit.md`
-
-**Done when:** Every frontend API call is mapped to a backend route status (exists / missing / broken)
+| Phase | Name | Status |
+|-------|------|--------|
+| 1 | Backend Audit | Complete |
+| 2 | Auth & Core Data Flow | Complete |
+| 3 | Reservations & Catalog | Complete |
+| 4 | Lockers & Billing | Complete |
+| 5 | Family, Payments & Notifications | Complete |
+| 6 | Staff & Admin Wiring | Complete |
+| 7 | Polish, Seed & Demo Prep | Complete |
 
 ---
 
-## Phase 2 — Auth & Core Data Flow
+## Milestone 2: v2.0 Premium UX
 
-**Goal:** A member can log in with real credentials, see their credential card, and the app doesn't crash on any view.
-
-**Steps:**
-1. Fix any auth endpoint mismatches (login response must return `user` shape matching `authStore.ts`)
-2. Ensure `membership_id`, `member_number`, `role`, `user_type`, `first_name`, `last_name` are returned on login
-3. Verify JWT middleware works on all protected routes
-4. Wire HomeView: real reservations, real maintenance status, real events
-5. Fix any 500/404 errors on page load across all views (return empty arrays, not errors)
-6. Seed at least one test member account + one admin account in Railway DB
-
-**Done when:** Login → Home shows real user data with no console errors on any view
+**Milestone goal:** Transform the app from functional demo into a premium, platform-adaptive club experience. Every screen feels native to the platform it runs on. The credential card replaces the physical membership card. Booking rivals PlayTomic. The app greets you like the club does.
 
 ---
 
-## Phase 3 — Reservations & Catalog
+## Phases
 
-**Goal:** Members can browse, book, and cancel reservations against real backend data.
-
-**Steps:**
-1. Verify/build `GET /services` (or `/catalog`) — returns services/resources with category, type, price
-2. Verify/build `GET /reservations/user` — returns member's upcoming reservations
-3. Verify/build `POST /reservations` — creates a reservation with date, time, serviceId, staffId
-4. Verify/build `DELETE /reservations/:id` or cancel endpoint
-5. Verify no-show/late-cancel logic triggers a `MonthlyCharge` record
-6. Test booking-blocked state when `isMaintenancePaid = false`
-7. Seed services and staff in Railway DB
-
-**Done when:** Full reservation round-trip works (browse → book → cancel → no-show charge) with real data
+- [ ] **Phase 8: Foundation** — Theme system, auth flow fix, platform detection infrastructure, touch audit
+- [ ] **Phase 9: Identity** — Welcome animation, QR credential card, multi-profile switching
+- [ ] **Phase 10: Booking UX** — Time strip, court cards, staff picker, favorites
+- [ ] **Phase 11: Platform Chrome + Hospitality** — Platform-adaptive navigation, anniversary + greeting notifications
 
 ---
 
-## Phase 4 — Lockers & Billing
+## Phase Details
 
-**Goal:** Members can rent a locker and see it appear on their monthly statement.
+### Phase 8: Foundation
 
-**Steps:**
-1. Verify/build `GET /lockers?unit_name=X` — returns locker list with status and size
-2. Verify/build `GET /lockers/my` — returns member's active locker rentals
-3. Verify/build `POST /lockers/:id/rent` — creates LockerRent + MonthlyCharge for recurring fee
-4. Verify/build `DELETE /lockers/:id/rent` (or cancel endpoint)
-5. Verify `GET /payments/:membershipId/statement` returns correct shape:
-   - `maintenance[]`, `lockers[]`, `penalties[]`, `totals` with `total_due`
-6. Seed some lockers in the DB
+**Goal:** The app has a working three-way theme system with no FOUC, a correct auth flow order, synchronous platform detection, and all existing touch bugs patched — providing the infrastructure every subsequent phase depends on.
 
-**Done when:** Locker rental flow works end-to-end and the charge appears on the statement
+**Depends on:** Phase 7 (M1 complete)
 
----
+**Requirements:** THEME-01, THEME-02, THEME-03, THEME-04, THEME-05, THEME-06, THEME-07, AUTH-01, PLAT-01, PLAT-02, PLAT-06, PLAT-07
 
-## Phase 5 — Family, Payments & Notifications
+**Success Criteria** (what must be TRUE when this phase is complete):
+  1. User can toggle between light, dark, and auto theme from the profile page; the selected mode persists after closing and reopening the app
+  2. On cold page load, the user sees the correct theme immediately — no flash of the wrong palette for any preference (light, dark, or auto)
+  3. Both light and dark palettes pass WCAG AA contrast ratio (4.5:1) for all body text
+  4. Auth login follows the correct order: member number field → password field → profile selection screen (family chooser appears only after password validates)
+  5. Platform (iOS / Android / web) is detected once at app start with no render flash; web defaults to iOS style
 
-**Goal:** The family tab shows real group data, the payment flow works (mock), and notifications appear.
-
-**Steps:**
-1. Verify/build `GET /membership/:id/family` — returns family group members
-2. Verify/build `GET /notifications/my` — returns notifications with `unread_count`
-3. Verify/build `POST /notifications/:id/read`
-4. Verify mock payment flow:
-   - `POST /payments/create-intent` returns `{ payment_id, dev_mode: true }`
-   - `POST /payments/:id/confirm` marks maintenance charge as paid
-   - HomeView maintenance status updates after payment
-5. Verify/build family approval endpoints (`GET /membership/approvals`, `POST /membership/approvals/:id/approve|reject`)
-
-**Done when:** Full payment round-trip works in dev mode and family view shows real member data
+**Plans:** TBD
 
 ---
 
-## Phase 6 — Staff & Admin Wiring
+### Phase 9: Identity
 
-**Goal:** Employees see their real agenda. Admin panel tabs show real data.
+**Goal:** Users see a premium welcome animation on their first login of the session, can view and expand their digital QR credential card, and can switch between family member profiles without re-entering a password.
 
-**Steps:**
-1. Verify/build `GET /staff/me/appointments` and `GET /staff/me/week`
-2. Verify/build `POST /staff/appointments/:id/status` (mark completed/no-show)
-3. Admin — God View: `GET /admin/stats` (total members, revenue, today's reservations)
-4. Admin — Membresías: `GET /admin/members?search=X`
-5. Admin — Finanzas: `GET /admin/charges`, `POST /admin/charges/:id/pay`, `POST /admin/penalties`
-6. Admin — Lockers: `GET /admin/lockers`, `POST /admin/lockers/:id/release`
-7. Admin — Catálogo: CRUD for services and resources
-8. Events CRUD already partially wired — verify and fix if needed
+**Depends on:** Phase 8
 
-**Done when:** Employee dashboard and 6 key admin tabs show real data without errors
+**Requirements:** AUTH-02, AUTH-03, AUTH-04, AUTH-05, PROF-01, PROF-02, PROF-03, PROF-04, QR-01, QR-02, QR-03, QR-04, QR-05, QR-06
 
----
+**Success Criteria** (what must be TRUE when this phase is complete):
+  1. On first login of a session, user sees a 2-second brand entrance animation (logo fade → "Bienvenido, [Name]" → credential card slide-up → home); on subsequent in-session navigation the animation does not replay
+  2. User with `prefers-reduced-motion` enabled sees a static welcome screen instead of the animation
+  3. From the home dashboard, user can tap the credential card to reveal a full-screen view showing their photo/initials, member number, and a scannable QR code; the QR background is white to ensure readability
+  4. In dark mode, the credential card displays an animated gold shimmer border
+  5. User can switch to a different family member's profile from the navigation bar bottom sheet without entering a password; the active profile name/avatar is visible in the header throughout the app
 
-## Phase 7 — Polish, Seed & Demo Prep
-
-**Goal:** App is demo-ready with realistic data, clean UX, and no embarrassing bugs.
-
-**Steps:**
-1. Seed Railway DB with realistic data:
-   - 5–10 member accounts (titular + dependientes)
-   - 3–5 staff accounts
-   - Real services: canchas de tenis, piscina, clases de yoga, spa, etc.
-   - Active lockers (some occupied, some free)
-   - Sample past + upcoming reservations
-   - One member with pending maintenance fee (to demo blocking)
-2. Mobile UI audit: test every view at 390px, fix overflow/scroll issues
-3. Error state audit: every API failure shows a clean empty state (not a white screen)
-4. Loading state audit: every async view shows a skeleton/spinner
-5. Fix any remaining console errors or TypeScript warnings
-6. End-to-end demo walkthrough: login as member → book → pay → view family → logout → login as admin
-
-**Done when:** A 10-minute demo walkthrough completes without crashes or blank screens
+**Plans:** TBD
 
 ---
 
-## Milestone 2 (Future — not planned yet)
-- Live Stripe integration
-- Push notifications
-- Capacitor iOS build
-- App Store submission
+### Phase 10: Booking UX
+
+**Goal:** Members browse courts as visual cards, select time slots via a horizontal snap-scroll strip, choose a preferred staff member, save favorite courts, and confirm bookings in a bottom sheet — matching the PlayTomic-style experience.
+
+**Depends on:** Phase 8
+
+**Requirements:** BOOK-01, BOOK-02, BOOK-03, BOOK-04, BOOK-05, BOOK-06, BOOK-07, BOOK-08, BOOK-09
+
+**Success Criteria** (what must be TRUE when this phase is complete):
+  1. Court and resource cards display a color-coded availability overlay (green / amber / red); user can star any court as a favorite and starred courts appear at the top of the list on next visit
+  2. User can scroll horizontally through a time slot strip that snaps to each slot; each slot shows the time, price, and availability; scrolling the time strip does not conflict with vertical page scroll
+  3. User can select multiple consecutive time slots in a single booking session
+  4. User can choose a staff member via avatar cards with a "Sin preferencia" default option
+  5. User sees a bottom sheet summary (court + time + staff + price) with a single "Confirmar" button before the booking is submitted
+
+**Plans:** TBD
+
+---
+
+### Phase 11: Platform Chrome + Hospitality
+
+**Goal:** iOS users see HIG-style large-title navigation with translucent tab bar; Android users see Material Design 3 top app bar with ripple feedback; all users receive time-aware and occasion-based greetings.
+
+**Depends on:** Phase 9, Phase 10
+
+**Requirements:** PLAT-03, PLAT-04, PLAT-05, HOSP-01, HOSP-02, HOSP-03, HOSP-04
+
+**Success Criteria** (what must be TRUE when this phase is complete):
+  1. On an iOS device (or web, which defaults to iOS), the app shows a translucent blur bottom tab bar, large collapsing title headers, and subtle highlight tap feedback on interactive elements
+  2. On an Android device, the app shows a Material Design 3 top app bar, a bottom navigation bar with always-visible labels, and a ripple effect on interactive elements
+  3. On any login, the greeting reflects the current time ("Buenos días", "Buenas tardes", "Buenas noches") followed by the user's first name
+  4. On a member's birthday, login shows a birthday greeting with a confetti animation
+  5. On a member's club anniversary, an in-app card notification acknowledges the milestone (e.g., "1 año como socio")
+
+**Plans:** TBD
+
+---
+
+## Progress Table
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 8. Foundation | 0/? | Not started | — |
+| 9. Identity | 0/? | Not started | — |
+| 10. Booking UX | 0/? | Not started | — |
+| 11. Platform Chrome + Hospitality | 0/? | Not started | — |
+
+---
+
+## Coverage
+
+| Requirement | Phase | Description |
+|-------------|-------|-------------|
+| THEME-01 | 8 | Theme toggle (light / dark / auto) |
+| THEME-02 | 8 | Theme persistence across sessions |
+| THEME-03 | 8 | Dark mode muted luxury palette |
+| THEME-04 | 8 | Light mode warm palette |
+| THEME-05 | 8 | Smooth 200ms theme transitions |
+| THEME-06 | 8 | FOUC blocking script in index.html |
+| THEME-07 | 8 | WCAG AA contrast in both modes |
+| AUTH-01 | 8 | Login order fix: number → password → profiles |
+| PLAT-01 | 8 | Platform detection via Capacitor + UA |
+| PLAT-02 | 8 | Synchronous platform detection (no flash) |
+| PLAT-06 | 8 | Web defaults to iOS style |
+| PLAT-07 | 8 | touchAction: manipulation audit on motion.button |
+| AUTH-02 | 9 | Premium welcome animation on login |
+| AUTH-03 | 9 | Animation completes under 2s, preloads data |
+| AUTH-04 | 9 | Animation skips on subsequent same-session logins |
+| AUTH-05 | 9 | Animation respects prefers-reduced-motion |
+| PROF-01 | 9 | Profile switcher bottom sheet from nav bar |
+| PROF-02 | 9 | Profile switcher shows role badges |
+| PROF-03 | 9 | Active profile visible throughout app |
+| PROF-04 | 9 | Profile switch without password re-entry |
+| QR-01 | 9 | Full-screen credential card from home |
+| QR-02 | 9 | Card shows photo/initials, name, member number, QR |
+| QR-03 | 9 | QR encodes member ID for club entrance scan |
+| QR-04 | 9 | Animated gold shimmer border in dark mode |
+| QR-05 | 9 | UI dims/brightens for QR readability |
+| QR-06 | 9 | "Añadir a Wallet" placeholder with coming-soon toast |
+| BOOK-01 | 10 | Court cards with availability color overlay |
+| BOOK-02 | 10 | Horizontal scroll-snap time strip |
+| BOOK-03 | 10 | Time slots show time, price, availability |
+| BOOK-04 | 10 | Multiple consecutive time slot selection |
+| BOOK-05 | 10 | Unidad favorita star toggle, favorites first |
+| BOOK-06 | 10 | Favorites persist in localStorage |
+| BOOK-07 | 10 | Staff picker with avatar cards |
+| BOOK-08 | 10 | Booking confirmation bottom sheet |
+| BOOK-09 | 10 | Time strip uses CSS scroll-snap (not Framer drag) |
+| PLAT-03 | 11 | iOS HIG navigation: blur tab bar, large titles |
+| PLAT-04 | 11 | Android Material 3: top app bar, bottom nav |
+| PLAT-05 | 11 | iOS highlight vs Android ripple tap feedback |
+| HOSP-01 | 11 | Time-aware greeting on login |
+| HOSP-02 | 11 | Birthday greeting + confetti |
+| HOSP-03 | 11 | Anniversary notification |
+| HOSP-04 | 11 | Hospitality as in-app cards only |
+
+**Total: 42 requirements mapped across 4 phases. 0 orphans.**
+
+---
+
+*Last updated: 2026-03-11 — Milestone v2.0 phases 8–11 added*
