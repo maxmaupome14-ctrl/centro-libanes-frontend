@@ -41,6 +41,68 @@ Staff use a separate dashboard to manage their agenda. Admins get a full back-of
 | Employee daily agenda | EmployeeDashboard | Built |
 | Admin back-office | AdminView | Built (9 tabs) |
 
+## Current Milestone: v2.0 Premium UX
+
+**Goal:** Transform the app from functional demo into a premium, platform-adaptive club experience focused on UI/UX excellence.
+
+**Target features:**
+- Platform-adaptive design (Apple HIG for iOS, Material Design 3 for Android)
+- Dark/light/auto theme with muted luxury dark mode
+- Auth flow fix (password before profiles) + premium welcome animation
+- PlayTomic-inspired booking UX (time pickers, court selection, staff selection)
+- Unidad favorita (save preferred courts/resources)
+- Multi-profile switching (family members)
+- QR code digital credential card
+- Unreasonable hospitality (personalized welcome, birthday notifications)
+
+**Design reference:** `docs/plans/2026-03-11-v2-ux-premium-design.md`
+
+## Requirements
+
+### Validated
+- ✓ Auth login flow (member + staff) — existing
+- ✓ Home dashboard with credential card — existing
+- ✓ Service catalog + booking UI — existing
+- ✓ Locker management UI — existing
+- ✓ Family group + statement — existing
+- ✓ Mock payment flow — existing
+- ✓ Notifications view — existing
+- ✓ Member profile — existing
+- ✓ Employee dashboard — existing
+- ✓ Admin panel (9 tabs) — existing
+- ✓ Live deployment (Vercel + Railway + Supabase) — existing
+
+### Active
+- [ ] Platform-adaptive UI (iOS HIG / Android Material 3)
+- [ ] Dark/light/auto theme system with muted luxury dark mode
+- [ ] Auth flow fix + premium welcome animation
+- [ ] PlayTomic-inspired booking UX
+- [ ] Unidad favorita (preferred courts)
+- [ ] Multi-profile switching
+- [ ] QR code credential card
+- [ ] Unreasonable hospitality notifications
+
+### Out of Scope
+- Tournament system — backend-heavy, future milestone
+- Payment domiciliation — requires Stripe integration
+- Calendar integration — native API, future milestone
+- Guest invitations — new backend feature
+- Strapi CMS — infrastructure change
+- Locker floor-plan maps — design asset heavy
+- Waitlist system — new backend feature
+- Rating system — new backend feature
+- Push notifications (native) — requires Capacitor
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Platform-adaptive (not one design) | Diego's explicit request; follows Apple HIG + Material 3 benchmarks | Two UI shells, shared logic |
+| Muted luxury dark mode | Premium club feel without being flashy; dark slate + warm white + gold accents | Implemented via CSS custom properties |
+| Premium welcome animation | "Unreasonable hospitality" — club entrance feel on login | Framer Motion 2s sequence |
+| PlayTomic as booking UX reference | Diego's benchmark for court booking flow | Horizontal time strip, visual court cards |
+| Web defaults to iOS style | Cleaner baseline for PWA users | `usePlatform()` fallback |
+
 ## Repos
 - Frontend: `centro-libanes-frontend-main` (local + Vercel)
 - Backend: `maxmaupome14-ctrl/centro-libanes-backend` (Railway)
@@ -50,3 +112,6 @@ Hundreds of club members (not thousands). Spanish-language UI throughout.
 
 ## Launch Target
 Internal demo / soft launch with real club members. Not a public production launch.
+
+---
+*Last updated: 2026-03-11 after milestone v2.0 initialization*
