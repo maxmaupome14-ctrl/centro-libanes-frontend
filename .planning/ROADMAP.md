@@ -1,10 +1,10 @@
-# Centro Libanés — Roadmap
+# Centro Libanes -- Roadmap
 
 ---
 
 ## Milestone 1: Demo-Ready Soft Launch (COMPLETE)
 
-Phases 1–7 delivered a working demo app wired to real backend data, deployed on Vercel + Railway.
+Phases 1-7 delivered a working demo app wired to real backend data, deployed on Vercel + Railway.
 
 | Phase | Name | Status |
 |-------|------|--------|
@@ -26,10 +26,10 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 ## Phases
 
-- [ ] **Phase 8: Foundation** — Theme system, auth flow fix, platform detection infrastructure, touch audit
-- [ ] **Phase 9: Identity** — Welcome animation, QR credential card, multi-profile switching
-- [ ] **Phase 10: Booking UX** — Time strip, court cards, staff picker, favorites
-- [ ] **Phase 11: Platform Chrome + Hospitality** — Platform-adaptive navigation, anniversary + greeting notifications
+- [ ] **Phase 8: Foundation** -- Theme system, auth flow fix, platform detection infrastructure, touch audit
+- [ ] **Phase 9: Identity** -- Welcome animation, QR credential card, multi-profile switching
+- [ ] **Phase 10: Booking UX** -- Time strip, court cards, staff picker, favorites
+- [ ] **Phase 11: Platform Chrome + Hospitality** -- Platform-adaptive navigation, anniversary + greeting notifications
 
 ---
 
@@ -37,7 +37,7 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 ### Phase 8: Foundation
 
-**Goal:** The app has a working three-way theme system with no FOUC, a correct auth flow order, synchronous platform detection, and all existing touch bugs patched — providing the infrastructure every subsequent phase depends on.
+**Goal:** The app has a working three-way theme system with no FOUC, a correct auth flow order, synchronous platform detection, and all existing touch bugs patched -- providing the infrastructure every subsequent phase depends on.
 
 **Depends on:** Phase 7 (M1 complete)
 
@@ -45,12 +45,17 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 **Success Criteria** (what must be TRUE when this phase is complete):
   1. User can toggle between light, dark, and auto theme from the profile page; the selected mode persists after closing and reopening the app
-  2. On cold page load, the user sees the correct theme immediately — no flash of the wrong palette for any preference (light, dark, or auto)
+  2. On cold page load, the user sees the correct theme immediately -- no flash of the wrong palette for any preference (light, dark, or auto)
   3. Both light and dark palettes pass WCAG AA contrast ratio (4.5:1) for all body text
-  4. Auth login follows the correct order: member number field → password field → profile selection screen (family chooser appears only after password validates)
+  4. Auth login follows the correct order: member number field -> password field -> profile selection screen (family chooser appears only after password validates)
   5. Platform (iOS / Android / web) is detected once at app start with no render flash; web defaults to iOS style
 
-**Plans:** TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 08-01-PLAN.md -- CSS foundation: FOUC script, dual-theme token blocks, light palette, body transition
+- [ ] 08-02-PLAN.md -- Theme and platform stores, hooks, AppProviders, ThemeToggle wired into App + Profile
+- [ ] 08-03-PLAN.md -- Auth flow reorder (password before profiles) + touchAction audit on all motion.button
 
 ---
 
@@ -63,7 +68,7 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 **Requirements:** AUTH-02, AUTH-03, AUTH-04, AUTH-05, PROF-01, PROF-02, PROF-03, PROF-04, QR-01, QR-02, QR-03, QR-04, QR-05, QR-06
 
 **Success Criteria** (what must be TRUE when this phase is complete):
-  1. On first login of a session, user sees a 2-second brand entrance animation (logo fade → "Bienvenido, [Name]" → credential card slide-up → home); on subsequent in-session navigation the animation does not replay
+  1. On first login of a session, user sees a 2-second brand entrance animation (logo fade -> "Bienvenido, [Name]" -> credential card slide-up -> home); on subsequent in-session navigation the animation does not replay
   2. User with `prefers-reduced-motion` enabled sees a static welcome screen instead of the animation
   3. From the home dashboard, user can tap the credential card to reveal a full-screen view showing their photo/initials, member number, and a scannable QR code; the QR background is white to ensure readability
   4. In dark mode, the credential card displays an animated gold shimmer border
@@ -75,7 +80,7 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 ### Phase 10: Booking UX
 
-**Goal:** Members browse courts as visual cards, select time slots via a horizontal snap-scroll strip, choose a preferred staff member, save favorite courts, and confirm bookings in a bottom sheet — matching the PlayTomic-style experience.
+**Goal:** Members browse courts as visual cards, select time slots via a horizontal snap-scroll strip, choose a preferred staff member, save favorite courts, and confirm bookings in a bottom sheet -- matching the PlayTomic-style experience.
 
 **Depends on:** Phase 8
 
@@ -103,9 +108,9 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 **Success Criteria** (what must be TRUE when this phase is complete):
   1. On an iOS device (or web, which defaults to iOS), the app shows a translucent blur bottom tab bar, large collapsing title headers, and subtle highlight tap feedback on interactive elements
   2. On an Android device, the app shows a Material Design 3 top app bar, a bottom navigation bar with always-visible labels, and a ripple effect on interactive elements
-  3. On any login, the greeting reflects the current time ("Buenos días", "Buenas tardes", "Buenas noches") followed by the user's first name
+  3. On any login, the greeting reflects the current time ("Buenos dias", "Buenas tardes", "Buenas noches") followed by the user's first name
   4. On a member's birthday, login shows a birthday greeting with a confetti animation
-  5. On a member's club anniversary, an in-app card notification acknowledges the milestone (e.g., "1 año como socio")
+  5. On a member's club anniversary, an in-app card notification acknowledges the milestone (e.g., "1 ano como socio")
 
 **Plans:** TBD
 
@@ -115,10 +120,10 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 8. Foundation | 0/? | Not started | — |
-| 9. Identity | 0/? | Not started | — |
-| 10. Booking UX | 0/? | Not started | — |
-| 11. Platform Chrome + Hospitality | 0/? | Not started | — |
+| 8. Foundation | 0/3 | Planning complete | -- |
+| 9. Identity | 0/? | Not started | -- |
+| 10. Booking UX | 0/? | Not started | -- |
+| 11. Platform Chrome + Hospitality | 0/? | Not started | -- |
 
 ---
 
@@ -133,7 +138,7 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 | THEME-05 | 8 | Smooth 200ms theme transitions |
 | THEME-06 | 8 | FOUC blocking script in index.html |
 | THEME-07 | 8 | WCAG AA contrast in both modes |
-| AUTH-01 | 8 | Login order fix: number → password → profiles |
+| AUTH-01 | 8 | Login order fix: number -> password -> profiles |
 | PLAT-01 | 8 | Platform detection via Capacitor + UA |
 | PLAT-02 | 8 | Synchronous platform detection (no flash) |
 | PLAT-06 | 8 | Web defaults to iOS style |
@@ -151,7 +156,7 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 | QR-03 | 9 | QR encodes member ID for club entrance scan |
 | QR-04 | 9 | Animated gold shimmer border in dark mode |
 | QR-05 | 9 | UI dims/brightens for QR readability |
-| QR-06 | 9 | "Añadir a Wallet" placeholder with coming-soon toast |
+| QR-06 | 9 | "Anadir a Wallet" placeholder with coming-soon toast |
 | BOOK-01 | 10 | Court cards with availability color overlay |
 | BOOK-02 | 10 | Horizontal scroll-snap time strip |
 | BOOK-03 | 10 | Time slots show time, price, availability |
@@ -173,4 +178,4 @@ Phases 1–7 delivered a working demo app wired to real backend data, deployed o
 
 ---
 
-*Last updated: 2026-03-11 — Milestone v2.0 phases 8–11 added*
+*Last updated: 2026-03-11 -- Phase 8 plans created (3 plans, 2 waves)*
