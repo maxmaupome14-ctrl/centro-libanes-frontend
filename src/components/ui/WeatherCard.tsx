@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Sun, Cloud, CloudRain, CloudSnow, CloudLightning, Wind, X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { api } from '../../services/api';
 
 interface WeatherData {
     temp: number;
@@ -64,10 +65,9 @@ export const WeatherCard = () => {
             }
         } catch { /* ignore */ }
 
-        // OpenWeatherMap free tier — no API key needed for basic
-        // Using wttr.in as free no-key alternative
-        fetch(`https://wttr.in/${LAT},${LON}?format=j1`)
-            .then(r => r.json())
+        // Fetch via backend proxy to avoid CORS on Vercel
+        api.get('/weather')
+            .then(r => r.data)
             .then(data => {
                 const current = data.current_condition?.[0];
                 if (!current) return;
