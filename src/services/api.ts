@@ -4,9 +4,25 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const api = axios.create({
     baseURL: API_URL,
+    timeout: 20000,
     headers: {
         'Content-Type': 'application/json',
     },
+});
+
+// Retry once on timeout/network error (Railway cold starts take ~15s)
+api.interceptors.response.use(undefined, async (error) => {
+    const config = error.config;
+    if (
+        config &&
+        !config._retried &&
+        (!error.response || error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK')
+    ) {
+        config._retried = true;
+        config.timeout = 25000;
+        return api.request(config);
+    }
+    return Promise.reject(error);
 });
 
 api.interceptors.request.use((config) => {

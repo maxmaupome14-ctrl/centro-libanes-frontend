@@ -11,6 +11,9 @@ import { useAuthStore } from './store/authStore';
 import { ToastProvider } from './components/ui/Toast';
 import { AppProviders } from './components/providers/AppProviders';
 
+// Wake up Railway backend on app load (cold start takes ~15s)
+fetch((import.meta.env.VITE_API_URL || 'http://localhost:3000/api') + '/weather').catch(() => {});
+
 // Lazy-loaded views (not on primary nav)
 const EmployeeDashboard = lazy(() => import('./views/EmployeeDashboard').then(m => ({ default: m.EmployeeDashboard })));
 const LockerView = lazy(() => import('./views/LockerView').then(m => ({ default: m.LockerView })));

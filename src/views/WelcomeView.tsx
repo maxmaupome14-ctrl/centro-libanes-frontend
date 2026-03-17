@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ANIM_DURATION = 1900;
+const ANIM_DURATION = 3800;
 
 function getTimeGreeting(): string {
     const h = new Date().getHours();
@@ -90,11 +90,11 @@ export const WelcomeView = () => {
             return () => clearTimeout(t);
         }
 
-        const t1 = setTimeout(() => setPhase('greeting'), 600);
-        const t2 = setTimeout(() => setPhase('card'), 1400);
+        const t1 = setTimeout(() => setPhase('greeting'), 800);
+        const t2 = setTimeout(() => setPhase('card'), 2200);
         const t3 = setTimeout(() => {
             setPhase('exit');
-            setTimeout(() => navigate('/', { replace: true }), 200);
+            setTimeout(() => navigate('/', { replace: true }), 400);
         }, ANIM_DURATION);
 
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
