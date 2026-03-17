@@ -430,9 +430,8 @@ export const PaymentView = () => {
             {/* Sticky Pay Button (only on statement view when there's pending balance) */}
             {view === 'statement' && hasPending && (
                 <div style={{
-                    position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
+                    position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)',
                     width: '100%', maxWidth: 430, padding: '12px 16px',
-                    paddingBottom: 'calc(12px + env(safe-area-inset-bottom))',
                     background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)',
                     zIndex: 40,
                 }}>
