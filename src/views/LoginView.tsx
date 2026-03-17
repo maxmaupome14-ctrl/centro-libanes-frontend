@@ -34,11 +34,17 @@ export const LoginView = () => {
         setIsLoading(true);
         try {
             const res = await api.post('/auth/select-profile', { member_number: memberNum });
-            setProfiles(res.data.profiles);
-            if (res.data.profiles.length === 1) {
-                setSelectedProfile(res.data.profiles[0]);
+            const roleOrder: Record<string, number> = { titular: 0, conyugue: 1, conyuge: 1, hijo: 2 };
+            const profs = (res.data.profiles as any[]).sort((a, b) =>
+                (roleOrder[a.role?.toLowerCase()] ?? 9) - (roleOrder[b.role?.toLowerCase()] ?? 9)
+            );
+            setProfiles(profs);
+            if (profs.length === 1) {
+                setSelectedProfile(profs[0]);
+                setStep('pin');
+            } else {
+                setStep('perfil');
             }
-            setStep('pin');
         } catch (err: any) {
             setError(err.response?.data?.error || 'Error buscando socio');
         } finally {
@@ -287,7 +293,7 @@ export const LoginView = () => {
                         </div>
 
                         <button style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', fontSize: '0.875rem', color: 'var(--color-text-tertiary)', marginTop: '2rem', width: '100%', transition: 'color 0.2s', background: 'none', border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}
-                            onClick={() => { setStep('pin'); setError(''); }}>
+                            onClick={() => { setStep('membresia'); setError(''); setSelectedProfile(null); }}>
                             <ChevronLeft size={16} /> Regresar
                         </button>
                     </motion.div>
@@ -353,7 +359,13 @@ export const LoginView = () => {
                             </>
                         )}
 
-                        <button style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', fontSize: '0.875rem', color: 'var(--color-text-tertiary)', marginTop: '2rem', width: '100%', transition: 'color 0.2s', background: 'none', border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}
+                        {profiles.length > 1 && (
+                            <button style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', fontSize: '0.875rem', color: 'var(--color-text-tertiary)', marginTop: '1.5rem', width: '100%', transition: 'color 0.2s', background: 'none', border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}
+                                onClick={() => { setStep('perfil'); setPin(''); setPassword(''); setError(''); setSelectedProfile(null); }}>
+                                <ChevronLeft size={16} /> Cambiar perfil
+                            </button>
+                        )}
+                        <button style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', fontSize: '0.875rem', color: 'var(--color-text-tertiary)', marginTop: profiles.length > 1 ? '0.5rem' : '2rem', width: '100%', transition: 'color 0.2s', background: 'none', border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}
                             onClick={() => { setStep('membresia'); setPin(''); setPassword(''); setError(''); setProfiles([]); setSelectedProfile(null); }}>
                             <ChevronLeft size={16} /> Cambiar membresía
                         </button>
