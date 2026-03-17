@@ -267,35 +267,11 @@ export const LoginView = () => {
                                     whileTap={{ scale: 0.98 }}
                                     style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: '1rem', border: '1px solid var(--color-border)', transition: 'all 0.2s', textAlign: 'left', background: 'var(--color-surface)', cursor: 'pointer', touchAction: 'manipulation' }}
                                     onClick={() => {
-                                        const profile = p;
-                                        setSelectedProfile(profile);
+                                        setSelectedProfile(p);
                                         setError('');
-                                        setIsLoading(true);
-                                        const payload = {
-                                            profile_id: profile.id,
-                                            pin: profile.is_minor ? pin : undefined,
-                                            password: profile.is_minor ? undefined : password,
-                                        };
-                                        api.post('/auth/login', payload)
-                                            .then(res => {
-                                                const userData = {
-                                                    id: res.data.user?.id || profile.id,
-                                                    membership_id: res.data.user?.membership_id || '',
-                                                    member_number: String(res.data.user?.member_number || memberNum),
-                                                    role: res.data.user?.role || profile.role,
-                                                    first_name: res.data.user?.first_name || profile.first_name,
-                                                    last_name: res.data.user?.last_name || profile.last_name,
-                                                    user_type: 'member' as const,
-                                                    photo_url: res.data.user?.photo_url || profile.photo_url,
-                                                };
-                                                login(userData, res.data.token);
-                                                setFamilyContext(profiles, { password: password || undefined, pin: pin || undefined });
-                                                navigate('/welcome');
-                                            })
-                                            .catch((err: any) => {
-                                                setError(err.response?.data?.error || 'Error al ingresar');
-                                            })
-                                            .finally(() => setIsLoading(false));
+                                        setPin('');
+                                        setPassword('');
+                                        setStep('pin');
                                     }}
                                 >
                                     <div style={{ width: '3rem', height: '3rem', borderRadius: '9999px', background: 'var(--color-surface-hover)', border: '1px solid var(--color-border-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', fontWeight: 700, color: 'var(--color-gold)', flexShrink: 0 }}>
