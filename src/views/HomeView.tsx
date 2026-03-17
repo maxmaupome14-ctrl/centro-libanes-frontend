@@ -122,7 +122,7 @@ export const HomeView = () => {
         if (!cancelTarget) return;
         setIsCancelling(true);
         try {
-            const res = await api.post(`/reservations/${cancelTarget.id}/cancel`);
+            const res = await api.post(`/reservations/${cancelTarget.id}/cancel`, { reason: 'Cancelada por el usuario' });
             setReservations(prev => prev.filter(r => r.id !== cancelTarget.id));
             showToast(res.data.message || 'Reservación cancelada', 'success');
             setCancelTarget(null);
