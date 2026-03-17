@@ -552,10 +552,24 @@ export const HomeView = () => {
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {reservations.map(resv => {
-                            const dateStr = resv.date
-                                ? new Date(resv.date + 'T12:00:00').toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' })
-                                : '';
-                            const timeStr = resv.start_time ? `${resv.start_time}${resv.end_time ? '–' + resv.end_time : ''}` : '';
+                            // Handle both "YYYY-MM-DD" and full ISO datetime for date
+                            let dateStr = '';
+                            if (resv.date) {
+                                const d = new Date(resv.date.length <= 10 ? resv.date + 'T12:00:00' : resv.date);
+                                if (!isNaN(d.getTime())) {
+                                    dateStr = d.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' });
+                                }
+                            }
+                            // Handle both "HH:MM" and full ISO datetime for times
+                            const fmtTime = (t: string) => {
+                                if (!t) return '';
+                                if (t.length <= 5) return t; // already "HH:MM"
+                                const d = new Date(t);
+                                return isNaN(d.getTime()) ? t : d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
+                            };
+                            const startFmt = fmtTime(resv.start_time);
+                            const endFmt = fmtTime(resv.end_time);
+                            const timeStr = startFmt ? `${startFmt}${endFmt ? '–' + endFmt : ''}` : '';
                             const statusMap: Record<string, { label: string; bg: string; color: string }> = {
                                 confirmada: { label: 'Confirmada', bg: 'rgba(0,90,54,0.1)', color: 'var(--color-green-cedar-light)' },
                                 pendiente: { label: 'Pendiente', bg: 'rgba(201,168,76,0.1)', color: 'var(--color-gold)' },

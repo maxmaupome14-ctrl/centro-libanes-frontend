@@ -69,26 +69,6 @@ export const PaymentView = () => {
         }
     };
 
-    if (loading) {
-        return (
-            <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="animate-spin" style={{ width: 32, height: 32, borderRadius: 9999, border: '3px solid var(--color-border)', borderTopColor: 'var(--color-gold)' }} />
-            </div>
-        );
-    }
-
-    if (!statement) {
-        return (
-            <div style={{ minHeight: '100vh', background: 'var(--color-bg)', padding: 20, textAlign: 'center', color: 'var(--color-text-tertiary)', paddingTop: 80 }}>
-                No se encontró estado de cuenta
-            </div>
-        );
-    }
-
-    const allPayments = Object.values(statement.payments || {}).flat() as any[];
-    const sortedPayments = allPayments
-        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
     const CATEGORY_MAP: Record<string, string[]> = {
         todos: [],
         mantenimiento: ['mantenimiento'],
@@ -97,8 +77,14 @@ export const PaymentView = () => {
         otros: ['enrollment', 'pase_invitado'],
     };
 
+    // useMemo MUST be called before early returns to satisfy React hooks rules
     const filteredPayments = useMemo(() => {
-        let filtered = sortedPayments;
+        if (!statement) return [];
+        const allPayments = Object.values(statement.payments || {}).flat() as any[];
+        const sorted = allPayments
+            .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        let filtered = sorted;
 
         // Category filter
         if (categoryFilter !== 'todos') {
@@ -127,7 +113,25 @@ export const PaymentView = () => {
         }
 
         return filtered;
-    }, [sortedPayments, categoryFilter, dateRangeFilter]);
+    }, [statement, categoryFilter, dateRangeFilter]);
+
+    const totalPaymentCount = statement ? Object.values(statement.payments || {}).flat().length : 0;
+
+    if (loading) {
+        return (
+            <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="animate-spin" style={{ width: 32, height: 32, borderRadius: 9999, border: '3px solid var(--color-border)', borderTopColor: 'var(--color-gold)' }} />
+            </div>
+        );
+    }
+
+    if (!statement) {
+        return (
+            <div style={{ minHeight: '100vh', background: 'var(--color-bg)', padding: 20, textAlign: 'center', color: 'var(--color-text-tertiary)', paddingTop: 80 }}>
+                No se encontró estado de cuenta
+            </div>
+        );
+    }
 
     const pendingMaintenance = (statement.maintenance || []).filter((b: any) => ['pendiente', 'vencido'].includes(b.status));
     const hasPending = statement.totals?.total_due > 0;
@@ -366,7 +370,7 @@ export const PaymentView = () => {
                                     <div className="card" style={{ padding: '32px 16px', textAlign: 'center' }}>
                                         <Clock size={24} style={{ color: 'var(--color-text-tertiary)', margin: '0 auto 8px' }} />
                                         <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)' }}>
-                                            {sortedPayments.length === 0 ? 'Sin pagos registrados' : 'Sin resultados para estos filtros'}
+                                            {totalPaymentCount === 0 ? 'Sin pagos registrados' : 'Sin resultados para estos filtros'}
                                         </p>
                                     </div>
                                 ) : (
