@@ -59,8 +59,8 @@ export const HomeView = () => {
     useEffect(() => {
         const fetchReservations = async () => {
             try {
-                const res = await api.get('/reservations/user');
-                setReservations(res.data);
+                const res = await api.get('/reservations/user', { timeout: 8000 });
+                setReservations(Array.isArray(res.data) ? res.data : []);
             } catch { /* empty */ }
             finally { setLoadingRes(false); }
         };
@@ -105,6 +105,13 @@ export const HomeView = () => {
             fetchCMS();
         }
         fetchEvents();
+
+        // Safety net: ensure loading states resolve even if API hangs
+        const safetyTimeout = setTimeout(() => {
+            setLoadingRes(false);
+            setLoadingEvents(false);
+        }, 10000);
+        return () => clearTimeout(safetyTimeout);
     }, [user]);
 
     if (!user) return null;
@@ -531,14 +538,16 @@ export const HomeView = () => {
                         <span style={{ fontSize: 14, color: 'var(--color-text-tertiary)' }}>Cargando...</span>
                     </div>
                 ) : reservations.length === 0 ? (
-                    <div className="card" style={{ padding: '32px 24px', textAlign: 'center' }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(201,168,76,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                            <CalendarDays size={22} style={{ color: 'var(--color-text-tertiary)' }} strokeWidth={1.6} />
+                    <div className="card" style={{ padding: '28px 24px', display: 'flex', alignItems: 'center', gap: 14 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(201,168,76,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <CalendarDays size={20} style={{ color: 'var(--color-text-tertiary)', opacity: 0.7 }} strokeWidth={1.6} />
                         </div>
-                        <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text-secondary)' }}>No tienes reservas próximas</p>
-                        <button onClick={() => navigate('/reservations')} style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-gold)', marginTop: 10, display: 'inline-block', cursor: 'pointer', touchAction: 'manipulation' }}>
-                            Agendar ahora →
-                        </button>
+                        <div style={{ flex: 1 }}>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-secondary)' }}>Sin reservas proximas</p>
+                            <button onClick={() => navigate('/reservations')} style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-gold)', marginTop: 4, display: 'inline-block', cursor: 'pointer', touchAction: 'manipulation', background: 'none', border: 'none', padding: 0 }}>
+                                Agendar ahora →
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -36,9 +36,6 @@ function getSuggestion(temp: number, iconCode: string) {
     return SUGGESTIONS.cloudy;
 }
 
-// Mexico City (CDMX) coordinates — Centro Libanés location
-const LAT = 19.4326;
-const LON = -99.1332;
 const CACHE_KEY = 'cl-weather-cache';
 const CACHE_TTL = 30 * 60 * 1000; // 30 min
 
