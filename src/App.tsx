@@ -11,8 +11,10 @@ import { useAuthStore } from './store/authStore';
 import { ToastProvider } from './components/ui/Toast';
 import { AppProviders } from './components/providers/AppProviders';
 
-// Wake up Railway backend on app load (cold start takes ~15s)
-fetch((import.meta.env.VITE_API_URL || 'http://localhost:3000/api') + '/weather').catch(() => {});
+// Keep Railway backend alive — ping on load + every 4 min while app is open
+const BACKEND_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '');
+fetch(BACKEND_BASE + '/health').catch(() => {});
+setInterval(() => fetch(BACKEND_BASE + '/health').catch(() => {}), 4 * 60 * 1000);
 
 // Lazy-loaded views (not on primary nav)
 const EmployeeDashboard = lazy(() => import('./views/EmployeeDashboard').then(m => ({ default: m.EmployeeDashboard })));

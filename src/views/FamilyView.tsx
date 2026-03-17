@@ -103,7 +103,7 @@ export const FamilyView = () => {
             <div style={{ position: 'relative', zIndex: 20, padding: '0 16px', marginTop: -32, display: 'flex', flexDirection: 'column', gap: 24 }}>
 
                 {/* Tab Pills (iOS HIG Segmented Control) */}
-                <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: 'rgba(0,0,0,0.25)' }}>
+                <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: '#1a3d2e' }}>
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
@@ -112,7 +112,7 @@ export const FamilyView = () => {
                                 position: 'relative', flex: 1, padding: '7px 0', minHeight: 32,
                                 fontSize: 13, fontWeight: 500, borderRadius: 7, border: 'none',
                                 cursor: 'pointer', outline: 'none', transition: 'all 200ms',
-                                color: activeTab === tab.key ? 'var(--color-text-primary)' : 'rgba(255,255,255,0.85)',
+                                color: activeTab === tab.key ? 'var(--color-text-primary)' : 'rgba(255,255,255,0.8)',
                                 background: activeTab === tab.key ? 'var(--color-surface)' : 'transparent',
                                 boxShadow: activeTab === tab.key ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)' : 'none',
                             }}
