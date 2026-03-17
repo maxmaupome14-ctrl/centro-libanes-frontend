@@ -446,7 +446,7 @@ export const HomeView = () => {
                             <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 3 }}>
                                 {maintenance.status === 'pendiente'
                                     ? `Debes $${maintenance.amount.toLocaleString('es-MX')} MXN`
-                                    : `Próximo: ${maintenance.nextDue ? new Date(maintenance.nextDue + 'T12:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }) : '—'}`
+                                    : `Próximo: ${maintenance.nextDue ? new Date(maintenance.nextDue).toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }) : '—'}`
                                 }
                             </p>
                         </div>
