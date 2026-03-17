@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import {
     ArrowLeft, CreditCard, Apple, CheckCircle2, Wallet, Clock,
-    ChevronRight, Lock, Dumbbell, Receipt, AlertCircle, Shield
+    Lock, Dumbbell, Receipt, AlertCircle, Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../components/ui/Toast';
@@ -196,7 +196,7 @@ export const PaymentView = () => {
                                 <motion.div {...f(0.1)}>
                                     <p className="section-header" style={{ marginBottom: 12 }}>Servicios Activos</p>
                                     <div className="card" style={{ overflow: 'hidden' }}>
-                                        {(statement.lockers || []).filter((l: any) => l.status === 'activa').map((locker: any, idx: number) => (
+                                        {(statement.lockers || []).filter((l: any) => l.status === 'activa').map((locker: any) => (
                                             <div key={locker.id} style={{
                                                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                                 padding: '14px 16px',

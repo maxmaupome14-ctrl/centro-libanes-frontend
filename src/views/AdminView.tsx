@@ -407,7 +407,6 @@ const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefre
 
 // ── Staff Tab ──────────────────────────────────────────────
 const StaffTab = () => {
-    const { showToast } = useToast();
     const [staff, setStaff] = useState<any[]>([]);
     const [units, setUnits] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -422,13 +421,6 @@ const StaffTab = () => {
         finally { setLoading(false); }
     };
     useEffect(() => { fetchStaff(); }, []);
-
-    const toggleActive = async (s: any) => {
-        try {
-            await api.patch(`/admin/staff/${s.id}`, { is_active: !s.is_active });
-            fetchStaff();
-        } catch (err: any) { showToast(err.response?.data?.error || err.message); }
-    };
 
     const filtered = staff.filter(s => s.name.toLowerCase().includes(query.toLowerCase()) || s.role.toLowerCase().includes(query.toLowerCase()));
 
