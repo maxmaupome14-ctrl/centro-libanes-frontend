@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import {
     ArrowLeft, CreditCard, Apple, CheckCircle2, Wallet, Clock,
-    Lock, Dumbbell, Receipt, AlertCircle, Shield
+    Lock, Dumbbell, Receipt, AlertCircle, Shield, Filter, CalendarDays
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../components/ui/Toast';
@@ -33,6 +33,8 @@ export const PaymentView = () => {
     const [view, setView] = useState<'statement' | 'checkout' | 'processing' | 'success'>('statement');
     const [selectedMethod, setSelectedMethod] = useState<'card' | 'apple_pay'>('card');
     const [paymentId, setPaymentId] = useState<string | null>(null);
+    const [categoryFilter, setCategoryFilter] = useState<string>('todos');
+    const [dateRangeFilter, setDateRangeFilter] = useState<string>('todos');
 
     useEffect(() => {
         const fetchStatement = async () => {
@@ -84,9 +86,48 @@ export const PaymentView = () => {
     }
 
     const allPayments = Object.values(statement.payments || {}).flat() as any[];
-    const recentPayments = allPayments
-        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 10);
+    const sortedPayments = allPayments
+        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const CATEGORY_MAP: Record<string, string[]> = {
+        todos: [],
+        mantenimiento: ['mantenimiento'],
+        reservaciones: ['reserva'],
+        lockers: ['locker'],
+        otros: ['enrollment', 'pase_invitado'],
+    };
+
+    const filteredPayments = useMemo(() => {
+        let filtered = sortedPayments;
+
+        // Category filter
+        if (categoryFilter !== 'todos') {
+            const allowedTypes = CATEGORY_MAP[categoryFilter] || [];
+            filtered = filtered.filter((p: any) => allowedTypes.includes(p.type));
+        }
+
+        // Date range filter
+        if (dateRangeFilter !== 'todos') {
+            const now = new Date();
+            let cutoff: Date;
+            switch (dateRangeFilter) {
+                case 'este_mes':
+                    cutoff = new Date(now.getFullYear(), now.getMonth(), 1);
+                    break;
+                case 'ultimos_3':
+                    cutoff = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+                    break;
+                case 'este_ano':
+                    cutoff = new Date(now.getFullYear(), 0, 1);
+                    break;
+                default:
+                    cutoff = new Date(0);
+            }
+            filtered = filtered.filter((p: any) => new Date(p.date) >= cutoff);
+        }
+
+        return filtered;
+    }, [sortedPayments, categoryFilter, dateRangeFilter]);
 
     const pendingMaintenance = (statement.maintenance || []).filter((b: any) => ['pendiente', 'vencido'].includes(b.status));
     const hasPending = statement.totals?.total_due > 0;
@@ -238,21 +279,105 @@ export const PaymentView = () => {
 
                             {/* Payment History */}
                             <motion.div {...f(0.15)}>
-                                <p className="section-header" style={{ marginBottom: 12 }}>Historial de Pagos</p>
-                                {recentPayments.length === 0 ? (
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                                    <p className="section-header" style={{ marginBottom: 0 }}>Historial de Pagos</p>
+                                    <span style={{
+                                        fontSize: 11, fontWeight: 600, color: 'var(--color-text-tertiary)',
+                                        background: 'var(--color-surface-hover)', padding: '3px 8px', borderRadius: 8,
+                                    }}>
+                                        {filteredPayments.length} {filteredPayments.length === 1 ? 'resultado' : 'resultados'}
+                                    </span>
+                                </div>
+
+                                {/* Category Filter Chips */}
+                                <div style={{ display: 'flex', gap: 8, marginBottom: 12, overflowX: 'auto', paddingBottom: 4 }} className="scrollbar-none">
+                                    <Filter size={14} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: 6 }} />
+                                    {([
+                                        { key: 'todos', label: 'Todos' },
+                                        { key: 'mantenimiento', label: 'Mantenimiento' },
+                                        { key: 'reservaciones', label: 'Reservaciones' },
+                                        { key: 'lockers', label: 'Lockers' },
+                                        { key: 'otros', label: 'Otros' },
+                                    ] as const).map(chip => {
+                                        const active = categoryFilter === chip.key;
+                                        return (
+                                            <motion.button
+                                                key={chip.key}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={() => setCategoryFilter(chip.key)}
+                                                style={{
+                                                    padding: '6px 14px',
+                                                    borderRadius: 20,
+                                                    fontSize: 11,
+                                                    fontWeight: 600,
+                                                    whiteSpace: 'nowrap',
+                                                    border: active ? '1px solid var(--color-gold)' : '1px solid var(--color-border)',
+                                                    background: active ? 'rgba(201,168,76,0.12)' : 'var(--color-surface)',
+                                                    color: active ? '#C9A84C' : 'var(--color-text-tertiary)',
+                                                    cursor: 'pointer',
+                                                    touchAction: 'manipulation',
+                                                    transition: 'all 0.15s ease',
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                {chip.label}
+                                            </motion.button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Date Range Filter Chips */}
+                                <div style={{ display: 'flex', gap: 8, marginBottom: 16, overflowX: 'auto', paddingBottom: 4 }} className="scrollbar-none">
+                                    <CalendarDays size={14} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: 6 }} />
+                                    {([
+                                        { key: 'este_mes', label: 'Este mes' },
+                                        { key: 'ultimos_3', label: 'Últimos 3 meses' },
+                                        { key: 'este_ano', label: 'Este año' },
+                                        { key: 'todos', label: 'Todos' },
+                                    ] as const).map(chip => {
+                                        const active = dateRangeFilter === chip.key;
+                                        return (
+                                            <motion.button
+                                                key={chip.key}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={() => setDateRangeFilter(chip.key)}
+                                                style={{
+                                                    padding: '6px 14px',
+                                                    borderRadius: 20,
+                                                    fontSize: 11,
+                                                    fontWeight: 600,
+                                                    whiteSpace: 'nowrap',
+                                                    border: active ? '1px solid var(--color-gold)' : '1px solid var(--color-border)',
+                                                    background: active ? 'rgba(201,168,76,0.12)' : 'var(--color-surface)',
+                                                    color: active ? '#C9A84C' : 'var(--color-text-tertiary)',
+                                                    cursor: 'pointer',
+                                                    touchAction: 'manipulation',
+                                                    transition: 'all 0.15s ease',
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                {chip.label}
+                                            </motion.button>
+                                        );
+                                    })}
+                                </div>
+
+                                {filteredPayments.length === 0 ? (
                                     <div className="card" style={{ padding: '32px 16px', textAlign: 'center' }}>
                                         <Clock size={24} style={{ color: 'var(--color-text-tertiary)', margin: '0 auto 8px' }} />
-                                        <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)' }}>Sin pagos registrados</p>
+                                        <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)' }}>
+                                            {sortedPayments.length === 0 ? 'Sin pagos registrados' : 'Sin resultados para estos filtros'}
+                                        </p>
                                     </div>
                                 ) : (
                                     <div className="card" style={{ overflow: 'hidden' }}>
-                                        {recentPayments.map((p: any, idx: number) => {
+                                        {filteredPayments.map((p: any, idx: number) => {
                                             const st = STATUS_COLORS[p.status] || STATUS_COLORS.pendiente;
                                             return (
                                                 <div key={p.id} style={{
                                                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                                     padding: '12px 16px',
-                                                    borderBottom: idx < recentPayments.length - 1 ? '1px solid var(--color-border)' : 'none',
+                                                    borderBottom: idx < filteredPayments.length - 1 ? '1px solid var(--color-border)' : 'none',
                                                 }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                                         <div style={{

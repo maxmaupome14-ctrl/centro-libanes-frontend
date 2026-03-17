@@ -20,6 +20,7 @@ const TABS = [
     { id: 'agenda', label: 'Agenda Staff', icon: CalendarDays },
     { id: 'lockers', label: 'Control Lockers', icon: Lock },
     { id: 'finanzas', label: 'Finanzas', icon: Wallet },
+    { id: 'comisiones', label: 'Comisiones', icon: DollarSign },
     { id: 'contenido', label: 'Contenido', icon: FileText },
     { id: 'recepcion', label: 'Recepción', icon: QrCode },
     { id: 'catalogo', label: 'Catálogo', icon: Briefcase },
@@ -1494,6 +1495,195 @@ const DashboardTab = () => {
     );
 };
 
+// ── Comisiones Tab ──────────────────────────────────────────────
+const ComisionesTab = () => {
+    const { showToast } = useToast();
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [generating, setGenerating] = useState(false);
+    const [expandedStaff, setExpandedStaff] = useState<string | null>(null);
+
+    const fetchCommissions = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get('/admin/commissions');
+            setData(res.data);
+        } catch { setData(null); }
+        finally { setLoading(false); }
+    };
+
+    useEffect(() => { fetchCommissions(); }, []);
+
+    const handleGenerate = async () => {
+        setGenerating(true);
+        try {
+            const res = await api.post('/admin/commissions/generate');
+            showToast(res.data.message || 'Liquidaciones generadas');
+            fetchCommissions();
+        } catch (err: any) {
+            showToast(err.response?.data?.error || 'Error al generar liquidaciones');
+        } finally { setGenerating(false); }
+    };
+
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando comisiones...</div>;
+    if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171', fontSize: 14 }}>Error al cargar comisiones</div>;
+
+    const statusColor = (status: string) => {
+        if (status === 'pagado') return { bg: 'rgba(52,211,153,0.1)', color: '#34D399', border: 'rgba(52,211,153,0.3)' };
+        return { bg: 'rgba(245,158,11,0.1)', color: '#F59E0B', border: 'rgba(245,158,11,0.3)' };
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Comisiones</h2>
+                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Gestión de comisiones y liquidaciones del personal independiente</p>
+                </div>
+                <button onClick={handleGenerate} disabled={generating}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        padding: '10px 20px', borderRadius: 12, border: 'none', fontSize: 13, fontWeight: 600,
+                        background: generating ? '#1E293B' : 'var(--color-gold)', color: generating ? '#64748B' : '#0F1419',
+                        cursor: generating ? 'not-allowed' : 'pointer', touchAction: 'manipulation', transition: 'all 200ms',
+                    }}>
+                    {generating ? <Loader2 size={16} className="animate-spin" /> : <DollarSign size={16} />}
+                    {generating ? 'Generando...' : 'Generar Liquidaciones'}
+                </button>
+            </div>
+
+            {/* Summary Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201,168,76,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <TrendingUp size={18} style={{ color: 'var(--color-gold)' }} />
+                        </div>
+                        <p style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Total Bruto del Mes</p>
+                    </div>
+                    <p style={{ fontSize: 32, fontWeight: 700, color: 'white', letterSpacing: -1 }}>${data.totals.gross.toLocaleString('es-MX')}</p>
+                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 6 }}>Período: {data.period}</p>
+                </div>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201,168,76,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <DollarSign size={18} style={{ color: 'var(--color-gold)' }} />
+                        </div>
+                        <p style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Comisión del Club</p>
+                    </div>
+                    <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-gold)', letterSpacing: -1 }}>${data.totals.club_cut.toLocaleString('es-MX')}</p>
+                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 6 }}>{data.staff?.length || 0} proveedores activos</p>
+                </div>
+            </div>
+
+            {/* Staff List */}
+            {!data.staff?.length ? (
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 48, textAlign: 'center' }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(100,116,139,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                        <Users size={22} style={{ color: '#64748B' }} />
+                    </div>
+                    <p style={{ color: '#94A3B8' }}>Sin proveedores independientes</p>
+                    <p style={{ color: '#475569', fontSize: 12, marginTop: 4 }}>Registra personal con tipo "independiente" para ver comisiones</p>
+                </div>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {data.staff.map((s: any) => {
+                        const isExpanded = expandedStaff === s.id;
+                        const rateLabel = s.fixed_rent > 0
+                            ? `Renta fija: $${s.fixed_rent.toLocaleString('es-MX')}`
+                            : `Comisión: ${Math.round(s.commission_rate * 100)}%`;
+
+                        return (
+                            <div key={s.id} style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                                {/* Staff Row */}
+                                <button onClick={() => setExpandedStaff(isExpanded ? null : s.id)}
+                                    style={{
+                                        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                        padding: '16px 20px', background: 'transparent', border: 'none',
+                                        cursor: 'pointer', touchAction: 'manipulation',
+                                        borderBottom: isExpanded ? '1px solid #1E293B' : 'none',
+                                    }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                                        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#1E293B', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+                                            {s.name?.charAt(0) || '?'}
+                                        </div>
+                                        <div style={{ textAlign: 'left' }}>
+                                            <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{s.name}</p>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
+                                                <span style={{ fontSize: 11, color: '#64748B', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')}</span>
+                                                {s.unit && <span style={{ fontSize: 11, color: '#475569' }}>·</span>}
+                                                {s.unit && <span style={{ fontSize: 11, color: '#64748B' }}>{s.unit}</span>}
+                                                <span style={{ fontSize: 11, color: '#475569' }}>·</span>
+                                                <span style={{ fontSize: 11, color: 'var(--color-gold)' }}>{rateLabel}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>{s.month_services} servicios</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'white' }}>${s.month_gross.toLocaleString('es-MX')}</p>
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>Club</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-gold)' }}>${s.month_club_cut.toLocaleString('es-MX')}</p>
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>Pago Staff</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: '#94A3B8' }}>${s.month_staff_payout.toLocaleString('es-MX')}</p>
+                                        </div>
+                                        {isExpanded ? <ChevronDown size={16} style={{ color: '#64748B', flexShrink: 0 }} /> : <ChevronRight size={16} style={{ color: '#64748B', flexShrink: 0 }} />}
+                                    </div>
+                                </button>
+
+                                {/* Settlement History (expanded) */}
+                                {isExpanded && (
+                                    <div style={{ padding: '16px 20px', background: '#05080F' }}>
+                                        <p style={{ fontSize: 10, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500, marginBottom: 12 }}>Historial de Liquidaciones</p>
+                                        {!s.settlements?.length ? (
+                                            <p style={{ fontSize: 12, color: '#475569', fontStyle: 'italic' }}>Sin liquidaciones registradas</p>
+                                        ) : (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                                {s.settlements.slice(0, 3).map((st: any) => {
+                                                    const sc = statusColor(st.status);
+                                                    return (
+                                                        <div key={st.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#0B1120', borderRadius: 10, border: '1px solid #1E293B' }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                                                <Clock size={14} style={{ color: '#475569', flexShrink: 0 }} />
+                                                                <div>
+                                                                    <p style={{ fontSize: 12, color: '#E2E8F0' }}>
+                                                                        {new Date(st.period_start).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })} — {new Date(st.period_end).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                                    </p>
+                                                                    <p style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>{st.total_services} servicios · Bruto: ${st.gross_revenue.toLocaleString('es-MX')}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                                                <div style={{ textAlign: 'right' }}>
+                                                                    <p style={{ fontSize: 11, color: '#64748B' }}>Pago</p>
+                                                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>${st.staff_payout.toLocaleString('es-MX')}</p>
+                                                                </div>
+                                                                <span style={{
+                                                                    padding: '3px 10px', borderRadius: 6, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                                    background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`,
+                                                                }}>{st.status}</span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
 // ── Main Admin View ──────────────────────────────────────────────
 export const AdminView = () => {
     const { user } = useAuthStore();
@@ -1566,6 +1756,7 @@ export const AdminView = () => {
                             {activeTab === 'eventos' && <EventsTab />}
                             {activeTab === 'staff' && <StaffTab />}
                             {activeTab === 'finanzas' && <FinanzasTab />}
+                            {activeTab === 'comisiones' && <ComisionesTab />}
                             {activeTab === 'lockers' && <LockersTab />}
                             {activeTab === 'agenda' && <AgendaTab />}
                             {activeTab === 'contenido' && <ContenidoTab />}

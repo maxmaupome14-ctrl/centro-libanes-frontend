@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../services/api';
-import { CalendarDays, Clock, CheckCircle2, Check, UserX, DollarSign, TrendingUp, Receipt } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useToast } from '../components/ui/Toast';
+import { CalendarDays, Clock, CheckCircle2, Check, UserX, DollarSign, TrendingUp, Receipt, QrCode, ShieldCheck, UserCheck, Loader2, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Appointment {
     id: string;
@@ -21,9 +22,403 @@ const f = (delay: number) => ({
     transition: { duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
+// ── Recepcion Tab (QR / Code validation for all staff) ──────────
+const RecepcionTab = () => {
+    const { showToast } = useToast();
+    const [codeInput, setCodeInput] = useState('');
+    const [validating, setValidating] = useState(false);
+    const [result, setResult] = useState<any>(null);
+    const [checkingIn, setCheckingIn] = useState(false);
+
+    const getResultType = (res: any): 'granted' | 'denied' | 'suspended' => {
+        if (!res) return 'denied';
+        // Member QR result
+        if (res.member_number !== undefined) {
+            if (res.valid && res.status === 'activa') return 'granted';
+            if (res.status === 'suspendida') return 'suspended';
+            return 'denied';
+        }
+        // Guest pass result
+        if (res.valid) return 'granted';
+        if (res.pass?.status === 'cancelled') return 'denied';
+        return 'denied';
+    };
+
+    const resultColors = {
+        granted: { bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)', text: '#10B981', label: 'ACCESO PERMITIDO' },
+        denied: { bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.25)', text: '#EF4444', label: 'ACCESO DENEGADO' },
+        suspended: { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)', text: '#F59E0B', label: 'MEMBRESIA SUSPENDIDA' },
+    };
+
+    const handleValidate = async () => {
+        const code = codeInput.trim();
+        if (!code) return;
+        setValidating(true);
+        setResult(null);
+
+        try {
+            const isMemberCode = code.toUpperCase().startsWith('CL-');
+
+            if (isMemberCode) {
+                const res = await api.post('/admin/qr/validate', { code: code.toUpperCase() });
+                setResult({ type: 'member', ...res.data });
+            } else {
+                const res = await api.post('/guests/validate', { pass_code: code.toUpperCase() });
+                setResult({ type: 'guest', ...res.data });
+            }
+        } catch (err: any) {
+            const errorMsg = err.response?.data?.error || 'Codigo invalido';
+            setResult({ type: 'error', valid: false, message: errorMsg });
+        } finally {
+            setValidating(false);
+        }
+    };
+
+    const handleCheckin = async (passId: string) => {
+        setCheckingIn(true);
+        try {
+            await api.post(`/guests/${passId}/checkin`);
+            showToast('Invitado registrado exitosamente');
+            setResult((prev: any) => prev ? { ...prev, checkedIn: true } : prev);
+        } catch (err: any) {
+            showToast(err.response?.data?.error || 'Error al registrar');
+        } finally {
+            setCheckingIn(false);
+        }
+    };
+
+    const handleClear = () => {
+        setCodeInput('');
+        setResult(null);
+    };
+
+    const rType = result ? getResultType(result) : null;
+    const colors = rType ? resultColors[rType] : null;
+
+    return (
+        <motion.div {...f(0.08)} style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                <div style={{
+                    width: 40, height: 40, borderRadius: 12,
+                    background: 'rgba(201,168,76,0.08)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                    <QrCode size={20} style={{ color: '#C9A84C' }} strokeWidth={1.6} />
+                </div>
+                <div>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>Control de Acceso</p>
+                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>Valida codigos de socio o pases de invitado</p>
+                </div>
+            </div>
+
+            {/* Input area */}
+            <div className="card" style={{ padding: 20 }}>
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <div style={{ flex: 1, position: 'relative' }}>
+                        <Search size={16} style={{
+                            position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+                            color: 'var(--color-text-tertiary)', pointerEvents: 'none',
+                        }} />
+                        <input
+                            value={codeInput}
+                            onChange={e => setCodeInput(e.target.value)}
+                            onKeyDown={e => e.key === 'Enter' && handleValidate()}
+                            placeholder="CL-0001 o codigo de invitado..."
+                            style={{
+                                width: '100%', boxSizing: 'border-box',
+                                paddingLeft: 36, paddingRight: 14, paddingTop: 12, paddingBottom: 12,
+                                background: 'var(--color-surface-hover)',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: 12, fontSize: 15, fontWeight: 500,
+                                color: 'var(--color-text-primary)', outline: 'none',
+                                letterSpacing: '0.02em',
+                            }}
+                        />
+                    </div>
+                    <button
+                        onClick={handleValidate}
+                        disabled={validating || !codeInput.trim()}
+                        style={{
+                            paddingLeft: 20, paddingRight: 20, paddingTop: 12, paddingBottom: 12,
+                            background: validating || !codeInput.trim() ? 'rgba(201,168,76,0.3)' : '#C9A84C',
+                            color: '#0F1419', fontWeight: 700, fontSize: 13,
+                            borderRadius: 12, border: 'none',
+                            cursor: validating || !codeInput.trim() ? 'default' : 'pointer',
+                            touchAction: 'manipulation',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            gap: 6, minWidth: 80, flexShrink: 0,
+                        }}
+                    >
+                        {validating ? (
+                            <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
+                        ) : (
+                            'Validar'
+                        )}
+                    </button>
+                </div>
+
+                {/* Quick hint */}
+                <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+                    <span style={{
+                        fontSize: 10, color: 'var(--color-text-tertiary)',
+                        background: 'rgba(201,168,76,0.06)', padding: '3px 8px',
+                        borderRadius: 6, fontWeight: 500,
+                    }}>
+                        CL-XXXX = Socio
+                    </span>
+                    <span style={{
+                        fontSize: 10, color: 'var(--color-text-tertiary)',
+                        background: 'rgba(6,182,212,0.06)', padding: '3px 8px',
+                        borderRadius: 6, fontWeight: 500,
+                    }}>
+                        Otro = Pase invitado
+                    </span>
+                </div>
+            </div>
+
+            {/* Result card */}
+            <AnimatePresence mode="wait">
+                {result && colors && (
+                    <motion.div
+                        key="result"
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        className="card"
+                        style={{
+                            padding: 0, overflow: 'hidden',
+                            border: `1px solid ${colors.border}`,
+                        }}
+                    >
+                        {/* Status banner */}
+                        <div style={{
+                            background: colors.bg, padding: '14px 20px',
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div style={{
+                                    width: 12, height: 12, borderRadius: 6,
+                                    background: colors.text,
+                                    boxShadow: `0 0 8px ${colors.text}40`,
+                                }} />
+                                <p style={{
+                                    fontSize: 13, fontWeight: 800, color: colors.text,
+                                    textTransform: 'uppercase', letterSpacing: '0.08em',
+                                }}>
+                                    {colors.label}
+                                </p>
+                            </div>
+                            <button
+                                onClick={handleClear}
+                                style={{
+                                    background: 'none', border: 'none', padding: 4,
+                                    cursor: 'pointer', touchAction: 'manipulation',
+                                    color: 'var(--color-text-tertiary)', fontSize: 11, fontWeight: 600,
+                                }}
+                            >
+                                Limpiar
+                            </button>
+                        </div>
+
+                        {/* Details */}
+                        <div style={{ padding: '16px 20px' }}>
+                            {/* Member result */}
+                            {result.type === 'member' && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div style={{
+                                            width: 48, height: 48, borderRadius: 14,
+                                            background: `${colors.text}12`,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        }}>
+                                            <ShieldCheck size={22} style={{ color: colors.text }} strokeWidth={1.6} />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                                                {result.titular || 'Socio'}
+                                            </p>
+                                            <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
+                                                Socio #{result.member_number}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style={{
+                                        display: 'flex', gap: 8,
+                                        paddingTop: 12,
+                                        borderTop: '1px solid var(--color-border)',
+                                    }}>
+                                        <div style={{
+                                            flex: 1, padding: '8px 12px', borderRadius: 10,
+                                            background: 'var(--color-surface-hover)', textAlign: 'center',
+                                        }}>
+                                            <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Tipo</p>
+                                            <p style={{ fontSize: 13, fontWeight: 700, color: '#C9A84C' }}>{result.tier || '—'}</p>
+                                        </div>
+                                        <div style={{
+                                            flex: 1, padding: '8px 12px', borderRadius: 10,
+                                            background: 'var(--color-surface-hover)', textAlign: 'center',
+                                        }}>
+                                            <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Estado</p>
+                                            <p style={{ fontSize: 13, fontWeight: 700, color: colors.text, textTransform: 'capitalize' }}>{result.status || '—'}</p>
+                                        </div>
+                                    </div>
+                                    {result.message && (
+                                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', fontStyle: 'italic' }}>
+                                            {result.message}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Guest pass result */}
+                            {result.type === 'guest' && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div style={{
+                                            width: 48, height: 48, borderRadius: 14,
+                                            background: `${colors.text}12`,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        }}>
+                                            <UserCheck size={22} style={{ color: colors.text }} strokeWidth={1.6} />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                                                {result.pass?.guest_name || 'Invitado'}
+                                            </p>
+                                            <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
+                                                Pase de invitado
+                                                {result.pass?.invited_by && (
+                                                    <span> &middot; Invita: {result.pass.invited_by.first_name} {result.pass.invited_by.last_name}</span>
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {result.pass && (
+                                        <div style={{
+                                            display: 'flex', gap: 8,
+                                            paddingTop: 12,
+                                            borderTop: '1px solid var(--color-border)',
+                                        }}>
+                                            <div style={{
+                                                flex: 1, padding: '8px 12px', borderRadius: 10,
+                                                background: 'var(--color-surface-hover)', textAlign: 'center',
+                                            }}>
+                                                <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Codigo</p>
+                                                <p style={{ fontSize: 13, fontWeight: 700, color: '#C9A84C', fontFamily: 'monospace', letterSpacing: 1 }}>{result.pass.pass_code}</p>
+                                            </div>
+                                            <div style={{
+                                                flex: 1, padding: '8px 12px', borderRadius: 10,
+                                                background: 'var(--color-surface-hover)', textAlign: 'center',
+                                            }}>
+                                                <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Estado</p>
+                                                <p style={{ fontSize: 13, fontWeight: 700, color: colors.text, textTransform: 'capitalize' }}>{result.pass.status || '—'}</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {!result.valid && result.reason && (
+                                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', fontStyle: 'italic' }}>
+                                            {result.reason}
+                                        </p>
+                                    )}
+
+                                    {/* Check-in button for valid active guest passes */}
+                                    {result.valid && result.pass && !result.checkedIn && (
+                                        <motion.button
+                                            whileTap={{ scale: 0.97 }}
+                                            onClick={() => handleCheckin(result.pass.id)}
+                                            disabled={checkingIn}
+                                            style={{
+                                                width: '100%', padding: '14px 0',
+                                                background: checkingIn ? 'rgba(16,185,129,0.3)' : 'linear-gradient(135deg, #10B981, #059669)',
+                                                color: 'white', fontWeight: 700, fontSize: 14,
+                                                borderRadius: 12, border: 'none',
+                                                cursor: checkingIn ? 'default' : 'pointer',
+                                                touchAction: 'manipulation',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                                marginTop: 4,
+                                            }}
+                                        >
+                                            {checkingIn ? (
+                                                <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+                                            ) : (
+                                                <>
+                                                    <Check size={18} strokeWidth={2.5} />
+                                                    Registrar Entrada
+                                                </>
+                                            )}
+                                        </motion.button>
+                                    )}
+
+                                    {/* Already checked in */}
+                                    {result.checkedIn && (
+                                        <div style={{
+                                            width: '100%', padding: '14px 0', marginTop: 4,
+                                            background: 'rgba(16,185,129,0.06)',
+                                            border: '1px solid rgba(16,185,129,0.2)',
+                                            borderRadius: 12,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                            color: '#10B981', fontWeight: 700, fontSize: 14,
+                                        }}>
+                                            <CheckCircle2 size={18} strokeWidth={2} />
+                                            Entrada Registrada
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Error result */}
+                            {result.type === 'error' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <div style={{
+                                        width: 48, height: 48, borderRadius: 14,
+                                        background: 'rgba(239,68,68,0.08)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    }}>
+                                        <ShieldCheck size={22} style={{ color: '#EF4444' }} strokeWidth={1.6} />
+                                    </div>
+                                    <div>
+                                        <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Codigo no encontrado</p>
+                                        <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
+                                            {result.message || 'Verifica el codigo e intenta de nuevo'}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Empty state when no result */}
+            {!result && !validating && (
+                <motion.div {...f(0.15)} className="card" style={{ padding: '40px 24px', textAlign: 'center' }}>
+                    <div style={{
+                        width: 56, height: 56, borderRadius: 18,
+                        background: 'rgba(201,168,76,0.06)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        margin: '0 auto 16px',
+                    }}>
+                        <QrCode size={26} style={{ color: 'var(--color-text-tertiary)' }} strokeWidth={1.4} />
+                    </div>
+                    <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text-secondary)' }}>
+                        Escanea o ingresa un codigo
+                    </p>
+                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 6, lineHeight: 1.5 }}>
+                        Ingresa el codigo QR del socio (CL-XXXX) o el codigo del pase de invitado para validar el acceso
+                    </p>
+                </motion.div>
+            )}
+        </motion.div>
+    );
+};
+
 export const EmployeeDashboard = () => {
     const { user } = useAuthStore();
-    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias'>('hoy');
+    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias' | 'recepcion'>('hoy');
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0 });
     const [loadingToday, setLoadingToday] = useState(true);
@@ -93,16 +488,17 @@ export const EmployeeDashboard = () => {
             {/* ═══ Tab bar ═══ */}
             <motion.div {...f(0.05)} style={{ padding: '16px 16px 8px' }}>
                 <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: 'rgba(120,120,128,0.16)' }}>
-                    {(['hoy', 'agenda', 'ganancias'] as const).map(tab => (
+                    {(['hoy', 'agenda', 'ganancias', 'recepcion'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
                             style={{
-                                flex: 1, padding: '7px 0', borderRadius: 7, fontSize: 13, fontWeight: 500,
+                                flex: 1, padding: '7px 0', borderRadius: 7, fontSize: 12, fontWeight: 500,
                                 cursor: 'pointer', outline: 'none', border: 'none', transition: 'all 200ms',
+                                touchAction: 'manipulation',
                                 color: activeTab === tab ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                 background: activeTab === tab ? 'var(--color-surface)' : 'transparent',
                                 boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)' : 'none',
                             }}>
-                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : 'Ganancias'}
+                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : tab === 'ganancias' ? 'Ganancias' : 'Recepcion'}
                         </button>
                     ))}
                 </div>
@@ -382,6 +778,9 @@ export const EmployeeDashboard = () => {
                         )}
                     </motion.div>
                 )}
+
+                {/* RECEPCION */}
+                {activeTab === 'recepcion' && <RecepcionTab />}
 
             </div>
         </div>
