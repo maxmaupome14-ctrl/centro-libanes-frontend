@@ -390,7 +390,7 @@ export const HomeView = () => {
                             const dateObj = new Date(ev.event_date);
                             const dayNum = dateObj.getDate();
                             const monthStr = dateObj.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '');
-                            const timeStr = dateObj.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                            const timeStr = dateObj.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
                             return (
                                 <div key={ev.id} style={{
                                     flexShrink: 0, scrollSnapAlign: 'start', cursor: 'pointer',
@@ -411,7 +411,7 @@ export const HomeView = () => {
                                             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'white', lineHeight: 1.3, marginBottom: 6 }}>{ev.title}</h3>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                                 <CalendarDays size={11} style={{ color: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
-                                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>{timeStr}h</span>
+                                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>{timeStr} hrs</span>
                                                 {ev.location && <>
                                                     <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
                                                     <MapPin size={11} style={{ color: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />

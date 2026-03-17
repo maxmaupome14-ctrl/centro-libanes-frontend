@@ -215,7 +215,7 @@ const EventsTab = () => {
                                     </td>
                                     <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', fontSize: 12 }}>
                                         {new Date(ev.event_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}<br />
-                                        {new Date(ev.event_date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}h
+                                        {new Date(ev.event_date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false })} hrs
                                     </td>
                                     <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
                                         <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: '#1E293B', color: '#CBD5E1' }}>{ev.category}</span>
