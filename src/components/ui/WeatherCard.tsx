@@ -35,9 +35,9 @@ function getSuggestion(temp: number, iconCode: string) {
     return SUGGESTIONS.cloudy;
 }
 
-// Aguascalientes, Mexico coordinates
-const LAT = 21.8818;
-const LON = -102.2916;
+// Mexico City (CDMX) coordinates — Centro Libanés location
+const LAT = 19.4326;
+const LON = -99.1332;
 const CACHE_KEY = 'cl-weather-cache';
 const CACHE_TTL = 30 * 60 * 1000; // 30 min
 
