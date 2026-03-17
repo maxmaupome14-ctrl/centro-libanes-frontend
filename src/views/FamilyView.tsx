@@ -38,7 +38,6 @@ export const FamilyView = () => {
                     api.get(`/membership/${user.membership_id}/beneficiaries`),
                     api.get(`/payments/${user.membership_id}/statement`),
                 ];
-                // Only fetch approvals if user can approve
                 if (user.role === 'titular' || user.role === 'conyugue') {
                     requests.push(api.get('/reservations/pending-approvals'));
                 }
@@ -79,38 +78,52 @@ export const FamilyView = () => {
     ];
 
     return (
-        <div className="pb-24">
+        <div style={{ paddingBottom: 100 }}>
 
             {/* ── Header ── */}
-            <div className="relative bg-gradient-to-b from-[var(--color-green-cedar-dark)] to-[var(--color-green-cedar)] pt-6 pb-16 px-5 overflow-hidden">
+            <div style={{
+                position: 'relative', overflow: 'hidden', padding: '24px 16px 56px',
+                background: 'linear-gradient(to bottom, var(--color-green-cedar-dark), var(--color-green-cedar))',
+            }}>
                 {/* Decorative glow */}
-                <div className="absolute top-[-50%] right-[-30%] w-[300px] h-[300px] rounded-full bg-white/5 blur-[100px]" />
-                <div className="relative z-10">
-                    <h1 className="text-lg font-bold text-white tracking-tight">Administración Familiar</h1>
-                    <p className="text-white/50 text-sm mt-0.5">
-                        Membresía <span className="text-[var(--color-gold-light)] font-semibold">{user.member_number || '---'}</span>
+                <div style={{
+                    position: 'absolute', top: '-50%', right: '-30%',
+                    width: 300, height: 300, borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.05)', filter: 'blur(100px)',
+                }} />
+                <div style={{ position: 'relative', zIndex: 10 }}>
+                    <h1 style={{ fontSize: 18, fontWeight: 700, color: 'white', letterSpacing: -0.3 }}>Administración Familiar</h1>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 2 }}>
+                        Membresía <span style={{ color: 'var(--color-gold-light)', fontWeight: 600 }}>{user.member_number || '---'}</span>
                     </p>
                 </div>
             </div>
 
             {/* ── Content ── */}
-            <div className="px-5 -mt-10 relative z-20 space-y-5">
+            <div style={{ position: 'relative', zIndex: 20, padding: '0 16px', marginTop: -32, display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-                {/* Tab Pills */}
-                <div className="bg-[var(--color-surface)] p-1 rounded-[var(--radius-md)] flex border border-[var(--color-border)]">
+                {/* Tab Pills (iOS HIG Segmented Control) */}
+                <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: 'rgba(120,120,128,0.16)' }}>
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 py-3 min-h-[44px] text-[13px] font-semibold rounded-[var(--radius-sm)] transition-all relative ${activeTab === tab.key
-                                ? 'bg-[var(--color-gold)] text-[var(--color-bg)] shadow-sm'
-                                : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]'
-                                }`}
+                            style={{
+                                position: 'relative', flex: 1, padding: '7px 0', minHeight: 32,
+                                fontSize: 13, fontWeight: 500, borderRadius: 7, border: 'none',
+                                cursor: 'pointer', outline: 'none', transition: 'all 200ms',
+                                color: activeTab === tab.key ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                                background: activeTab === tab.key ? 'var(--color-surface)' : 'transparent',
+                                boxShadow: activeTab === tab.key ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)' : 'none',
+                            }}
                         >
                             {tab.label}
                             {tab.badgeCount != null && tab.badgeCount > 0 && (
-                                <span className={`absolute top-1 right-2 w-1.5 h-1.5 rounded-full ${activeTab === tab.key ? 'bg-[var(--color-bg)]' : 'bg-[var(--color-red-lebanese)]'
-                                    } animate-pulse`} />
+                                <span className="animate-pulse" style={{
+                                    position: 'absolute', top: 4, right: 8,
+                                    width: 6, height: 6, borderRadius: 3,
+                                    background: 'var(--color-red-lebanese)',
+                                }} />
                             )}
                         </button>
                     ))}
@@ -126,46 +139,66 @@ export const FamilyView = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             transition={{ duration: 0.25 }}
-                            className="space-y-3"
+                            style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
                         >
                             {loading ? (
-                                <div className="flex items-center justify-center py-8 gap-2">
-                                    <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[var(--color-gold)] animate-spin" />
-                                    <span className="text-sm text-[var(--color-text-tertiary)]">Cargando...</span>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 0', gap: 8 }}>
+                                    <div className="animate-spin" style={{ width: 16, height: 16, borderRadius: 8, border: '2px solid var(--color-gold)', borderTopColor: 'transparent' }} />
+                                    <span style={{ fontSize: 14, color: 'var(--color-text-tertiary)' }}>Cargando...</span>
                                 </div>
                             ) : familyMembers.map(member => (
                                 <div
                                     key={member.id}
-                                    className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] p-4 flex items-center gap-4 hover:border-[var(--color-border-strong)] transition-all"
+                                    className="card"
+                                    style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16 }}
                                 >
-                                    <div className="w-11 h-11 rounded-full bg-[var(--color-surface-hover)] border border-[var(--color-border-strong)] flex items-center justify-center text-sm font-bold text-[var(--color-gold)] shrink-0">
+                                    <div style={{
+                                        width: 44, height: 44, borderRadius: 22, flexShrink: 0,
+                                        background: 'var(--color-surface-hover)',
+                                        border: '1px solid var(--color-border-strong)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontSize: 14, fontWeight: 700, color: 'var(--color-gold)',
+                                    }}>
                                         {member.first_name?.[0] ?? '?'}
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-semibold text-sm text-[var(--color-text-primary)]">{member.first_name} {member.last_name}</h3>
-                                        <p className="text-xs text-[var(--color-text-tertiary)] flex items-center gap-1 mt-0.5">
-                                            <Shield size={11} className="text-[var(--color-gold-dark)]" />
-                                            <span className="capitalize">{member.role}</span>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <h3 style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-text-primary)' }}>{member.first_name} {member.last_name}</h3>
+                                        <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                                            <Shield size={11} style={{ color: 'var(--color-gold-dark)' }} />
+                                            <span style={{ textTransform: 'capitalize' }}>{member.role}</span>
                                         </p>
                                     </div>
-                                    <div className="flex flex-col items-end gap-2">
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
                                         {member.is_active ? (
-                                            <span className="px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Activo</span>
+                                            <span style={{
+                                                padding: '2px 8px', fontSize: 9, textTransform: 'uppercase',
+                                                fontWeight: 700, letterSpacing: 1.2, borderRadius: 9999,
+                                                background: 'rgba(52,211,153,0.1)', color: '#34D399',
+                                                border: '1px solid rgba(52,211,153,0.2)',
+                                            }}>Activo</span>
                                         ) : (
-                                            <span className="px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest rounded-full bg-[var(--color-red-lebanese)]/10 text-[var(--color-red-lebanese)]">Inactivo</span>
+                                            <span style={{
+                                                padding: '2px 8px', fontSize: 9, textTransform: 'uppercase',
+                                                fontWeight: 700, letterSpacing: 1.2, borderRadius: 9999,
+                                                background: 'rgba(var(--color-red-lebanese-rgb, 220,38,38),0.1)',
+                                                color: 'var(--color-red-lebanese)',
+                                            }}>Inactivo</span>
                                         )}
                                     </div>
                                 </div>
                             ))}
                             {user.role === 'titular' && !showAddForm && (
-                                <Button variant="outline" className="w-full py-5 border-dashed" onClick={() => setShowAddForm(true)}>
+                                <Button variant="outline" style={{ width: '100%', padding: '20px 0', borderStyle: 'dashed' }} onClick={() => setShowAddForm(true)}>
                                     <UserPlus size={16} />
                                     Agregar Beneficiario
                                 </Button>
                             )}
                             {showAddForm && (
-                                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 space-y-3">
-                                    <p className="text-[11px] font-bold text-[var(--color-text-tertiary)] tracking-[2px] uppercase">Nuevo Beneficiario</p>
+                                <div style={{
+                                    background: 'var(--color-surface)', border: '1px solid var(--color-border)',
+                                    borderRadius: 16, padding: 16, display: 'flex', flexDirection: 'column', gap: 12,
+                                }}>
+                                    <p className="section-header" style={{ marginBottom: 0 }}>Nuevo Beneficiario</p>
                                     {[
                                         { key: 'first_name', placeholder: 'Nombre' },
                                         { key: 'last_name', placeholder: 'Apellido' },
@@ -174,16 +207,30 @@ export const FamilyView = () => {
                                         <input key={field.key} type={field.type || 'text'} placeholder={field.placeholder}
                                             value={addForm[field.key as keyof typeof addForm]}
                                             onChange={e => setAddForm(f => ({ ...f, [field.key]: e.target.value }))}
-                                            className="w-full bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-xl px-4 py-2.5 text-[13px] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-gold)]" />
+                                            style={{
+                                                width: '100%', background: 'var(--color-surface-hover)',
+                                                border: '1px solid var(--color-border)', borderRadius: 12,
+                                                padding: '10px 16px', fontSize: 13, color: 'var(--color-text-primary)',
+                                                outline: 'none', boxSizing: 'border-box',
+                                            }} />
                                     ))}
                                     <select value={addForm.role} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))}
-                                        className="w-full bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-xl px-4 py-2.5 text-[13px] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-gold)]">
+                                        style={{
+                                            width: '100%', background: 'var(--color-surface-hover)',
+                                            border: '1px solid var(--color-border)', borderRadius: 12,
+                                            padding: '10px 16px', fontSize: 13, color: 'var(--color-text-primary)',
+                                            outline: 'none', boxSizing: 'border-box',
+                                        }}>
                                         <option value="hijo">Hijo/a</option>
                                         <option value="conyugue">Cónyuge</option>
                                         <option value="dependiente">Dependiente</option>
                                     </select>
-                                    <div className="flex gap-2 pt-1">
-                                        <button onClick={() => setShowAddForm(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--color-border)] text-[12px] text-[var(--color-text-tertiary)] cursor-pointer">Cancelar</button>
+                                    <div style={{ display: 'flex', gap: 8, paddingTop: 4 }}>
+                                        <button onClick={() => setShowAddForm(false)} style={{
+                                            flex: 1, padding: '10px 0', borderRadius: 12,
+                                            border: '1px solid var(--color-border)', background: 'transparent',
+                                            fontSize: 12, color: 'var(--color-text-tertiary)', cursor: 'pointer',
+                                        }}>Cancelar</button>
                                         <button disabled={addingMember || !addForm.first_name || !addForm.last_name}
                                             onClick={async () => {
                                                 if (!user?.membership_id) return;
@@ -197,7 +244,12 @@ export const FamilyView = () => {
                                                 } catch { /* silently fail */ }
                                                 finally { setAddingMember(false); }
                                             }}
-                                            className="flex-1 py-2.5 rounded-xl bg-[var(--color-gold)] text-[var(--color-bg)] text-[12px] font-semibold cursor-pointer disabled:opacity-50">
+                                            style={{
+                                                flex: 1, padding: '10px 0', borderRadius: 12, border: 'none',
+                                                background: 'var(--color-gold)', color: 'var(--color-bg)',
+                                                fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                                                opacity: (addingMember || !addForm.first_name || !addForm.last_name) ? 0.5 : 1,
+                                            }}>
                                             {addingMember ? 'Guardando...' : 'Guardar'}
                                         </button>
                                     </div>
@@ -214,20 +266,22 @@ export const FamilyView = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             transition={{ duration: 0.25 }}
-                            className="space-y-4"
+                            style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
                         >
-                            <p className="text-[10px] font-bold tracking-[2px] text-[var(--color-text-tertiary)] uppercase">Pendientes de autorización</p>
+                            <p className="section-header" style={{ marginBottom: 0 }}>Pendientes de autorización</p>
 
                             {loadingApprovals ? (
-                                <div className="flex items-center justify-center py-8 gap-2">
-                                    <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[var(--color-gold)] animate-spin" />
-                                    <span className="text-sm text-[var(--color-text-tertiary)]">Cargando...</span>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 0', gap: 8 }}>
+                                    <div className="animate-spin" style={{ width: 16, height: 16, borderRadius: 8, border: '2px solid var(--color-gold)', borderTopColor: 'transparent' }} />
+                                    <span style={{ fontSize: 14, color: 'var(--color-text-tertiary)' }}>Cargando...</span>
                                 </div>
                             ) : approvals.length === 0 ? (
-                                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] p-6 text-center">
-                                    <Check size={28} className="text-emerald-400 mx-auto mb-2" />
-                                    <p className="text-sm font-semibold text-[var(--color-text-secondary)]">Todo al día</p>
-                                    <p className="text-xs text-[var(--color-text-tertiary)] mt-1">No hay reservas pendientes de aprobación</p>
+                                <div className="card" style={{ padding: 24, textAlign: 'center' }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(16,185,129,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                                        <Check size={22} style={{ color: '#10B981' }} strokeWidth={2} />
+                                    </div>
+                                    <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text-secondary)' }}>Todo al día</p>
+                                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>No hay reservas pendientes de aprobación</p>
                                 </div>
                             ) : approvals.map((appr) => {
                                 const initials = (appr.profile?.first_name?.[0] || '') + (appr.profile?.last_name?.[0] || '');
@@ -237,27 +291,32 @@ export const FamilyView = () => {
                                 const requesterName = `${appr.profile?.first_name || ''} ${appr.profile?.last_name || ''}`.trim();
                                 const isActioning = actioningId === appr.id;
                                 return (
-                                    <div key={appr.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] overflow-hidden">
-                                        <div className="p-4 flex gap-3 border-l-2 border-l-[var(--color-gold)]">
-                                            <div className="w-10 h-10 bg-[var(--color-surface-hover)] rounded-full flex shrink-0 items-center justify-center text-xs font-bold text-[var(--color-gold)]">
+                                    <div key={appr.id} className="card" style={{ overflow: 'hidden' }}>
+                                        <div style={{ padding: 16, display: 'flex', gap: 12, borderLeft: '2px solid var(--color-gold)' }}>
+                                            <div style={{
+                                                width: 40, height: 40, borderRadius: 20, flexShrink: 0,
+                                                background: 'var(--color-surface-hover)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                fontSize: 12, fontWeight: 700, color: 'var(--color-gold)',
+                                            }}>
                                                 {initials}
                                             </div>
-                                            <div className="flex-1">
-                                                <h4 className="font-semibold text-sm text-[var(--color-text-primary)]">{serviceName}</h4>
-                                                <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5 flex items-center gap-1.5">
+                                            <div style={{ flex: 1 }}>
+                                                <h4 style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-text-primary)' }}>{serviceName}</h4>
+                                                <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
                                                     {requesterName}
-                                                    {dateStr && <><span className="opacity-40">·</span> <CalendarDays size={10} />{dateStr}</>}
-                                                    {timeStr && <><span className="opacity-40">·</span> <Clock size={10} />{timeStr}</>}
+                                                    {dateStr && <><span style={{ opacity: 0.4 }}>·</span> <CalendarDays size={10} />{dateStr}</>}
+                                                    {timeStr && <><span style={{ opacity: 0.4 }}>·</span> <Clock size={10} />{timeStr}</>}
                                                 </p>
-                                                <p className="text-xs text-[var(--color-text-tertiary)] mt-1 opacity-70">Requiere tu aprobación</p>
+                                                <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4, opacity: 0.7 }}>Requiere tu aprobación</p>
                                             </div>
                                         </div>
-                                        <div className="flex gap-2 p-3 px-4 border-t border-[var(--color-border)]">
-                                            <Button variant="outline" size="sm" className="flex-1 text-[var(--color-red-lebanese)] border-[var(--color-border-strong)]"
+                                        <div style={{ display: 'flex', gap: 8, padding: '12px 16px', borderTop: '1px solid var(--color-border)' }}>
+                                            <Button variant="outline" size="sm" style={{ flex: 1, color: 'var(--color-red-lebanese)', borderColor: 'var(--color-border-strong)' }}
                                                 onClick={() => handleApproval(appr.id, 'reject')} disabled={isActioning}>
                                                 <X size={14} /> Rechazar
                                             </Button>
-                                            <Button size="sm" className="flex-1"
+                                            <Button size="sm" style={{ flex: 1 }}
                                                 onClick={() => handleApproval(appr.id, 'approve')} disabled={isActioning}>
                                                 <Check size={14} /> Aprobar
                                             </Button>
@@ -276,58 +335,72 @@ export const FamilyView = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             transition={{ duration: 0.25 }}
-                            className="space-y-4"
+                            style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
                         >
-                            {/* Alert Card */}
+                            {/* Balance Card */}
                             {totalDue > 0 ? (
-                                <div className="bg-[var(--color-red-lebanese)] rounded-[var(--radius-lg)] p-5 relative overflow-hidden">
-                                    <div className="absolute right-[-10px] bottom-[-10px] opacity-10">
-                                        <AlertCircle size={80} />
-                                    </div>
-                                    <div className="relative z-10 flex flex-col gap-3">
-                                        <div>
-                                            <p className="text-red-200 text-[10px] font-bold uppercase tracking-widest">Saldo Pendiente</p>
-                                            <h2 className="text-2xl font-bold text-white mt-1">
-                                                ${Number(totalDue).toLocaleString('es-MX')} <span className="text-sm font-normal opacity-70">MXN</span>
+                                <div className="card-elevated" style={{ overflow: 'hidden' }}>
+                                    {/* Red top banner */}
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, var(--color-red-lebanese), var(--color-red-lebanese-dark))',
+                                        padding: '20px 20px 24px',
+                                        position: 'relative',
+                                    }}>
+                                        <div style={{ position: 'absolute', right: -8, bottom: -8, opacity: 0.1 }}>
+                                            <AlertCircle size={72} />
+                                        </div>
+                                        <div style={{ position: 'relative', zIndex: 1 }}>
+                                            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2 }}>
+                                                Saldo Pendiente
+                                            </p>
+                                            <h2 style={{ fontSize: 32, fontWeight: 700, color: 'white', marginTop: 6, letterSpacing: -0.5 }}>
+                                                ${Number(totalDue).toLocaleString('es-MX')}
+                                                <span style={{ fontSize: 14, fontWeight: 400, opacity: 0.6, marginLeft: 6 }}>MXN</span>
                                             </h2>
                                         </div>
-                                        <div className="flex justify-end">
-                                            <Button size="sm" className="bg-white text-[var(--color-red-lebanese)] hover:bg-white/90 shadow-none border-0 px-6" onClick={() => navigate('/payment')}>
-                                                Pagar Adeudo
-                                            </Button>
-                                        </div>
+                                    </div>
+                                    {/* Action area */}
+                                    <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'flex-end' }}>
+                                        <Button onClick={() => navigate('/payment')} style={{ paddingLeft: 32, paddingRight: 32 }}>
+                                            Pagar Adeudo
+                                        </Button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-[var(--radius-lg)] p-5">
-                                    <p className="text-emerald-400 font-semibold text-sm">Al corriente ✓</p>
-                                    <p className="text-xs text-emerald-400/70 mt-1">No tienes saldos pendientes</p>
+                                <div className="card" style={{ padding: 20, display: 'flex', alignItems: 'center', gap: 14 }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(16,185,129,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        <Check size={20} style={{ color: '#10B981' }} strokeWidth={2.5} />
+                                    </div>
+                                    <div>
+                                        <p style={{ fontSize: 15, fontWeight: 600, color: '#10B981' }}>Al corriente</p>
+                                        <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>No tienes saldos pendientes</p>
+                                    </div>
                                 </div>
                             )}
 
                             {/* Breakdown */}
                             {statement && (
-                                <div className="bg-[var(--color-surface)] rounded-[var(--radius-lg)] border border-[var(--color-border)] overflow-hidden">
-                                    <div className="bg-[var(--color-surface-hover)] px-4 py-3 border-b border-[var(--color-border)]">
-                                        <p className="text-[10px] font-bold text-[var(--color-text-tertiary)] uppercase tracking-widest">Desglose</p>
+                                <div className="card" style={{ overflow: 'hidden' }}>
+                                    <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface-hover)' }}>
+                                        <p className="section-header" style={{ marginBottom: 0 }}>Desglose</p>
                                     </div>
-                                    <div className="p-4 space-y-4">
+                                    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
                                         {statement.maintenance?.filter((m: any) => m.status === 'pendiente').map((m: any) => (
-                                            <div key={m.id} className="flex justify-between items-center py-1">
-                                                <span className="text-sm text-[var(--color-text-primary)]">Mantenimiento {m.period}</span>
-                                                <span className="text-sm font-semibold text-[var(--color-red-lebanese)]">${Number(m.amount).toLocaleString('es-MX')}</span>
+                                            <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ fontSize: 14, color: 'var(--color-text-primary)' }}>Mantenimiento {m.period}</span>
+                                                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-red-lebanese)' }}>${Number(m.amount).toLocaleString('es-MX')}</span>
                                             </div>
                                         ))}
                                         {statement.locker_rentals?.filter((l: any) => l.status !== 'pagada').map((l: any) => (
-                                            <div key={l.id} className="flex justify-between items-center py-1">
-                                                <span className="text-sm text-[var(--color-text-primary)]">Locker {l.locker?.number}</span>
-                                                <span className="text-sm font-medium text-[var(--color-text-primary)]">${Number(l.price).toLocaleString('es-MX')}</span>
+                                            <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ fontSize: 14, color: 'var(--color-text-primary)' }}>Locker {l.locker?.number}</span>
+                                                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' }}>${Number(l.price).toLocaleString('es-MX')}</span>
                                             </div>
                                         ))}
-                                        <div className="h-px bg-[var(--color-border)]" />
-                                        <div className="flex justify-between items-center pt-1">
-                                            <span className="font-bold text-[var(--color-text-primary)]">Total</span>
-                                            <span className="font-bold text-lg text-[var(--color-gold)]">${Number(totalDue).toLocaleString('es-MX')} MXN</span>
+                                        <div style={{ height: 1, background: 'var(--color-border)' }} />
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Total</span>
+                                            <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-gold)' }}>${Number(totalDue).toLocaleString('es-MX')} MXN</span>
                                         </div>
                                     </div>
                                 </div>

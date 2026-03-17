@@ -19,8 +19,18 @@ export class ErrorBoundary extends Component<Props, State> {
     render() {
         if (this.state.hasError) {
             return (
-                <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center gap-5"
-                    style={{ background: 'var(--color-bg)' }}>
+                <div style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingLeft: 24,
+                    paddingRight: 24,
+                    textAlign: 'center',
+                    gap: 20,
+                    background: 'var(--color-bg)',
+                }}>
                     <div style={{
                         width: 64, height: 64, borderRadius: 20,
                         background: 'rgba(239,68,68,0.1)',

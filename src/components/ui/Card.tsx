@@ -8,20 +8,29 @@ interface CardProps extends HTMLMotionProps<"div"> {
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-    ({ className, glass, interactive, children, ...props }, ref) => {
+    ({ className, glass, interactive, children, style, ...props }, ref) => {
         return (
             <motion.div
                 ref={ref}
                 whileHover={interactive ? { y: -2 } : undefined}
                 transition={{ duration: 0.2 }}
                 className={cn(
-                    'rounded-[var(--radius-lg)] overflow-hidden transition-all duration-200',
-                    glass
-                        ? 'glass'
-                        : 'bg-[var(--color-surface)] border border-[var(--color-border)]',
-                    interactive && 'cursor-pointer hover:border-[var(--color-border-strong)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)]',
+                    glass && 'glass',
                     className
                 )}
+                style={{
+                    borderRadius: 'var(--radius-lg)',
+                    overflow: 'hidden',
+                    transition: 'all 0.2s',
+                    ...(!glass ? {
+                        background: 'var(--color-surface)',
+                        border: '1px solid var(--color-border)',
+                    } : {}),
+                    ...(interactive ? {
+                        cursor: 'pointer',
+                    } : {}),
+                    ...style,
+                }}
                 {...props}
             >
                 {children}
@@ -31,14 +40,41 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = 'Card';
 
-export const CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("px-5 py-4 flex flex-col space-y-1", className)} {...props} />
+export const CardHeader = ({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div
+        className={className}
+        style={{
+            padding: '16px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            ...style,
+        }}
+        {...props}
+    />
 )
 
-export const CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className={cn("font-semibold leading-tight tracking-tight text-[var(--color-text-primary)]", className)} {...props} />
+export const CardTitle = ({ className, style, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h3
+        className={className}
+        style={{
+            fontWeight: 600,
+            lineHeight: 1.25,
+            letterSpacing: '-0.01em',
+            color: 'var(--color-text-primary)',
+            ...style,
+        }}
+        {...props}
+    />
 )
 
-export const CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("px-5 py-4", className)} {...props} />
+export const CardContent = ({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div
+        className={className}
+        style={{
+            padding: '16px 16px',
+            ...style,
+        }}
+        {...props}
+    />
 )

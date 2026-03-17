@@ -3,9 +3,11 @@ import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import {
     LayoutDashboard, Users, CalendarDays,
-    Briefcase, Wallet, Settings, ShieldCheck, ChevronRight,
+    Briefcase, Wallet, Settings, ShieldCheck, ChevronRight, ChevronDown,
     Activity, TrendingUp, AlertCircle,
-    Lock, Megaphone, Plus, Trash2, Edit3, X, Check, Search, UserCheck
+    Lock, Megaphone, Plus, Trash2, Edit3, X, Check, Search, UserCheck,
+    DollarSign, Clock, MapPin, Dumbbell, Scissors, BookOpen,
+    FileText, Image, Star, ArrowUp, ArrowDown, Eye, EyeOff, Loader2, Link2, UserPlus, QrCode
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
@@ -18,6 +20,8 @@ const TABS = [
     { id: 'agenda', label: 'Agenda Staff', icon: CalendarDays },
     { id: 'lockers', label: 'Control Lockers', icon: Lock },
     { id: 'finanzas', label: 'Finanzas', icon: Wallet },
+    { id: 'contenido', label: 'Contenido', icon: FileText },
+    { id: 'recepcion', label: 'Recepción', icon: QrCode },
     { id: 'catalogo', label: 'Catálogo', icon: Briefcase },
     { id: 'config', label: 'Sistema', icon: Settings },
 ];
@@ -80,13 +84,13 @@ const EventsTab = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2 className="text-xl font-bold text-white">Gestión de Eventos</h2>
-                    <p className="text-slate-400 text-sm mt-1">Crea y administra los eventos del club</p>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Gestión de Eventos</h2>
+                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Crea y administra los eventos del club</p>
                 </div>
-                <Button onClick={openCreate} className="bg-[var(--color-gold)] text-[var(--color-bg)] hover:opacity-90 text-xs font-semibold">
+                <Button onClick={openCreate} style={{ background: 'var(--color-gold)', color: 'var(--color-bg)', fontSize: 12, fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}>
                     <Plus size={16} /> Nuevo Evento
                 </Button>
             </div>
@@ -94,63 +98,69 @@ const EventsTab = () => {
             <AnimatePresence>
                 {showForm && (
                     <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                        className="bg-[#0B1120] border border-[var(--color-gold)]/30 rounded-2xl p-6 space-y-4">
-                        <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-bold text-white">{editing ? 'Editar Evento' : 'Nuevo Evento'}</h3>
-                            <button onClick={() => setShowForm(false)} aria-label="Cerrar" className="text-slate-400 hover:text-white"><X size={18} /></button>
+                        style={{ background: '#0B1120', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                            <h3 style={{ fontWeight: 700, color: 'white' }}>{editing ? 'Editar Evento' : 'Nuevo Evento'}</h3>
+                            <button onClick={() => setShowForm(false)} aria-label="Cerrar" style={{ color: '#94A3B8', cursor: 'pointer', touchAction: 'manipulation', background: 'none', border: 'none' }}><X size={18} /></button>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
                             {[
                                 { key: 'title', label: 'Título *', type: 'text', placeholder: '' },
                                 { key: 'location', label: 'Ubicación', type: 'text', placeholder: 'Ej. Piscina Olímpica' },
                             ].map(f => (
                                 <div key={f.key}>
-                                    <label className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">{f.label}</label>
+                                    <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>{f.label}</label>
                                     <input value={form[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} placeholder={f.placeholder}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--color-gold)]" />
+                                        style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', boxSizing: 'border-box' }} />
                                 </div>
                             ))}
                             <div>
-                                <label className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Categoría</label>
+                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Categoría</label>
                                 <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--color-gold)]">
+                                    style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }}>
                                     {['general', 'torneo', 'social', 'curso', 'nutricion', 'infantil', 'deportivo'].map(c => (
                                         <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
                                     ))}
                                 </select>
                             </div>
                             <div>
-                                <label className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Fecha y Hora *</label>
+                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Fecha y Hora *</label>
                                 <input type="datetime-local" value={form.event_date} onChange={e => setForm({ ...form, event_date: e.target.value })}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--color-gold)]" />
+                                    style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }} />
                             </div>
-                            <div className="md:col-span-2">
-                                <label className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Descripción</label>
+                            <div style={{ gridColumn: 'span 2' }}>
+                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Descripción</label>
                                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-                                    rows={2} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--color-gold)] resize-none" />
+                                    rows={2} style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
                             </div>
                             <div>
-                                <label className="text-[10px] text-slate-400 uppercase tracking-widest block mb-2">Color de Tarjeta</label>
-                                <div className="flex gap-2 flex-wrap">
+                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>Color de Tarjeta</label>
+                                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                     {EVENT_COLORS.map(c => (
                                         <button key={c.value} onClick={() => setForm({ ...form, image_color: c.value })}
-                                            className={`w-8 h-8 rounded-lg border-2 transition-all ${form.image_color === c.value ? 'border-white scale-110' : 'border-transparent'}`}
-                                            style={{ background: c.value }} title={c.label} />
+                                            style={{
+                                                width: 32, height: 32, borderRadius: 8,
+                                                border: form.image_color === c.value ? '2px solid white' : '2px solid transparent',
+                                                transform: form.image_color === c.value ? 'scale(1.1)' : 'scale(1)',
+                                                transition: 'all 200ms',
+                                                background: c.value, cursor: 'pointer', touchAction: 'manipulation',
+                                            }}
+                                            title={c.label} />
                                     ))}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-6 pt-4">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 24, paddingTop: 16 }}>
                                 {[{ key: 'is_published', label: 'Publicado' }, { key: 'is_featured', label: 'Destacado' }].map(cb => (
-                                    <label key={cb.key} className="flex items-center gap-2 cursor-pointer">
-                                        <input type="checkbox" checked={form[cb.key]} onChange={e => setForm({ ...form, [cb.key]: e.target.checked })} className="w-4 h-4 accent-[var(--color-gold)]" />
-                                        <span className="text-sm text-slate-300">{cb.label}</span>
+                                    <label key={cb.key} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', touchAction: 'manipulation' }}>
+                                        <input type="checkbox" checked={form[cb.key]} onChange={e => setForm({ ...form, [cb.key]: e.target.checked })} style={{ width: 16, height: 16, accentColor: 'var(--color-gold)', cursor: 'pointer', touchAction: 'manipulation' }} />
+                                        <span style={{ fontSize: 14, color: '#CBD5E1' }}>{cb.label}</span>
                                     </label>
                                 ))}
                             </div>
                         </div>
-                        <div className="flex gap-3 pt-2">
-                            <Button variant="outline" onClick={() => setShowForm(false)} className="border-slate-700 text-slate-400">Cancelar</Button>
-                            <Button onClick={handleSave} isLoading={saving} className="bg-[var(--color-gold)] text-[var(--color-bg)]">
+                        <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
+                            <Button variant="outline" onClick={() => setShowForm(false)} style={{ borderColor: '#334155', color: '#94A3B8', cursor: 'pointer', touchAction: 'manipulation' }}>Cancelar</Button>
+                            <Button onClick={handleSave} isLoading={saving} style={{ background: 'var(--color-gold)', color: 'var(--color-bg)', cursor: 'pointer', touchAction: 'manipulation' }}>
                                 <Check size={16} /> {editing ? 'Guardar Cambios' : 'Crear Evento'}
                             </Button>
                         </div>
@@ -158,61 +168,80 @@ const EventsTab = () => {
                 )}
             </AnimatePresence>
 
-            <div className="bg-[#0B1120] rounded-2xl border border-slate-800 overflow-hidden">
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
                 {loading ? (
-                    <div className="p-12 text-center text-slate-500 text-sm">Cargando eventos...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando eventos...</div>
                 ) : fetchError ? (
-                    <div className="p-12 text-center">
-                        <AlertCircle size={36} className="text-red-500 mx-auto mb-3" />
-                        <p className="text-red-400 text-sm">{fetchError}</p>
-                        <button onClick={fetchEvents} className="mt-4 px-4 py-2 text-xs text-slate-300 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">Reintentar</button>
+                    <div style={{ padding: 48, textAlign: 'center' }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                            <AlertCircle size={22} style={{ color: '#EF4444' }} />
+                        </div>
+                        <p style={{ color: '#F87171', fontSize: 14 }}>{fetchError}</p>
+                        <button onClick={fetchEvents} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, fontSize: 12, color: '#CBD5E1', border: '1px solid #334155', borderRadius: 8, background: 'transparent', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}>Reintentar</button>
                     </div>
                 ) : events.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <Megaphone size={36} className="text-slate-600 mx-auto mb-3" />
-                        <p className="text-slate-400">Sin eventos registrados</p>
-                        <p className="text-slate-600 text-xs mt-1">Crea el primer evento del club</p>
+                    <div style={{ padding: 48, textAlign: 'center' }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(100,116,139,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                            <Megaphone size={22} style={{ color: '#64748B' }} />
+                        </div>
+                        <p style={{ color: '#94A3B8' }}>Sin eventos registrados</p>
+                        <p style={{ color: '#475569', fontSize: 12, marginTop: 4 }}>Crea el primer evento del club</p>
                     </div>
                 ) : (
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-[#05080F] text-slate-500 font-medium text-[10px] uppercase tracking-widest border-b border-slate-800">
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 14, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid #1E293B' }}>
                             <tr>
-                                <th className="px-6 py-4">Evento</th>
-                                <th className="px-6 py-4">Fecha</th>
-                                <th className="px-6 py-4">Categoría</th>
-                                <th className="px-6 py-4">Estado</th>
-                                <th className="px-6 py-4 text-right">Acciones</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Evento</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Fecha</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Categoría</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Estado</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, textAlign: 'right' }}>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/50">
-                            {events.map(ev => (
-                                <tr key={ev.id} className="hover:bg-slate-900/50 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-3 h-10 rounded-full shrink-0" style={{ background: ev.image_color || '#007A4A' }} />
+                        <tbody>
+                            {events.map((ev, idx) => (
+                                <tr key={ev.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined, transition: 'background 200ms' }}
+                                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(15,23,42,0.5)')}
+                                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                            <div style={{ width: 3, height: 40, borderRadius: 9999, flexShrink: 0, background: ev.image_color || '#007A4A' }} />
                                             <div>
-                                                <p className="font-semibold text-slate-200">{ev.title}</p>
-                                                {ev.location && <p className="text-xs text-slate-500 mt-0.5">{ev.location}</p>}
+                                                <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{ev.title}</p>
+                                                {ev.location && <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>{ev.location}</p>}
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-slate-400 text-xs">
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', fontSize: 12 }}>
                                         {new Date(ev.event_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}<br />
                                         {new Date(ev.event_date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}h
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded bg-slate-800 text-slate-300">{ev.category}</span>
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
+                                        <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: '#1E293B', color: '#CBD5E1' }}>{ev.category}</span>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
                                         <button onClick={() => togglePublish(ev)}
-                                            className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded ${ev.is_published ? 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
+                                            style={{
+                                                paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, cursor: 'pointer', touchAction: 'manipulation',
+                                                background: ev.is_published ? 'rgba(52,211,153,0.1)' : '#1E293B',
+                                                color: ev.is_published ? '#34D399' : '#64748B',
+                                                border: ev.is_published ? '1px solid rgba(52,211,153,0.3)' : '1px solid #334155',
+                                            }}>
                                             {ev.is_published ? 'Publicado' : 'Borrador'}
                                         </button>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center gap-2 justify-end">
-                                            <button onClick={() => openEdit(ev)} className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"><Edit3 size={15} /></button>
-                                            <button onClick={() => handleDelete(ev.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-colors"><Trash2 size={15} /></button>
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, textAlign: 'right' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
+                                            <button onClick={() => openEdit(ev)} style={{ padding: 8, borderRadius: 8, color: '#94A3B8', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
+                                                onMouseEnter={e => { e.currentTarget.style.background = '#1E293B'; e.currentTarget.style.color = 'white'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94A3B8'; }}>
+                                                <Edit3 size={15} />
+                                            </button>
+                                            <button onClick={() => handleDelete(ev.id)} style={{ padding: 8, borderRadius: 8, color: '#94A3B8', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
+                                                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#F87171'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94A3B8'; }}>
+                                                <Trash2 size={15} />
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -222,6 +251,157 @@ const EventsTab = () => {
                 )}
             </div>
         </div>
+    );
+};
+
+// ── Staff Service Assignment Row ────────────────────────────
+const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefresh: () => void }) => {
+    const { showToast } = useToast();
+    const [expanded, setExpanded] = useState(false);
+    const [available, setAvailable] = useState<any[]>([]);
+    const [assigned, setAssigned] = useState<string[]>([]);
+    const [loadingSvc, setLoadingSvc] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const currentAssigned = staffMember.services?.map((ss: any) => ss.service?.id).filter(Boolean) || [];
+
+    const toggleExpand = async () => {
+        if (expanded) { setExpanded(false); return; }
+        setExpanded(true);
+        setLoadingSvc(true);
+        try {
+            const res = await api.get(`/admin/staff/${staffMember.id}/services`);
+            setAvailable(res.data.available);
+            setAssigned(res.data.assigned);
+        } catch { setAvailable([]); setAssigned([]); }
+        finally { setLoadingSvc(false); }
+    };
+
+    const toggleService = (serviceId: string) => {
+        setAssigned(prev => prev.includes(serviceId) ? prev.filter(id => id !== serviceId) : [...prev, serviceId]);
+    };
+
+    const saveAssignments = async () => {
+        setSaving(true);
+        try {
+            await api.put(`/admin/staff/${staffMember.id}/services`, { service_ids: assigned });
+            showToast(`Servicios actualizados para ${staffMember.name}`);
+            onRefresh();
+        } catch (err: any) { showToast(err.response?.data?.error || 'Error al guardar'); }
+        finally { setSaving(false); }
+    };
+
+    // Group available services by category
+    const grouped = available.reduce((acc: Record<string, any[]>, svc: any) => {
+        const cat = svc.category || 'otros';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(svc);
+        return acc;
+    }, {});
+
+    const hasChanges = JSON.stringify([...assigned].sort()) !== JSON.stringify([...currentAssigned].sort());
+
+    return (
+        <>
+            <tr style={{ borderTop: '1px solid rgba(30,41,59,0.5)', transition: 'background 200ms', cursor: 'pointer' }}
+                onClick={toggleExpand}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(15,23,42,0.5)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 16, background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+                            {staffMember.name[0]}
+                        </div>
+                        <div>
+                            <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{staffMember.name}</p>
+                            {currentAssigned.length > 0 && (
+                                <p style={{ fontSize: 10, color: '#64748B', marginTop: 2 }}>
+                                    {currentAssigned.length} servicio{currentAssigned.length !== 1 ? 's' : ''} asignado{currentAssigned.length !== 1 ? 's' : ''}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', textTransform: 'capitalize', fontSize: 12 }}>{staffMember.role?.replace(/_/g, ' ')}</td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', fontSize: 12 }}>{staffMember.unit?.short_name || '—'}</td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
+                    <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: '#1E293B', color: '#CBD5E1' }}>{staffMember.employment_type?.replace(/_/g, ' ')}</span>
+                </td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{
+                            paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4,
+                            background: staffMember.is_active ? 'rgba(52,211,153,0.1)' : '#1E293B',
+                            color: staffMember.is_active ? '#34D399' : '#64748B',
+                            border: staffMember.is_active ? '1px solid rgba(52,211,153,0.3)' : '1px solid #334155',
+                        }}>
+                            {staffMember.is_active ? 'Activo' : 'Inactivo'}
+                        </span>
+                        {expanded ? <ChevronDown size={14} style={{ color: '#64748B' }} /> : <ChevronRight size={14} style={{ color: '#64748B' }} />}
+                    </div>
+                </td>
+            </tr>
+            {expanded && (
+                <tr>
+                    <td colSpan={5} style={{ padding: 0 }}>
+                        <div style={{ background: 'rgba(15,23,42,0.6)', borderTop: '1px solid rgba(201,168,76,0.15)', borderBottom: '1px solid rgba(201,168,76,0.15)', padding: 20 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <Link2 size={14} style={{ color: 'var(--color-gold)' }} />
+                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>Asignar Servicios</p>
+                                </div>
+                                {hasChanges && (
+                                    <button onClick={(e) => { e.stopPropagation(); saveAssignments(); }} disabled={saving}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: 6,
+                                            paddingLeft: 12, paddingRight: 12, paddingTop: 6, paddingBottom: 6,
+                                            background: 'var(--color-gold)', color: '#020617', fontSize: 11, fontWeight: 700,
+                                            borderRadius: 8, border: 'none', cursor: 'pointer', touchAction: 'manipulation',
+                                            opacity: saving ? 0.7 : 1,
+                                        }}>
+                                        {saving ? <Loader2 size={12} style={{ animation: 'spin 1s linear infinite' }} /> : <Check size={12} />}
+                                        Guardar
+                                    </button>
+                                )}
+                            </div>
+                            {loadingSvc ? (
+                                <div style={{ padding: 24, textAlign: 'center', color: '#64748B', fontSize: 12 }}>Cargando servicios...</div>
+                            ) : available.length === 0 ? (
+                                <div style={{ padding: 24, textAlign: 'center', color: '#64748B', fontSize: 12 }}>No hay servicios disponibles en esta unidad</div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                    {Object.entries(grouped).map(([category, services]) => (
+                                        <div key={category}>
+                                            <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748B', marginBottom: 8 }}>{category}</p>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                {(services as any[]).map((svc: any) => {
+                                                    const isAssigned = assigned.includes(svc.id);
+                                                    return (
+                                                        <button key={svc.id} onClick={(e) => { e.stopPropagation(); toggleService(svc.id); }}
+                                                            style={{
+                                                                display: 'flex', alignItems: 'center', gap: 6,
+                                                                paddingLeft: 10, paddingRight: 10, paddingTop: 6, paddingBottom: 6,
+                                                                borderRadius: 8, cursor: 'pointer', touchAction: 'manipulation',
+                                                                fontSize: 12, fontWeight: 500, transition: 'all 200ms',
+                                                                background: isAssigned ? 'rgba(201,168,76,0.15)' : '#1E293B',
+                                                                color: isAssigned ? '#C9A84C' : '#94A3B8',
+                                                                border: isAssigned ? '1px solid rgba(201,168,76,0.4)' : '1px solid #334155',
+                                                            }}>
+                                                            {isAssigned && <Check size={12} />}
+                                                            {svc.name}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </td>
+                </tr>
+            )}
+        </>
     );
 };
 
@@ -252,64 +432,969 @@ const StaffTab = () => {
 
     const filtered = staff.filter(s => s.name.toLowerCase().includes(query.toLowerCase()) || s.role.toLowerCase().includes(query.toLowerCase()));
 
+    const totalAssignments = staff.reduce((sum, s) => sum + (s.services?.length || 0), 0);
+
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h2 className="text-xl font-bold text-white">Personal del Club</h2>
-                    <p className="text-slate-400 text-sm mt-1">{staff.length} empleados · {units.length} unidades</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Personal del Club</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>{staff.length} empleados · {units.length} unidades · {totalAssignments} asignaciones de servicio</p>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+                <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} size={16} />
+                <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre o puesto..."
+                    style={{ width: '100%', paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10, background: '#0F172A', border: '1px solid #334155', borderRadius: 12, fontSize: 14, color: '#CBD5E1', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                {loading ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando personal...</div>
+                ) : filtered.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin resultados</div>
+                ) : (
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 14, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid #1E293B' }}>
+                            <tr>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Empleado</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Puesto</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Unidad</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Tipo</th>
+                                <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.map(s => (
+                                <StaffServiceRow key={s.id} staffMember={s} onRefresh={fetchStaff} />
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ── Finanzas Tab ──────────────────────────────────────────────
+const FinanzasTab = () => {
+    const [data, setData] = useState<any>(null);
+    const [commissions, setCommissions] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [loadingComm, setLoadingComm] = useState(true);
+    const [showComm, setShowComm] = useState(false);
+
+    useEffect(() => {
+        api.get('/admin/finance/summary')
+            .then(res => setData(res.data))
+            .catch(() => {})
+            .finally(() => setLoading(false));
+        api.get('/admin/commissions')
+            .then(res => setCommissions(res.data))
+            .catch(() => {})
+            .finally(() => setLoadingComm(false));
+    }, []);
+
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando datos financieros...</div>;
+    if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar finanzas</div>;
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Finanzas</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Resumen financiero del club</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <MetricCard title="Ingresos del Mes" value={`$${Number(data.month_revenue).toLocaleString('es-MX')}`} icon={DollarSign} trend={`${data.month_transactions} txns`} />
+                <MetricCard title="Pendiente de Cobro" value={`$${Number(data.pending_amount).toLocaleString('es-MX')}`} icon={AlertCircle} trend={`${data.pending_count} pagos`} color="red" />
+                <MetricCard title="Mant. Pendiente" value={`$${Number(data.pending_maintenance).toLocaleString('es-MX')}`} icon={Wallet} trend={`${data.pending_maintenance_count} cuotas`} color={Number(data.pending_maintenance) > 0 ? 'red' : undefined} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 4 }}>Ingresos Totales</h3>
+                    <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-gold)', letterSpacing: -1 }}>${Number(data.total_revenue).toLocaleString('es-MX')}</p>
+                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>{data.total_transactions} transacciones completadas</p>
+                </div>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 4 }}>Lockers Activos</h3>
+                    <p style={{ fontSize: 32, fontWeight: 700, color: '#10B981', letterSpacing: -1 }}>{data.active_locker_count}</p>
+                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>Ingreso: ${Number(data.active_locker_revenue).toLocaleString('es-MX')}</p>
                 </div>
             </div>
 
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
-                <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre o puesto..."
-                    className="w-full pl-9 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-300 focus:outline-none focus:border-[var(--color-gold)]" />
+            {/* Commission Tracking */}
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                <button onClick={() => setShowComm(!showComm)}
+                    style={{
+                        width: '100%', padding: '16px 24px', borderBottom: showComm ? '1px solid #1E293B' : 'none',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation',
+                    }}>
+                    <div>
+                        <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', textAlign: 'left' }}>Comisiones Independientes</h3>
+                        <p style={{ fontSize: 11, color: '#64748B', marginTop: 2, textAlign: 'left' }}>
+                            {commissions ? `${commissions.staff?.length || 0} proveedores · Corte del club: $${commissions.totals?.club_cut?.toLocaleString('es-MX') || '0'}` : 'Cargando...'}
+                        </p>
+                    </div>
+                    {showComm ? <ChevronDown size={16} style={{ color: '#64748B' }} /> : <ChevronRight size={16} style={{ color: '#64748B' }} />}
+                </button>
+                {showComm && (
+                    <div>
+                        {loadingComm ? (
+                            <div style={{ padding: 32, textAlign: 'center', color: '#64748B', fontSize: 12 }}>Cargando comisiones...</div>
+                        ) : !commissions?.staff?.length ? (
+                            <div style={{ padding: 32, textAlign: 'center', color: '#64748B', fontSize: 12 }}>No hay proveedores independientes</div>
+                        ) : (
+                            <>
+                                {/* Summary row */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: '#1E293B', borderBottom: '1px solid #1E293B' }}>
+                                    {[
+                                        { label: 'Ingresos Brutos', value: `$${commissions.totals.gross.toLocaleString('es-MX')}`, color: 'white' },
+                                        { label: 'Corte del Club', value: `$${commissions.totals.club_cut.toLocaleString('es-MX')}`, color: 'var(--color-gold)' },
+                                        { label: 'Período', value: commissions.period, color: '#94A3B8' },
+                                    ].map(s => (
+                                        <div key={s.label} style={{ background: '#05080F', padding: '12px 16px', textAlign: 'center' }}>
+                                            <p style={{ fontSize: 9, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>{s.label}</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Staff breakdown */}
+                                <table style={{ width: '100%', textAlign: 'left', fontSize: 12, borderCollapse: 'collapse' }}>
+                                    <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                        <tr>
+                                            <th style={{ padding: '10px 16px' }}>Proveedor</th>
+                                            <th style={{ padding: '10px 16px' }}>Servicios</th>
+                                            <th style={{ padding: '10px 16px' }}>Bruto</th>
+                                            <th style={{ padding: '10px 16px' }}>Club</th>
+                                            <th style={{ padding: '10px 16px' }}>Pago Staff</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {commissions.staff.map((s: any, idx: number) => (
+                                            <tr key={s.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                                <td style={{ padding: '10px 16px' }}>
+                                                    <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{s.name}</p>
+                                                    <p style={{ fontSize: 10, color: '#64748B', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')} · {s.unit}</p>
+                                                </td>
+                                                <td style={{ padding: '10px 16px', color: '#94A3B8', textAlign: 'center' }}>{s.month_services}</td>
+                                                <td style={{ padding: '10px 16px', color: '#E2E8F0', fontWeight: 600 }}>${s.month_gross.toLocaleString('es-MX')}</td>
+                                                <td style={{ padding: '10px 16px', color: 'var(--color-gold)', fontWeight: 700 }}>${s.month_club_cut.toLocaleString('es-MX')}</td>
+                                                <td style={{ padding: '10px 16px', color: '#94A3B8' }}>${s.month_staff_payout.toLocaleString('es-MX')}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
 
-            <div className="bg-[#0B1120] rounded-2xl border border-slate-800 overflow-hidden">
-                {loading ? (
-                    <div className="p-12 text-center text-slate-500 text-sm">Cargando personal...</div>
-                ) : filtered.length === 0 ? (
-                    <div className="p-12 text-center text-slate-500">Sin resultados</div>
+            {/* Recent payments table */}
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Últimos Pagos</h3>
+                    <span style={{ fontSize: 11, color: '#64748B' }}>{data.recent_payments.length} registros</span>
+                </div>
+                {data.recent_payments.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin pagos registrados</div>
                 ) : (
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-[#05080F] text-slate-500 font-medium text-[10px] uppercase tracking-widest border-b border-slate-800">
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
-                                <th className="px-6 py-4">Empleado</th>
-                                <th className="px-6 py-4">Puesto</th>
-                                <th className="px-6 py-4">Unidad</th>
-                                <th className="px-6 py-4">Tipo</th>
-                                <th className="px-6 py-4">Estado</th>
+                                <th style={{ padding: '12px 24px' }}>Socio</th>
+                                <th style={{ padding: '12px 24px' }}>Tipo</th>
+                                <th style={{ padding: '12px 24px' }}>Monto</th>
+                                <th style={{ padding: '12px 24px' }}>Estado</th>
+                                <th style={{ padding: '12px 24px' }}>Fecha</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/50">
-                            {filtered.map(s => (
-                                <tr key={s.id} className="hover:bg-slate-900/50 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-gold)] text-xs font-bold shrink-0">
-                                                {s.name[0]}
-                                            </div>
-                                            <p className="font-semibold text-slate-200">{s.name}</p>
-                                        </div>
+                        <tbody>
+                            {data.recent_payments.slice(0, 10).map((p: any, idx: number) => (
+                                <tr key={p.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                    <td style={{ padding: '12px 24px', color: '#E2E8F0', fontWeight: 500 }}>
+                                        {p.profile ? `${p.profile.first_name} ${p.profile.last_name}` : `#${p.membership?.member_number || '—'}`}
                                     </td>
-                                    <td className="px-6 py-4 text-slate-400 capitalize text-xs">{s.role?.replace(/_/g, ' ')}</td>
-                                    <td className="px-6 py-4 text-slate-400 text-xs">{s.unit?.short_name || '—'}</td>
-                                    <td className="px-6 py-4">
-                                        <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded bg-slate-800 text-slate-300">{s.employment_type?.replace(/_/g, ' ')}</span>
+                                    <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{p.type?.replace(/_/g, ' ')}</td>
+                                    <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white' }}>${Number(p.amount).toLocaleString('es-MX')}</td>
+                                    <td style={{ padding: '12px 24px' }}>
+                                        <span style={{
+                                            padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+                                            background: p.status === 'pagado' ? 'rgba(52,211,153,0.1)' : 'rgba(239,68,68,0.1)',
+                                            color: p.status === 'pagado' ? '#34D399' : '#F87171',
+                                            border: `1px solid ${p.status === 'pagado' ? 'rgba(52,211,153,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                                        }}>{p.status}</span>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <button onClick={() => toggleActive(s)}
-                                            className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded ${s.is_active ? 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
-                                            {s.is_active ? 'Activo' : 'Inactivo'}
-                                        </button>
+                                    <td style={{ padding: '12px 24px', color: '#64748B', fontSize: 12 }}>
+                                        {new Date(p.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 )}
+            </div>
+        </div>
+    );
+};
+
+// ── Lockers Tab ──────────────────────────────────────────────
+const LockersTab = () => {
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState<'all' | 'occupied' | 'available'>('all');
+
+    useEffect(() => {
+        api.get('/admin/lockers/overview')
+            .then(res => setData(res.data))
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando lockers...</div>;
+    if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar lockers</div>;
+
+    const filtered = data.lockers.filter((l: any) => {
+        if (filter === 'occupied') return l.rentals.length > 0;
+        if (filter === 'available') return l.rentals.length === 0;
+        return true;
+    });
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Control de Lockers</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>{data.total} lockers · {data.occupancy_rate}% ocupación</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <MetricCard title="Total Lockers" value={data.total} icon={Lock} trend="Instalados" />
+                <MetricCard title="Ocupados" value={data.occupied} icon={UserCheck} trend={`${data.occupancy_rate}%`} />
+                <MetricCard title="Disponibles" value={data.available} icon={Check} trend="Libres" />
+            </div>
+
+            {/* Filter */}
+            <div style={{ display: 'flex', gap: 8 }}>
+                {([['all', 'Todos'], ['occupied', 'Ocupados'], ['available', 'Disponibles']] as const).map(([key, label]) => (
+                    <button key={key} onClick={() => setFilter(key)}
+                        style={{
+                            padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                            background: filter === key ? 'rgba(201,168,76,0.1)' : 'transparent',
+                            color: filter === key ? 'var(--color-gold)' : '#94A3B8',
+                            border: filter === key ? '1px solid rgba(201,168,76,0.3)' : '1px solid #334155',
+                        }}>{label}</button>
+                ))}
+            </div>
+
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                {filtered.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin lockers en esta categoría</div>
+                ) : (
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                            <tr>
+                                <th style={{ padding: '12px 24px' }}>Locker</th>
+                                <th style={{ padding: '12px 24px' }}>Unidad</th>
+                                <th style={{ padding: '12px 24px' }}>Zona</th>
+                                <th style={{ padding: '12px 24px' }}>Tamaño</th>
+                                <th style={{ padding: '12px 24px' }}>Estado</th>
+                                <th style={{ padding: '12px 24px' }}>Rentado por</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.map((l: any, idx: number) => {
+                                const rental = l.rentals[0];
+                                return (
+                                    <tr key={l.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white' }}>#{l.number}</td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{l.unit?.short_name}</td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{l.zone}</td>
+                                        <td style={{ padding: '12px 24px' }}>
+                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', background: '#1E293B', color: '#CBD5E1' }}>{l.size}</span>
+                                        </td>
+                                        <td style={{ padding: '12px 24px' }}>
+                                            <span style={{
+                                                width: 8, height: 8, borderRadius: 4, display: 'inline-block', marginRight: 8,
+                                                background: rental ? '#C9A84C' : '#10B981',
+                                            }} />
+                                            <span style={{ color: rental ? '#C9A84C' : '#10B981', fontSize: 12, fontWeight: 600 }}>
+                                                {rental ? 'Ocupado' : 'Libre'}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>
+                                            {rental ? `${rental.profile?.first_name} ${rental.profile?.last_name} (#${rental.membership?.member_number})` : '—'}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ── Agenda Tab ──────────────────────────────────────────────
+const AgendaTab = () => {
+    const [reservations, setReservations] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        api.get('/admin/reservations/today')
+            .then(res => setReservations(res.data))
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    const today = new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+    const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+        confirmada: { label: 'Confirmada', color: '#34D399', bg: 'rgba(52,211,153,0.1)' },
+        pendiente: { label: 'Pendiente', color: '#C9A84C', bg: 'rgba(201,168,76,0.1)' },
+        pendiente_aprobacion: { label: 'Por aprobar', color: '#C9A84C', bg: 'rgba(201,168,76,0.1)' },
+        en_curso: { label: 'En curso', color: '#06B6D4', bg: 'rgba(6,182,212,0.1)' },
+        completada: { label: 'Completada', color: '#64748B', bg: 'rgba(100,116,139,0.1)' },
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Agenda del Día</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4, textTransform: 'capitalize' }}>{today} · {reservations.length} reservas</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <MetricCard title="Reservas Hoy" value={reservations.length} icon={CalendarDays} trend="Total" />
+                <MetricCard title="Confirmadas" value={reservations.filter(r => r.status === 'confirmada').length} icon={Check} trend="Listas" />
+                <MetricCard title="Pendientes" value={reservations.filter(r => r.status === 'pendiente' || r.status === 'pendiente_aprobacion').length} icon={Clock} trend="Por confirmar" />
+            </div>
+
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                {loading ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando agenda...</div>
+                ) : reservations.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center' }}>
+                        <CalendarDays size={32} style={{ color: '#334155', margin: '0 auto 12px' }} />
+                        <p style={{ color: '#64748B' }}>Sin reservas para hoy</p>
+                    </div>
+                ) : (
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                            <tr>
+                                <th style={{ padding: '12px 24px' }}>Hora</th>
+                                <th style={{ padding: '12px 24px' }}>Socio</th>
+                                <th style={{ padding: '12px 24px' }}>Servicio</th>
+                                <th style={{ padding: '12px 24px' }}>Staff</th>
+                                <th style={{ padding: '12px 24px' }}>Unidad</th>
+                                <th style={{ padding: '12px 24px' }}>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reservations.map((r: any, idx: number) => {
+                                const st = statusConfig[r.status] || statusConfig.pendiente;
+                                const startTime = r.start_time ? new Date(r.start_time).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '—';
+                                const endTime = r.end_time ? new Date(r.end_time).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '';
+                                return (
+                                    <tr key={r.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white', fontFamily: 'monospace' }}>
+                                            {startTime}{endTime ? `–${endTime}` : ''}
+                                        </td>
+                                        <td style={{ padding: '12px 24px', color: '#E2E8F0' }}>
+                                            {r.profile?.first_name} {r.profile?.last_name}
+                                        </td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.service?.name || '—'}</td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.staff?.name || '—'}</td>
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.unit?.short_name || '—'}</td>
+                                        <td style={{ padding: '12px 24px' }}>
+                                            <span style={{
+                                                padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+                                                background: st.bg, color: st.color, border: `1px solid ${st.color}30`,
+                                            }}>{st.label}</span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ── Recepción Tab ──────────────────────────────────────────────
+const RecepcionTab = () => {
+    const { showToast } = useToast();
+    const [passes, setPasses] = useState<any[]>([]);
+    const [stats, setStats] = useState({ total: 0, pending: 0, checked_in: 0 });
+    const [loading, setLoading] = useState(true);
+    const [qrInput, setQrInput] = useState('');
+    const [qrResult, setQrResult] = useState<any>(null);
+    const [validating, setValidating] = useState(false);
+
+    const fetchPasses = async () => {
+        try {
+            const res = await api.get('/admin/guests/today');
+            setPasses(res.data.passes);
+            setStats(res.data.stats);
+        } catch { /* empty */ }
+        finally { setLoading(false); }
+    };
+    useEffect(() => { fetchPasses(); }, []);
+
+    const handleCheckin = async (id: string) => {
+        try {
+            await api.post(`/guests/${id}/checkin`);
+            showToast('Invitado registrado');
+            fetchPasses();
+        } catch (err: any) { showToast(err.response?.data?.error || 'Error'); }
+    };
+
+    const handleQrValidate = async () => {
+        if (!qrInput.trim()) return;
+        setValidating(true);
+        try {
+            const res = await api.post('/admin/qr/validate', { code: qrInput.trim() });
+            setQrResult(res.data);
+        } catch (err: any) {
+            setQrResult({ valid: false, message: err.response?.data?.error || 'Código inválido' });
+        }
+        finally { setValidating(false); }
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Recepción</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Control de acceso y pases de invitado</p>
+            </div>
+
+            {/* QR / Member Code Validator */}
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                    <QrCode size={16} style={{ color: 'var(--color-gold)' }} />
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Validar Acceso</h3>
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <input value={qrInput} onChange={e => setQrInput(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleQrValidate()}
+                        placeholder="Escanea QR o ingresa código (CL-0001)..."
+                        style={{ flex: 1, paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: '#0F172A', border: '1px solid #334155', borderRadius: 10, fontSize: 14, color: '#CBD5E1', outline: 'none' }} />
+                    <button onClick={handleQrValidate} disabled={validating}
+                        style={{ paddingLeft: 16, paddingRight: 16, background: 'var(--color-gold)', color: '#020617', fontWeight: 700, fontSize: 12, borderRadius: 10, border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}>
+                        Validar
+                    </button>
+                </div>
+                {qrResult && (
+                    <div style={{
+                        marginTop: 12, padding: 16, borderRadius: 12,
+                        background: qrResult.valid ? 'rgba(52,211,153,0.08)' : 'rgba(239,68,68,0.08)',
+                        border: `1px solid ${qrResult.valid ? 'rgba(52,211,153,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                            <div style={{ width: 10, height: 10, borderRadius: 5, background: qrResult.valid ? '#34D399' : '#F87171' }} />
+                            <p style={{ fontSize: 14, fontWeight: 700, color: qrResult.valid ? '#34D399' : '#F87171' }}>
+                                {qrResult.valid ? 'ACCESO PERMITIDO' : 'ACCESO DENEGADO'}
+                            </p>
+                        </div>
+                        {qrResult.titular && <p style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 500 }}>{qrResult.titular}</p>}
+                        {qrResult.member_number && <p style={{ fontSize: 11, color: '#94A3B8' }}>Socio #{qrResult.member_number} · {qrResult.tier}</p>}
+                        <p style={{ fontSize: 11, color: '#64748B', marginTop: 4 }}>{qrResult.message}</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Today's Guest Passes */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <MetricCard title="Invitados Hoy" value={String(stats.total)} icon={UserPlus} trend="Total" />
+                <MetricCard title="Por Llegar" value={String(stats.pending)} icon={Clock} trend="Activos" />
+                <MetricCard title="Ingresaron" value={String(stats.checked_in)} icon={Check} trend="Check-in" />
+            </div>
+
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Pases de Invitado — Hoy</h3>
+                </div>
+                {loading ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando...</div>
+                ) : passes.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 13 }}>No hay invitados esperados hoy</div>
+                ) : (
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                            <tr>
+                                <th style={{ padding: '12px 20px' }}>Invitado</th>
+                                <th style={{ padding: '12px 20px' }}>Código</th>
+                                <th style={{ padding: '12px 20px' }}>Invita</th>
+                                <th style={{ padding: '12px 20px' }}>Estado</th>
+                                <th style={{ padding: '12px 20px' }}>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {passes.map((p: any, idx: number) => (
+                                <tr key={p.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                    <td style={{ padding: '12px 20px' }}>
+                                        <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{p.guest_name}</p>
+                                        {p.guest_phone && <p style={{ fontSize: 10, color: '#64748B' }}>{p.guest_phone}</p>}
+                                    </td>
+                                    <td style={{ padding: '12px 20px', fontFamily: 'monospace', fontWeight: 700, color: 'var(--color-gold)', fontSize: 13, letterSpacing: 1 }}>{p.pass_code}</td>
+                                    <td style={{ padding: '12px 20px', color: '#94A3B8', fontSize: 12 }}>
+                                        {p.invited_by ? `${p.invited_by.first_name} ${p.invited_by.last_name}` : '—'}
+                                        {p.invited_by?.membership && <span style={{ color: '#64748B' }}> #{p.invited_by.membership.member_number}</span>}
+                                    </td>
+                                    <td style={{ padding: '12px 20px' }}>
+                                        <span style={{
+                                            padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+                                            background: p.status === 'used' ? 'rgba(52,211,153,0.1)' : 'rgba(201,168,76,0.1)',
+                                            color: p.status === 'used' ? '#34D399' : '#C9A84C',
+                                            border: `1px solid ${p.status === 'used' ? 'rgba(52,211,153,0.3)' : 'rgba(201,168,76,0.3)'}`,
+                                        }}>{p.status === 'used' ? 'Ingresó' : 'Esperando'}</span>
+                                    </td>
+                                    <td style={{ padding: '12px 20px' }}>
+                                        {p.status === 'active' ? (
+                                            <button onClick={() => handleCheckin(p.id)}
+                                                style={{
+                                                    paddingLeft: 12, paddingRight: 12, paddingTop: 6, paddingBottom: 6,
+                                                    background: 'rgba(52,211,153,0.1)', color: '#34D399', fontWeight: 700, fontSize: 10,
+                                                    borderRadius: 6, border: '1px solid rgba(52,211,153,0.3)',
+                                                    cursor: 'pointer', touchAction: 'manipulation', textTransform: 'uppercase',
+                                                }}>Check-in</button>
+                                        ) : (
+                                            <span style={{ fontSize: 10, color: '#64748B' }}>
+                                                {p.checked_in_at ? new Date(p.checked_in_at).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ── Catálogo Tab ──────────────────────────────────────────────
+const CatalogoTab = () => {
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [view, setView] = useState<'services' | 'resources' | 'activities'>('activities');
+
+    useEffect(() => {
+        api.get('/admin/catalog/stats')
+            .then(res => setData(res.data))
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando catálogo...</div>;
+    if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar catálogo</div>;
+
+    const items = view === 'services' ? data.services : view === 'resources' ? data.resources : data.activities;
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Catálogo del Club</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Servicios, canchas y actividades</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                <MetricCard title="Servicios" value={data.total_services} icon={Scissors} trend="Spa/Barbería" />
+                <MetricCard title="Canchas" value={data.total_resources} icon={Dumbbell} trend="Recursos" />
+                <MetricCard title="Actividades" value={data.total_activities} icon={BookOpen} trend="Clases" />
+                <MetricCard title="Inscritos" value={data.total_enrollments} icon={Users} trend="Activos" />
+            </div>
+
+            {/* View toggle */}
+            <div style={{ display: 'flex', gap: 8 }}>
+                {([['activities', 'Actividades'], ['services', 'Servicios'], ['resources', 'Canchas']] as const).map(([key, label]) => (
+                    <button key={key} onClick={() => setView(key)}
+                        style={{
+                            padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                            background: view === key ? 'rgba(201,168,76,0.1)' : 'transparent',
+                            color: view === key ? 'var(--color-gold)' : '#94A3B8',
+                            border: view === key ? '1px solid rgba(201,168,76,0.3)' : '1px solid #334155',
+                        }}>{label}</button>
+                ))}
+            </div>
+
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                {items.length === 0 ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin items en esta categoría</div>
+                ) : (
+                    <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                            <tr>
+                                <th style={{ padding: '12px 24px' }}>Nombre</th>
+                                <th style={{ padding: '12px 24px' }}>Categoría</th>
+                                <th style={{ padding: '12px 24px' }}>Unidad</th>
+                                <th style={{ padding: '12px 24px' }}>Precio</th>
+                                {view === 'activities' && <th style={{ padding: '12px 24px' }}>Inscritos</th>}
+                                <th style={{ padding: '12px 24px' }}>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item: any, idx: number) => (
+                                <tr key={item.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
+                                    <td style={{ padding: '12px 24px', fontWeight: 600, color: '#E2E8F0' }}>{item.name}</td>
+                                    <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{item.category || item.resource_type || '—'}</td>
+                                    <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{item.unit?.short_name || '—'}</td>
+                                    <td style={{ padding: '12px 24px', fontWeight: 600, color: Number(item.price) > 0 ? 'white' : '#34D399' }}>
+                                        {Number(item.price) > 0 ? `$${Number(item.price).toLocaleString('es-MX')}` : 'Incluido'}
+                                    </td>
+                                    {view === 'activities' && (
+                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>
+                                            {item._count?.enrollments ?? 0}{item.max_capacity ? `/${item.max_capacity}` : ''}
+                                        </td>
+                                    )}
+                                    <td style={{ padding: '12px 24px' }}>
+                                        <span style={{
+                                            padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+                                            background: item.is_active !== false ? 'rgba(52,211,153,0.1)' : 'rgba(100,116,139,0.1)',
+                                            color: item.is_active !== false ? '#34D399' : '#64748B',
+                                        }}>{item.is_active !== false ? 'Activo' : 'Inactivo'}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ── Contenido (CMS) Tab ──────────────────────────────────────────────
+const ICON_OPTIONS = ['dumbbell', 'sparkles', 'waves', 'music', 'heart', 'trophy', 'calendar', 'star', 'zap', 'scissors', 'map-pin', 'user-plus'];
+
+const ContenidoTab = () => {
+    const { showToast } = useToast();
+    const [section, setSection] = useState<'featured' | 'explore' | 'banners'>('featured');
+    const [items, setItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [editing, setEditing] = useState<any | null>(null);
+    const [creating, setCreating] = useState(false);
+
+    const endpoints: Record<string, string> = { featured: '/cms/featured/all', explore: '/cms/explore/all', banners: '/cms/banners/all' };
+    const createEndpoints: Record<string, string> = { featured: '/cms/featured', explore: '/cms/explore', banners: '/cms/banners' };
+
+    const load = () => {
+        setLoading(true);
+        api.get(endpoints[section]).then(r => setItems(r.data)).catch(() => {}).finally(() => setLoading(false));
+    };
+    useEffect(() => { load(); }, [section]);
+
+    const handleSave = async (data: any, id?: string) => {
+        try {
+            if (id) {
+                await api.patch(`${createEndpoints[section]}/${id}`, data);
+                showToast('Actualizado', 'success');
+            } else {
+                await api.post(createEndpoints[section], data);
+                showToast('Creado', 'success');
+            }
+            setEditing(null);
+            setCreating(false);
+            load();
+        } catch (err: any) {
+            showToast(err.response?.data?.error || 'Error', 'error');
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        try {
+            await api.delete(`${createEndpoints[section]}/${id}`);
+            showToast('Eliminado', 'success');
+            load();
+        } catch { showToast('Error al eliminar', 'error'); }
+    };
+
+    const handleToggle = async (id: string, active: boolean) => {
+        await api.patch(`${createEndpoints[section]}/${id}`, { is_active: !active });
+        load();
+    };
+
+    const handleReorder = async (id: string, dir: 'up' | 'down') => {
+        const idx = items.findIndex(i => i.id === id);
+        if ((dir === 'up' && idx <= 0) || (dir === 'down' && idx >= items.length - 1)) return;
+        const swap = items[dir === 'up' ? idx - 1 : idx + 1];
+        await Promise.all([
+            api.patch(`${createEndpoints[section]}/${id}`, { display_order: swap.display_order }),
+            api.patch(`${createEndpoints[section]}/${swap.id}`, { display_order: items[idx].display_order }),
+        ]);
+        load();
+    };
+
+    const sections = [
+        { id: 'featured' as const, label: 'Destacados', icon: Star },
+        { id: 'explore' as const, label: 'Explorar', icon: Dumbbell },
+        { id: 'banners' as const, label: 'Banners', icon: Image },
+    ];
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Gestión de Contenido</h2>
+                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Administra destacados, explorar y banners del home</p>
+                </div>
+                <button onClick={() => { setCreating(true); setEditing(null); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 10, background: 'var(--color-gold)', color: '#000', fontWeight: 700, fontSize: 13, cursor: 'pointer', touchAction: 'manipulation', border: 'none' }}>
+                    <Plus size={16} /> Nuevo
+                </button>
+            </div>
+
+            {/* Section switcher */}
+            <div style={{ display: 'flex', gap: 8 }}>
+                {sections.map(s => (
+                    <button key={s.id} onClick={() => { setSection(s.id); setCreating(false); setEditing(null); }}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                            background: section === s.id ? 'rgba(201,168,76,0.08)' : 'transparent',
+                            color: section === s.id ? 'var(--color-gold)' : '#64748B',
+                            border: `1px solid ${section === s.id ? 'rgba(201,168,76,0.2)' : '#1E293B'}`,
+                            cursor: 'pointer', touchAction: 'manipulation',
+                        }}>
+                        <s.icon size={14} /> {s.label}
+                    </button>
+                ))}
+            </div>
+
+            {/* Create/Edit form */}
+            {(creating || editing) && (
+                <ContentForm section={section} item={editing} onSave={handleSave} onCancel={() => { setCreating(false); setEditing(null); }} />
+            )}
+
+            {/* Items list */}
+            {loading ? (
+                <div style={{ padding: 40, textAlign: 'center' }}><div className="animate-spin" style={{ width: 24, height: 24, borderRadius: 12, border: '2px solid var(--color-gold)', borderTopColor: 'transparent', margin: '0 auto' }} /></div>
+            ) : items.length === 0 ? (
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 40, textAlign: 'center' }}>
+                    <p style={{ color: '#475569', fontSize: 14 }}>No hay contenido en esta sección</p>
+                </div>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {items.map((item, idx) => (
+                        <div key={item.id} style={{
+                            background: '#0B1120', borderRadius: 12, border: '1px solid #1E293B', padding: '14px 18px',
+                            display: 'flex', alignItems: 'center', gap: 14, opacity: item.is_active ? 1 : 0.5,
+                        }}>
+                            {/* Preview swatch */}
+                            {section === 'featured' && (
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                                    background: `linear-gradient(135deg, ${item.gradient_start}, ${item.gradient_end})`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                }}>
+                                    <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: 700 }}>{idx + 1}</span>
+                                </div>
+                            )}
+                            {section === 'explore' && (
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                                    background: item.background_color || 'rgba(0,122,74,0.08)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                }}>
+                                    <span style={{ fontSize: 18 }}>●</span>
+                                </div>
+                            )}
+                            {section === 'banners' && (
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                                    background: item.background_color || '#007A4A',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                }}>
+                                    <Image size={18} style={{ color: 'rgba(255,255,255,0.8)' }} />
+                                </div>
+                            )}
+
+                            {/* Info */}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{item.title || item.name}</p>
+                                <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                                    {item.subtitle || item.link || item.cta_text || '—'}
+                                    {' · '}icon: {item.icon || '—'}
+                                </p>
+                            </div>
+
+                            {/* Actions */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <button onClick={() => handleReorder(item.id, 'up')} disabled={idx === 0}
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: idx === 0 ? 'default' : 'pointer', opacity: idx === 0 ? 0.3 : 1 }}>
+                                    <ArrowUp size={12} style={{ color: '#94A3B8' }} />
+                                </button>
+                                <button onClick={() => handleReorder(item.id, 'down')} disabled={idx === items.length - 1}
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: idx === items.length - 1 ? 'default' : 'pointer', opacity: idx === items.length - 1 ? 0.3 : 1 }}>
+                                    <ArrowDown size={12} style={{ color: '#94A3B8' }} />
+                                </button>
+                                <button onClick={() => handleToggle(item.id, item.is_active)}
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: 'pointer' }}>
+                                    {item.is_active ? <Eye size={12} style={{ color: '#10B981' }} /> : <EyeOff size={12} style={{ color: '#EF4444' }} />}
+                                </button>
+                                <button onClick={() => { setEditing(item); setCreating(false); }}
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: 'pointer' }}>
+                                    <Edit3 size={12} style={{ color: '#C9A84C' }} />
+                                </button>
+                                <button onClick={() => handleDelete(item.id)}
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer' }}>
+                                    <Trash2 size={12} style={{ color: '#EF4444' }} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Generic content form for all CMS sections
+const ContentForm = ({ section, item, onSave, onCancel }: { section: string; item: any; onSave: (data: any, id?: string) => void; onCancel: () => void }) => {
+    const [form, setForm] = useState<any>(item || {});
+    const set = (key: string, val: any) => setForm((p: any) => ({ ...p, [key]: val }));
+
+    const inputStyle: React.CSSProperties = {
+        width: '100%', padding: '10px 14px', borderRadius: 8, fontSize: 13,
+        background: '#0F172A', border: '1px solid #1E293B', color: '#E2E8F0',
+        outline: 'none',
+    };
+
+    return (
+        <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid rgba(201,168,76,0.15)', padding: 24 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>
+                {item ? 'Editar' : 'Nuevo'} {section === 'featured' ? 'Destacado' : section === 'explore' ? 'Item Explorar' : 'Banner'}
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {section === 'featured' && <>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Inicio</label><input type="color" value={form.gradient_start || '#005A36'} onChange={e => set('gradient_start', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Fin</label><input type="color" value={form.gradient_end || '#007A4A'} onChange={e => set('gradient_end', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
+                </>}
+                {section === 'explore' && <>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Nombre *</label><input style={inputStyle} value={form.name || ''} onChange={e => set('name', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color</label><input type="color" value={form.color || '#007A4A'} onChange={e => set('color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
+                </>}
+                {section === 'banners' && <>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Fondo</label><input type="color" value={form.background_color || '#007A4A'} onChange={e => set('background_color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>CTA Texto</label><input style={inputStyle} value={form.cta_text || ''} onChange={e => set('cta_text', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>CTA Link</label><input style={inputStyle} value={form.cta_link || ''} onChange={e => set('cta_link', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Ubicación</label><select style={inputStyle} value={form.placement || 'home_top'} onChange={e => set('placement', e.target.value)}><option value="home_top">Home Superior</option><option value="home_middle">Home Medio</option><option value="home_bottom">Home Inferior</option></select></div>
+                </>}
+            </div>
+            <div style={{ display: 'flex', gap: 10, marginTop: 16, justifyContent: 'flex-end' }}>
+                <button onClick={onCancel} style={{ padding: '8px 20px', borderRadius: 8, background: 'transparent', border: '1px solid #1E293B', color: '#94A3B8', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Cancelar</button>
+                <button onClick={() => onSave(form, item?.id)} style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--color-gold)', border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{item ? 'Guardar' : 'Crear'}</button>
+            </div>
+        </div>
+    );
+};
+
+// ── Sistema Tab ──────────────────────────────────────────────
+const SistemaTab = () => {
+    const [units, setUnits] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        api.get('/admin/units')
+            .then(res => setUnits(res.data))
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Sistema</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Configuración y unidades del club</p>
+            </div>
+
+            {/* Units */}
+            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <MapPin size={16} style={{ color: 'var(--color-gold)' }} /> Unidades / Sedes
+                    </h3>
+                    <span style={{ fontSize: 11, color: '#64748B' }}>{units.length} unidades</span>
+                </div>
+                {loading ? (
+                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando...</div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {units.map((u, idx) => (
+                            <div key={u.id} style={{
+                                padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 16,
+                                borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined,
+                            }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <MapPin size={17} style={{ color: 'var(--color-gold)' }} />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{u.name}</p>
+                                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                                        Código: {u.code} · {u.short_name}
+                                    </p>
+                                </div>
+                                {u.operating_hours && (
+                                    <span style={{ fontSize: 11, color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                        <Clock size={12} /> {u.operating_hours}
+                                    </span>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* System info */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>Información del Sistema</h3>
+                    {[
+                        { label: 'Versión', value: 'v2.0.0' },
+                        { label: 'Plataforma', value: 'React 19 + Vite' },
+                        { label: 'Backend', value: 'Node.js + Prisma' },
+                        { label: 'Base de datos', value: 'PostgreSQL (Supabase)' },
+                    ].map(item => (
+                        <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(30,41,59,0.3)' }}>
+                            <span style={{ fontSize: 13, color: '#64748B' }}>{item.label}</span>
+                            <span style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 500 }}>{item.value}</span>
+                        </div>
+                    ))}
+                </div>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>Módulos Activos</h3>
+                    {[
+                        { name: 'Reservaciones', active: true },
+                        { name: 'Torneos', active: true },
+                        { name: 'Pases de Invitado', active: true },
+                        { name: 'Lista de Espera', active: true },
+                        { name: 'Calificaciones', active: true },
+                        { name: 'Pagos Stripe', active: false },
+                        { name: 'CMS (Strapi)', active: false },
+                    ].map(mod => (
+                        <div key={mod.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(30,41,59,0.3)' }}>
+                            <span style={{ fontSize: 13, color: mod.active ? '#E2E8F0' : '#475569' }}>{mod.name}</span>
+                            <span style={{
+                                fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase',
+                                background: mod.active ? 'rgba(52,211,153,0.1)' : 'rgba(100,116,139,0.08)',
+                                color: mod.active ? '#34D399' : '#475569',
+                                border: `1px solid ${mod.active ? 'rgba(52,211,153,0.2)' : 'rgba(100,116,139,0.15)'}`,
+                            }}>{mod.active ? 'Activo' : 'Pendiente'}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
@@ -330,56 +1415,85 @@ const DashboardTab = () => {
     }, []);
 
     return (
-        <div className="space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 className="text-xl font-bold text-white">Panel Principal</h2>
-                <p className="text-slate-400 text-sm mt-1">Resumen operativo del club</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Panel Principal</h2>
+                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Resumen operativo del club</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <MetricCard title="Personal Activo" value={loading ? '—' : stats.staff} icon={UserCheck} trend="Empleados registrados" />
-                <MetricCard title="Eventos Creados" value={loading ? '—' : stats.events} icon={Megaphone} trend="Total en sistema" />
-                <MetricCard title="Unidades" value={loading ? '—' : stats.units} icon={Activity} trend="Hermes · Fredy Atala" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <MetricCard title="Personal Activo" value={loading ? '—' : stats.staff} icon={UserCheck} trend="Empleados" />
+                <MetricCard title="Eventos Creados" value={loading ? '—' : stats.events} icon={Megaphone} trend="En sistema" />
+                <MetricCard title="Unidades" value={loading ? '—' : stats.units} icon={Activity} trend="Sedes" />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-[#0B1120] rounded-2xl border border-slate-800 p-6">
-                    <h3 className="font-bold text-base mb-4 text-white flex items-center gap-2">
-                        <TrendingUp size={16} className="text-[var(--color-gold)]" />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24, display: 'flex', flexDirection: 'column' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                        <TrendingUp size={16} style={{ color: 'var(--color-gold)' }} />
                         Accesos Rápidos
                     </h3>
-                    <div className="space-y-2">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
                         {[
-                            { label: 'Gestionar Eventos', desc: 'Crear, editar y publicar eventos del club', tab: 'eventos', icon: Megaphone },
-                            { label: 'Ver Personal', desc: 'Lista completa de empleados por unidad', tab: 'staff', icon: Users },
+                            { label: 'Gestionar Eventos', desc: 'Crear, editar y publicar eventos', tab: 'eventos', icon: Megaphone },
+                            { label: 'Ver Personal', desc: 'Empleados por unidad', tab: 'staff', icon: Users },
+                            { label: 'Finanzas', desc: 'Ingresos, pagos y facturación', tab: 'finanzas', icon: Wallet },
+                            { label: 'Control Lockers', desc: 'Ocupación y rentas activas', tab: 'lockers', icon: Lock },
                         ].map(item => (
-                            <button key={item.tab} className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/60 transition-all text-left group cursor-pointer"
-                                onClick={() => document.dispatchEvent(new CustomEvent('admin-tab', { detail: item.tab }))}>
-                                <div className="w-9 h-9 rounded-xl bg-[var(--color-gold)]/10 flex items-center justify-center shrink-0">
-                                    <item.icon size={16} className="text-[var(--color-gold)]" />
+                            <button key={item.tab}
+                                onClick={() => document.dispatchEvent(new CustomEvent('admin-tab', { detail: item.tab }))}
+                                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 14, borderRadius: 12, background: 'rgba(15,23,42,0.6)', border: '1px solid #1E293B', textAlign: 'left', cursor: 'pointer', touchAction: 'manipulation', transition: 'border-color 200ms' }}
+                                onMouseEnter={e => (e.currentTarget.style.borderColor = '#475569')}
+                                onMouseLeave={e => (e.currentTarget.style.borderColor = '#1E293B')}
+                            >
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(201,168,76,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <item.icon size={17} style={{ color: 'var(--color-gold)' }} />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-slate-200">{item.label}</p>
-                                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>{item.label}</p>
+                                    <p style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>{item.desc}</p>
                                 </div>
-                                <ChevronRight size={14} className="text-slate-600 group-hover:text-slate-400 transition-colors shrink-0" />
+                                <ChevronRight size={14} style={{ color: '#475569', flexShrink: 0 }} />
                             </button>
                         ))}
                     </div>
                 </div>
 
-                <div className="bg-[#0B1120] rounded-2xl border border-slate-800 p-6">
-                    <h3 className="font-bold text-base mb-4 text-white flex items-center gap-2">
-                        <AlertCircle size={16} className="text-slate-400" />
-                        Módulos en Desarrollo
+                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24, display: 'flex', flexDirection: 'column' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                        <Activity size={16} style={{ color: 'var(--color-gold)' }} />
+                        Estado de Módulos
                     </h3>
-                    <div className="space-y-2">
-                        {['Mapa en Vivo', 'Control de Lockers', 'Finanzas & Penalizaciones', 'Catálogo CRM', 'Agenda Staff'].map(m => (
-                            <div key={m} className="flex items-center gap-3 p-3 rounded-xl bg-slate-900/40 border border-slate-800/50">
-                                <div className="w-2 h-2 rounded-full bg-slate-600 shrink-0" />
-                                <p className="text-sm text-slate-500">{m}</p>
-                                <span className="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-600">Próximamente</span>
-                            </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+                        {[
+                            { name: 'Finanzas', built: true, tab: 'finanzas' },
+                            { name: 'Control Lockers', built: true, tab: 'lockers' },
+                            { name: 'Agenda Staff', built: true, tab: 'agenda' },
+                            { name: 'Catálogo', built: true, tab: 'catalogo' },
+                            { name: 'Sistema', built: true, tab: 'config' },
+                            { name: 'Stripe Recurrente', built: false },
+                            { name: 'CMS (Strapi)', built: false },
+                        ].map(m => (
+                            <button key={m.name}
+                                onClick={() => m.tab && document.dispatchEvent(new CustomEvent('admin-tab', { detail: m.tab }))}
+                                disabled={!m.tab}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10,
+                                    background: m.built ? 'rgba(16,185,129,0.04)' : 'rgba(15,23,42,0.4)',
+                                    border: `1px solid ${m.built ? 'rgba(16,185,129,0.12)' : 'rgba(30,41,59,0.5)'}`,
+                                    cursor: m.tab ? 'pointer' : 'default', touchAction: 'manipulation', textAlign: 'left',
+                                    transition: 'border-color 200ms',
+                                }}
+                            >
+                                <div style={{ width: 6, height: 6, borderRadius: 3, background: m.built ? '#10B981' : '#334155', flexShrink: 0 }} />
+                                <p style={{ fontSize: 13, color: m.built ? '#E2E8F0' : '#475569', flex: 1 }}>{m.name}</p>
+                                <span style={{
+                                    fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: 0.8,
+                                    color: m.built ? '#10B981' : '#334155',
+                                    background: m.built ? 'rgba(16,185,129,0.08)' : '#0F172A',
+                                    border: `1px solid ${m.built ? 'rgba(16,185,129,0.15)' : '#1E293B'}`,
+                                }}>{m.built ? 'Activo' : 'Próximo'}</span>
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -402,72 +1516,77 @@ export const AdminView = () => {
     if (!user) return null;
 
     return (
-        <div className="flex h-screen bg-[#020617] overflow-hidden text-slate-300">
+        <div style={{ display: 'flex', height: '100vh', background: '#020617', overflow: 'hidden', color: '#CBD5E1' }}>
 
             {/* ── Sidebar ── */}
-            <div className="w-60 bg-[#0B1120] border-r border-[#1E293B] flex-col hidden md:flex shrink-0">
-                <div className="h-16 flex items-center px-5 border-b border-[#1E293B] gap-2.5">
-                    <ShieldCheck className="text-[var(--color-gold)] shrink-0" size={20} />
-                    <span className="font-bold text-sm tracking-wide text-white">Centro de Control</span>
+            <div style={{ width: 240, background: '#0B1120', borderRight: '1px solid #1E293B', flexDirection: 'column', flexShrink: 0, display: 'flex' }}>
+                <div style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 20px', borderBottom: '1px solid #1E293B', gap: 10 }}>
+                    <ShieldCheck size={20} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
+                    <span style={{ fontWeight: 700, fontSize: 14, color: 'white', letterSpacing: 0.3 }}>Centro de Control</span>
                 </div>
-                <div className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {TABS.map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                            className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === tab.id
-                                ? 'bg-[var(--color-gold)]/[0.12] text-[var(--color-gold)] border-l-2 border-[var(--color-gold)] pl-[10px]'
-                                : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}>
-                            <tab.icon size={16} className="mr-3 shrink-0" />
+                            style={{
+                                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                                padding: '10px 12px', borderRadius: 10, fontSize: 13, fontWeight: 500,
+                                cursor: 'pointer', touchAction: 'manipulation', transition: 'all 200ms', textAlign: 'left',
+                                background: activeTab === tab.id ? 'rgba(201,168,76,0.08)' : 'transparent',
+                                color: activeTab === tab.id ? 'var(--color-gold)' : '#94A3B8',
+                                borderLeft: activeTab === tab.id ? '2px solid var(--color-gold)' : '2px solid transparent',
+                                borderTop: 'none', borderRight: 'none', borderBottom: 'none',
+                            }}
+                            onMouseEnter={e => { if (activeTab !== tab.id) e.currentTarget.style.background = 'rgba(30,41,59,0.5)'; }}
+                            onMouseLeave={e => { if (activeTab !== tab.id) e.currentTarget.style.background = 'transparent'; }}
+                        >
+                            <tab.icon size={16} style={{ flexShrink: 0 }} />
                             {tab.label}
                         </button>
                     ))}
                 </div>
-                <div className="p-4 border-t border-[#1E293B]">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[var(--color-gold)] font-bold text-sm">
+                <div style={{ padding: 16, borderTop: '1px solid #1E293B' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 18, background: '#1E293B', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 13 }}>
                             {user.first_name[0]}
                         </div>
                         <div>
-                            <p className="text-sm font-bold leading-none text-white">{user.first_name} {user.last_name}</p>
-                            <p className="text-[10px] text-[var(--color-gold)] mt-1 uppercase tracking-wider">Administrador</p>
+                            <p style={{ fontSize: 13, fontWeight: 700, color: 'white', lineHeight: 1 }}>{user.first_name} {user.last_name}</p>
+                            <p style={{ fontSize: 10, color: 'var(--color-gold)', marginTop: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Administrador</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* ── Main Content ── */}
-            <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                <header className="h-16 bg-[#0B1120] border-b border-[#1E293B] flex items-center justify-between px-8 shrink-0">
-                    <h1 className="text-lg font-bold text-white">{TABS.find(t => t.id === activeTab)?.label}</h1>
-                    <div className="flex items-center gap-2">
-                        <span className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            En línea
-                        </span>
-                    </div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+                <header style={{ height: 64, background: '#0B1120', borderBottom: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', flexShrink: 0 }}>
+                    <h1 style={{ fontSize: 16, fontWeight: 700, color: 'white' }}>{TABS.find(t => t.id === activeTab)?.label}</h1>
+                    <span style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)', color: '#10B981', padding: '4px 12px', borderRadius: 6, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: 3, background: '#10B981' }} className="animate-pulse" />
+                        En línea
+                    </span>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-8">
+                <main style={{ flex: 1, overflowY: 'auto', padding: 32 }}>
                     <AnimatePresence mode="wait">
-                        <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="max-w-6xl mx-auto">
+                        <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} style={{ maxWidth: 1152, marginLeft: 'auto', marginRight: 'auto' }}>
                             {activeTab === 'dashboard' && <DashboardTab />}
                             {activeTab === 'eventos' && <EventsTab />}
                             {activeTab === 'staff' && <StaffTab />}
-                            {['agenda', 'lockers', 'finanzas', 'catalogo', 'config'].includes(activeTab) && (
-                                <div className="bg-[#0B1120] rounded-2xl border border-slate-800 p-16 text-center flex flex-col items-center justify-center">
-                                    <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600 mb-5">
-                                        <Settings size={28} />
-                                    </div>
-                                    <h2 className="text-lg font-bold text-slate-400">En Desarrollo</h2>
-                                    <p className="text-slate-600 mt-2 max-w-sm text-sm">Este módulo estará disponible en una próxima versión del sistema.</p>
-                                </div>
-                            )}
+                            {activeTab === 'finanzas' && <FinanzasTab />}
+                            {activeTab === 'lockers' && <LockersTab />}
+                            {activeTab === 'agenda' && <AgendaTab />}
+                            {activeTab === 'contenido' && <ContenidoTab />}
+                            {activeTab === 'recepcion' && <RecepcionTab />}
+                            {activeTab === 'catalogo' && <CatalogoTab />}
+                            {activeTab === 'config' && <SistemaTab />}
                         </motion.div>
                     </AnimatePresence>
                 </main>
             </div>
 
             {/* Mobile Nav */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0B1120] border-t border-slate-800 flex justify-around items-center px-4 z-50">
+            <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 64, background: '#0B1120', borderTop: '1px solid #1E293B', display: 'none', justifyContent: 'space-around', alignItems: 'center', padding: '0 16px', zIndex: 50 }}>
                 {[
                     { id: 'dashboard', icon: LayoutDashboard, label: 'Panel' },
                     { id: 'eventos', icon: Megaphone, label: 'Eventos' },
@@ -475,9 +1594,15 @@ export const AdminView = () => {
                     { id: 'config', icon: Settings, label: 'Config' },
                 ].map(t => (
                     <button key={t.id} aria-label={t.label} onClick={() => setActiveTab(t.id)}
-                        className={`flex flex-col items-center gap-0.5 p-2 rounded-xl transition ${activeTab === t.id ? 'text-[var(--color-gold)] bg-[var(--color-gold)]/10' : 'text-slate-400'}`}>
+                        style={{
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                            padding: 8, borderRadius: 10, cursor: 'pointer', touchAction: 'manipulation', transition: 'all 200ms',
+                            color: activeTab === t.id ? 'var(--color-gold)' : '#64748B',
+                            background: activeTab === t.id ? 'rgba(201,168,76,0.08)' : 'transparent',
+                            border: 'none',
+                        }}>
                         <t.icon size={20} />
-                        <span className="text-[9px] font-semibold">{t.label}</span>
+                        <span style={{ fontSize: 9, fontWeight: 600 }}>{t.label}</span>
                     </button>
                 ))}
             </div>
@@ -493,20 +1618,37 @@ interface MetricCardProps {
     color?: string;
 }
 
-const MetricCard = ({ title, value, icon: Icon, trend, color = "text-[var(--color-gold)]" }: MetricCardProps) => {
-    const isRed = color.includes('red');
+const MetricCard = ({ title, value, icon: Icon, trend, color }: MetricCardProps) => {
+    const isRed = color?.includes('red');
     return (
-        <div className="bg-[#0B1120] p-5 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
-            <div className="flex justify-between items-start mb-4">
-                <div className={`w-10 h-10 rounded-xl ${isRed ? 'bg-red-500/10 border-red-500/30' : 'bg-[var(--color-gold)]/10 border-[var(--color-gold)]/30'} border flex items-center justify-center ${color}`}>
-                    <Icon size={20} />
-                </div>
+        <div style={{
+            background: '#0B1120',
+            borderRadius: 16,
+            border: '1px solid #1E293B',
+            padding: 24,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            minHeight: 160,
+            transition: 'border-color 200ms',
+        }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = '#475569')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = '#1E293B')}
+        >
+            <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: isRed ? 'rgba(239,68,68,0.08)' : 'rgba(201,168,76,0.08)',
+                border: `1px solid ${isRed ? 'rgba(239,68,68,0.2)' : 'rgba(201,168,76,0.2)'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 20,
+            }}>
+                <Icon size={20} style={{ color: isRed ? '#EF4444' : 'var(--color-gold)' }} />
             </div>
             <div>
-                <h4 className="text-slate-400 text-[11px] uppercase tracking-widest">{title}</h4>
-                <div className="flex items-center justify-between mt-1">
-                    <span className="text-2xl font-bold text-white">{value}</span>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded">{trend}</span>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: 1.2 }}>{title}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 6 }}>
+                    <span style={{ fontSize: 32, fontWeight: 700, color: 'white', letterSpacing: -1, lineHeight: 1 }}>{value}</span>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: '#475569', background: '#0F172A', border: '1px solid #1E293B', padding: '3px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>{trend}</span>
                 </div>
             </div>
         </div>

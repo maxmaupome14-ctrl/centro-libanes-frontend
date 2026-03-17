@@ -20,9 +20,10 @@ api.interceptors.response.use(
     (error) => {
         const isAuthEndpoint = error.config?.url?.includes('/auth/');
         const isAlreadyOnLogin = window.location.pathname === '/login';
-        const isStaffPage = window.location.pathname === '/admin' ||
-            window.location.pathname.startsWith('/employee');
-        if (error.response?.status === 401 && !isAuthEndpoint && !isAlreadyOnLogin && !isStaffPage) {
+        // Don't auto-logout employees for 401s on member-only endpoints
+        const authUser = localStorage.getItem('auth_user');
+        const isEmployee = authUser ? JSON.parse(authUser).user_type === 'employee' : false;
+        if (error.response?.status === 401 && !isAuthEndpoint && !isAlreadyOnLogin && !isEmployee) {
             localStorage.removeItem('auth_token');
             localStorage.removeItem('auth_user');
             window.location.href = '/login';
