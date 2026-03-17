@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import {
     CalendarDays, Lock, User, ChevronRight, Dumbbell, Sparkles,
     Waves, Music, Heart, ArrowRight, Check, Trophy, MapPin, UserPlus,
-    Star, Zap, Scissors, Briefcase, ShieldCheck, type LucideIcon
+    Star, Zap, Scissors, Briefcase, ShieldCheck, X, AlertTriangle, type LucideIcon
 } from 'lucide-react';
 
 /* ── Icon name → component map for CMS dynamic icons ── */
@@ -14,7 +14,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
     heart: Heart, trophy: Trophy, 'map-pin': MapPin, 'user-plus': UserPlus,
     star: Star, zap: Zap, calendar: CalendarDays, scissors: Scissors,
 };
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '../components/ui/Toast';
 import { CredentialCardModal } from '../components/credential/CredentialCardModal';
 import { HospitalityCard } from '../components/ui/HospitalityCard';
 import { WeatherCard } from '../components/ui/WeatherCard';
@@ -55,6 +56,9 @@ export const HomeView = () => {
     const [featured, setFeatured] = useState<any[]>(FALLBACK_FEATURED);
     const [exploreItems, setExploreItems] = useState<any[]>(FALLBACK_EXPLORE);
     const [banners, setBanners] = useState<any[]>([]);
+    const [cancelTarget, setCancelTarget] = useState<any>(null);
+    const [isCancelling, setIsCancelling] = useState(false);
+    const { showToast } = useToast();
 
     useEffect(() => {
         const fetchReservations = async () => {
@@ -113,6 +117,31 @@ export const HomeView = () => {
         }, 10000);
         return () => clearTimeout(safetyTimeout);
     }, [user]);
+
+    const handleCancelReservation = async () => {
+        if (!cancelTarget) return;
+        setIsCancelling(true);
+        try {
+            const res = await api.post(`/reservations/${cancelTarget.id}/cancel`);
+            setReservations(prev => prev.filter(r => r.id !== cancelTarget.id));
+            showToast(res.data.message || 'Reservación cancelada', 'success');
+            setCancelTarget(null);
+        } catch (err: any) {
+            showToast(err.response?.data?.error || 'Error al cancelar', 'error');
+        } finally {
+            setIsCancelling(false);
+        }
+    };
+
+    const getCancelFeeInfo = (resv: any) => {
+        if (!resv?.start_time) return { hasLateFee: false, fee: 0 };
+        const startTime = new Date(resv.start_time);
+        const now = new Date();
+        const hoursUntil = (startTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+        const price = resv.service?.price ? Number(resv.service.price) : 0;
+        const hasLateFee = hoursUntil > 0 && hoursUntil < 2 && price > 0;
+        return { hasLateFee, fee: hasLateFee ? price * 0.5 : 0, hoursUntil };
+    };
 
     if (!user) return null;
 
@@ -591,7 +620,7 @@ export const HomeView = () => {
                                             {resv.unit?.short_name && <><span style={{ opacity: 0.4 }}>·</span><span>{resv.unit.short_name}</span></>}
                                         </p>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
                                         {resv.date && resv.start_time && (
                                             <button
                                                 onClick={(e) => {
@@ -610,6 +639,13 @@ export const HomeView = () => {
                                                 <CalendarDays size={14} style={{ color: 'var(--color-gold)' }} />
                                             </button>
                                         )}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); setCancelTarget(resv); }}
+                                            style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(206,17,38,0.08)', border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}
+                                            title="Cancelar reserva"
+                                        >
+                                            <X size={14} style={{ color: 'var(--color-red-lebanese)' }} />
+                                        </button>
                                         <div style={{ background: st.bg, borderRadius: 10, padding: '5px 12px' }}>
                                             <span style={{ fontSize: 11, fontWeight: 600, color: st.color }}>{st.label}</span>
                                         </div>
@@ -630,6 +666,151 @@ export const HomeView = () => {
                     user={user}
                 />
             )}
+
+            {/* ═══ Cancel Reservation Bottom Sheet ═══ */}
+            <AnimatePresence>
+                {cancelTarget && (() => {
+                    const feeInfo = getCancelFeeInfo(cancelTarget);
+                    const fmtTime = (t: string) => {
+                        if (!t) return '';
+                        if (t.length <= 5) return t;
+                        const d = new Date(t);
+                        return isNaN(d.getTime()) ? t : d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    };
+                    const cancelDateStr = cancelTarget.date
+                        ? new Date(cancelTarget.date.length <= 10 ? cancelTarget.date + 'T12:00:00' : cancelTarget.date)
+                            .toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })
+                        : '';
+                    return (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            style={{
+                                position: 'fixed', inset: 0, zIndex: 200,
+                                background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+                                display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                            }}
+                            onClick={() => !isCancelling && setCancelTarget(null)}
+                        >
+                            <motion.div
+                                initial={{ y: '100%' }}
+                                animate={{ y: 0 }}
+                                exit={{ y: '100%' }}
+                                transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+                                style={{
+                                    width: '100%', maxWidth: 430,
+                                    background: 'var(--color-bg)',
+                                    borderRadius: '28px 28px 0 0',
+                                    overflow: 'hidden',
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {/* Handle */}
+                                <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 4px' }}>
+                                    <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--color-border-strong)' }} />
+                                </div>
+
+                                <div style={{ padding: '20px 20px 32px' }}>
+                                    {/* Header */}
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                                        <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                                            Cancelar Reserva
+                                        </h2>
+                                        <button
+                                            onClick={() => !isCancelling && setCancelTarget(null)}
+                                            style={{
+                                                width: 36, height: 36, borderRadius: 18, flexShrink: 0,
+                                                background: 'var(--color-surface)', border: 'none',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <X size={16} style={{ color: 'var(--color-text-tertiary)' }} />
+                                        </button>
+                                    </div>
+
+                                    {/* Reservation details */}
+                                    <div style={{
+                                        background: 'var(--color-surface)', borderRadius: 16,
+                                        border: '1px solid var(--color-border)', overflow: 'hidden', marginBottom: 20,
+                                    }}>
+                                        {[
+                                            { label: 'Reserva', value: cancelTarget.service?.name || cancelTarget.resource_id || 'Reserva' },
+                                            { label: 'Fecha', value: cancelDateStr },
+                                            { label: 'Horario', value: `${fmtTime(cancelTarget.start_time)}${cancelTarget.end_time ? ' – ' + fmtTime(cancelTarget.end_time) : ''}` },
+                                            ...(cancelTarget.unit?.short_name ? [{ label: 'Unidad', value: cancelTarget.unit.short_name }] : []),
+                                        ].map((row, i, arr) => (
+                                            <div key={row.label} style={{
+                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                padding: '14px 16px',
+                                                borderBottom: i < arr.length - 1 ? '1px solid var(--color-border)' : 'none',
+                                            }}>
+                                                <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>{row.label}</span>
+                                                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', textAlign: 'right', maxWidth: '55%', textTransform: 'capitalize' }}>
+                                                    {row.value}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Late cancellation fee warning */}
+                                    {feeInfo.hasLateFee && (
+                                        <div style={{
+                                            display: 'flex', alignItems: 'flex-start', gap: 12,
+                                            padding: 16, borderRadius: 16, marginBottom: 20,
+                                            background: 'rgba(206,17,38,0.08)', border: '1px solid rgba(206,17,38,0.2)',
+                                        }}>
+                                            <AlertTriangle size={18} style={{ color: 'var(--color-red-lebanese)', flexShrink: 0, marginTop: 1 }} />
+                                            <div>
+                                                <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-red-lebanese)', marginBottom: 4 }}>
+                                                    Cancelación tardía
+                                                </p>
+                                                <p style={{ fontSize: 12, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+                                                    Faltan menos de 2 horas para tu cita. Se aplicará un cargo de <strong style={{ color: 'var(--color-red-lebanese)' }}>${feeInfo.fee.toFixed(0)} MXN</strong> (50% del costo del servicio).
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {!feeInfo.hasLateFee && (
+                                        <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginBottom: 20, lineHeight: 1.5 }}>
+                                            Puedes cancelar sin cargo hasta 2 horas antes de tu cita. Después se aplica una penalización del 50%.
+                                        </p>
+                                    )}
+
+                                    {/* Action buttons */}
+                                    <div style={{ display: 'flex', gap: 12 }}>
+                                        <button
+                                            onClick={() => setCancelTarget(null)}
+                                            disabled={isCancelling}
+                                            style={{
+                                                flex: 1, padding: '14px 0', borderRadius: 16, fontSize: 14, fontWeight: 600,
+                                                cursor: 'pointer', border: '1px solid var(--color-border)',
+                                                background: 'var(--color-surface)', color: 'var(--color-text-primary)',
+                                            }}
+                                        >
+                                            No, mantener
+                                        </button>
+                                        <button
+                                            onClick={handleCancelReservation}
+                                            disabled={isCancelling}
+                                            style={{
+                                                flex: 1, padding: '14px 0', borderRadius: 16, fontSize: 14, fontWeight: 600,
+                                                cursor: 'pointer', border: 'none',
+                                                background: 'var(--color-red-lebanese)', color: 'white',
+                                                opacity: isCancelling ? 0.6 : 1,
+                                            }}
+                                        >
+                                            {isCancelling ? 'Cancelando...' : feeInfo.hasLateFee ? `Cancelar ($${feeInfo.fee.toFixed(0)})` : 'Sí, cancelar'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    );
+                })()}
+            </AnimatePresence>
         </div>
     );
 };

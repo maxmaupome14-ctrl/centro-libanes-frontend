@@ -70,7 +70,7 @@ export const WelcomeView = () => {
                     }
                 }),
                 api.get('/notifications/my'),
-                api.get('/reservations/my/upcoming'),
+                api.get('/reservations/user'),
                 api.get('/events'),
             ]);
         });
