@@ -315,7 +315,7 @@ export const HomeView = () => {
             {/* ═══════════ QUICK ACTIONS ═══════════ */}
             <motion.div {...f(0.12)} style={{ padding: '24px 16px 0' }}>
                 <p className="section-header" style={{ marginBottom: 12 }}>Acceso Rápido</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isEmployee ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr', gap: 8 }}>
                     {(isEmployee ? [
                         { label: 'Panel', icon: Briefcase, path: '/employee', color: '#C9A84C', bg: 'rgba(201,168,76,0.08)' },
                         ...(user.role === 'administrador' ? [{ label: 'Admin', icon: ShieldCheck, path: '/admin', color: '#6366F1', bg: 'rgba(99,102,241,0.08)' }] : []),
