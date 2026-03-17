@@ -159,7 +159,7 @@ export const PaymentView = () => {
 
                             {/* Balance Card */}
                             <motion.div {...f(0)} style={{
-                                background: 'linear-gradient(135deg, #1A1F26 0%, #0F1419 100%)',
+                                background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg) 100%)',
                                 borderRadius: 24, padding: 24, border: '1px solid var(--color-border)',
                                 position: 'relative', overflow: 'hidden',
                             }}>

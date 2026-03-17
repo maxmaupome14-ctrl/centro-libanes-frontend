@@ -88,8 +88,8 @@ const EventsTab = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Gestión de Eventos</h2>
-                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Crea y administra los eventos del club</p>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Gestión de Eventos</h2>
+                    <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Crea y administra los eventos del club</p>
                 </div>
                 <Button onClick={openCreate} style={{ background: 'var(--color-gold)', color: 'var(--color-bg)', fontSize: 12, fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}>
                     <Plus size={16} /> Nuevo Evento
@@ -99,10 +99,10 @@ const EventsTab = () => {
             <AnimatePresence>
                 {showForm && (
                     <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                        style={{ background: '#0B1120', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        style={{ background: 'var(--color-surface)', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                            <h3 style={{ fontWeight: 700, color: 'white' }}>{editing ? 'Editar Evento' : 'Nuevo Evento'}</h3>
-                            <button onClick={() => setShowForm(false)} aria-label="Cerrar" style={{ color: '#94A3B8', cursor: 'pointer', touchAction: 'manipulation', background: 'none', border: 'none' }}><X size={18} /></button>
+                            <h3 style={{ fontWeight: 700, color: 'var(--color-text-primary)' }}>{editing ? 'Editar Evento' : 'Nuevo Evento'}</h3>
+                            <button onClick={() => setShowForm(false)} aria-label="Cerrar" style={{ color: 'var(--color-text-tertiary)', cursor: 'pointer', touchAction: 'manipulation', background: 'none', border: 'none' }}><X size={18} /></button>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
                             {[
@@ -110,32 +110,32 @@ const EventsTab = () => {
                                 { key: 'location', label: 'Ubicación', type: 'text', placeholder: 'Ej. Piscina Olímpica' },
                             ].map(f => (
                                 <div key={f.key}>
-                                    <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>{f.label}</label>
+                                    <label style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>{f.label}</label>
                                     <input value={form[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} placeholder={f.placeholder}
-                                        style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', boxSizing: 'border-box' }} />
+                                        style={{ width: '100%', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'var(--color-text-primary)', outline: 'none', boxSizing: 'border-box' }} />
                                 </div>
                             ))}
                             <div>
-                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Categoría</label>
+                                <label style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Categoría</label>
                                 <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                                    style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }}>
+                                    style={{ width: '100%', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'var(--color-text-primary)', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }}>
                                     {['general', 'torneo', 'social', 'curso', 'nutricion', 'infantil', 'deportivo'].map(c => (
                                         <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
                                     ))}
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Fecha y Hora *</label>
+                                <label style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Fecha y Hora *</label>
                                 <input type="datetime-local" value={form.event_date} onChange={e => setForm({ ...form, event_date: e.target.value })}
-                                    style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }} />
+                                    style={{ width: '100%', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'var(--color-text-primary)', outline: 'none', cursor: 'pointer', touchAction: 'manipulation', boxSizing: 'border-box' }} />
                             </div>
                             <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Descripción</label>
+                                <label style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Descripción</label>
                                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-                                    rows={2} style={{ width: '100%', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'white', outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
+                                    rows={2} style={{ width: '100%', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, fontSize: 14, color: 'var(--color-text-primary)', outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
                             </div>
                             <div>
-                                <label style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>Color de Tarjeta</label>
+                                <label style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>Color de Tarjeta</label>
                                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                     {EVENT_COLORS.map(c => (
                                         <button key={c.value} onClick={() => setForm({ ...form, image_color: c.value })}
@@ -154,13 +154,13 @@ const EventsTab = () => {
                                 {[{ key: 'is_published', label: 'Publicado' }, { key: 'is_featured', label: 'Destacado' }].map(cb => (
                                     <label key={cb.key} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', touchAction: 'manipulation' }}>
                                         <input type="checkbox" checked={form[cb.key]} onChange={e => setForm({ ...form, [cb.key]: e.target.checked })} style={{ width: 16, height: 16, accentColor: 'var(--color-gold)', cursor: 'pointer', touchAction: 'manipulation' }} />
-                                        <span style={{ fontSize: 14, color: '#CBD5E1' }}>{cb.label}</span>
+                                        <span style={{ fontSize: 14, color: 'var(--color-text-secondary)' }}>{cb.label}</span>
                                     </label>
                                 ))}
                             </div>
                         </div>
                         <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
-                            <Button variant="outline" onClick={() => setShowForm(false)} style={{ borderColor: '#334155', color: '#94A3B8', cursor: 'pointer', touchAction: 'manipulation' }}>Cancelar</Button>
+                            <Button variant="outline" onClick={() => setShowForm(false)} style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-tertiary)', cursor: 'pointer', touchAction: 'manipulation' }}>Cancelar</Button>
                             <Button onClick={handleSave} isLoading={saving} style={{ background: 'var(--color-gold)', color: 'var(--color-bg)', cursor: 'pointer', touchAction: 'manipulation' }}>
                                 <Check size={16} /> {editing ? 'Guardar Cambios' : 'Crear Evento'}
                             </Button>
@@ -169,28 +169,28 @@ const EventsTab = () => {
                 )}
             </AnimatePresence>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 {loading ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando eventos...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 14 }}>Cargando eventos...</div>
                 ) : fetchError ? (
                     <div style={{ padding: 48, textAlign: 'center' }}>
                         <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
                             <AlertCircle size={22} style={{ color: '#EF4444' }} />
                         </div>
                         <p style={{ color: '#F87171', fontSize: 14 }}>{fetchError}</p>
-                        <button onClick={fetchEvents} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, fontSize: 12, color: '#CBD5E1', border: '1px solid #334155', borderRadius: 8, background: 'transparent', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}>Reintentar</button>
+                        <button onClick={fetchEvents} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, fontSize: 12, color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)', borderRadius: 8, background: 'transparent', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}>Reintentar</button>
                     </div>
                 ) : events.length === 0 ? (
                     <div style={{ padding: 48, textAlign: 'center' }}>
                         <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(100,116,139,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                            <Megaphone size={22} style={{ color: '#64748B' }} />
+                            <Megaphone size={22} style={{ color: 'var(--color-text-tertiary)' }} />
                         </div>
-                        <p style={{ color: '#94A3B8' }}>Sin eventos registrados</p>
-                        <p style={{ color: '#475569', fontSize: 12, marginTop: 4 }}>Crea el primer evento del club</p>
+                        <p style={{ color: 'var(--color-text-tertiary)' }}>Sin eventos registrados</p>
+                        <p style={{ color: 'var(--color-text-tertiary)', fontSize: 12, marginTop: 4 }}>Crea el primer evento del club</p>
                     </div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 14, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid #1E293B' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid var(--color-border)' }}>
                             <tr>
                                 <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Evento</th>
                                 <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Fecha</th>
@@ -208,17 +208,17 @@ const EventsTab = () => {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                             <div style={{ width: 3, height: 40, borderRadius: 9999, flexShrink: 0, background: ev.image_color || '#007A4A' }} />
                                             <div>
-                                                <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{ev.title}</p>
-                                                {ev.location && <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>{ev.location}</p>}
+                                                <p style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{ev.title}</p>
+                                                {ev.location && <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>{ev.location}</p>}
                                             </div>
                                         </div>
                                     </td>
-                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', fontSize: 12 }}>
+                                    <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: 'var(--color-text-tertiary)', fontSize: 12 }}>
                                         {new Date(ev.event_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}<br />
                                         {new Date(ev.event_date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false })} hrs
                                     </td>
                                     <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
-                                        <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: '#1E293B', color: '#CBD5E1' }}>{ev.category}</span>
+                                        <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)' }}>{ev.category}</span>
                                     </td>
                                     <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
                                         <button onClick={() => togglePublish(ev)}
@@ -233,12 +233,12 @@ const EventsTab = () => {
                                     </td>
                                     <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, textAlign: 'right' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
-                                            <button onClick={() => openEdit(ev)} style={{ padding: 8, borderRadius: 8, color: '#94A3B8', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
+                                            <button onClick={() => openEdit(ev)} style={{ padding: 8, borderRadius: 8, color: 'var(--color-text-tertiary)', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
                                                 onMouseEnter={e => { e.currentTarget.style.background = '#1E293B'; e.currentTarget.style.color = 'white'; }}
                                                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94A3B8'; }}>
                                                 <Edit3 size={15} />
                                             </button>
-                                            <button onClick={() => handleDelete(ev.id)} style={{ padding: 8, borderRadius: 8, color: '#94A3B8', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
+                                            <button onClick={() => handleDelete(ev.id)} style={{ padding: 8, borderRadius: 8, color: 'var(--color-text-tertiary)', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', transition: 'background 200ms' }}
                                                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#F87171'; }}
                                                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94A3B8'; }}>
                                                 <Trash2 size={15} />
@@ -314,19 +314,19 @@ const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefre
                             {staffMember.name[0]}
                         </div>
                         <div>
-                            <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{staffMember.name}</p>
+                            <p style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{staffMember.name}</p>
                             {currentAssigned.length > 0 && (
-                                <p style={{ fontSize: 10, color: '#64748B', marginTop: 2 }}>
+                                <p style={{ fontSize: 10, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
                                     {currentAssigned.length} servicio{currentAssigned.length !== 1 ? 's' : ''} asignado{currentAssigned.length !== 1 ? 's' : ''}
                                 </p>
                             )}
                         </div>
                     </div>
                 </td>
-                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', textTransform: 'capitalize', fontSize: 12 }}>{staffMember.role?.replace(/_/g, ' ')}</td>
-                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: '#94A3B8', fontSize: 12 }}>{staffMember.unit?.short_name || '—'}</td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: 'var(--color-text-tertiary)', textTransform: 'capitalize', fontSize: 12 }}>{staffMember.role?.replace(/_/g, ' ')}</td>
+                <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, color: 'var(--color-text-tertiary)', fontSize: 12 }}>{staffMember.unit?.short_name || '—'}</td>
                 <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
-                    <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: '#1E293B', color: '#CBD5E1' }}>{staffMember.employment_type?.replace(/_/g, ' ')}</span>
+                    <span style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 4, background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)' }}>{staffMember.employment_type?.replace(/_/g, ' ')}</span>
                 </td>
                 <td style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -338,7 +338,7 @@ const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefre
                         }}>
                             {staffMember.is_active ? 'Activo' : 'Inactivo'}
                         </span>
-                        {expanded ? <ChevronDown size={14} style={{ color: '#64748B' }} /> : <ChevronRight size={14} style={{ color: '#64748B' }} />}
+                        {expanded ? <ChevronDown size={14} style={{ color: 'var(--color-text-tertiary)' }} /> : <ChevronRight size={14} style={{ color: 'var(--color-text-tertiary)' }} />}
                     </div>
                 </td>
             </tr>
@@ -349,7 +349,7 @@ const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefre
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                     <Link2 size={14} style={{ color: 'var(--color-gold)' }} />
-                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>Asignar Servicios</p>
+                                    <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)' }}>Asignar Servicios</p>
                                 </div>
                                 {hasChanges && (
                                     <button onClick={(e) => { e.stopPropagation(); saveAssignments(); }} disabled={saving}
@@ -366,14 +366,14 @@ const StaffServiceRow = ({ staffMember, onRefresh }: { staffMember: any; onRefre
                                 )}
                             </div>
                             {loadingSvc ? (
-                                <div style={{ padding: 24, textAlign: 'center', color: '#64748B', fontSize: 12 }}>Cargando servicios...</div>
+                                <div style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 12 }}>Cargando servicios...</div>
                             ) : available.length === 0 ? (
-                                <div style={{ padding: 24, textAlign: 'center', color: '#64748B', fontSize: 12 }}>No hay servicios disponibles en esta unidad</div>
+                                <div style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 12 }}>No hay servicios disponibles en esta unidad</div>
                             ) : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                     {Object.entries(grouped).map(([category, services]) => (
                                         <div key={category}>
-                                            <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748B', marginBottom: 8 }}>{category}</p>
+                                            <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-tertiary)', marginBottom: 8 }}>{category}</p>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                                 {(services as any[]).map((svc: any) => {
                                                     const isAssigned = assigned.includes(svc.id);
@@ -430,24 +430,24 @@ const StaffTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Personal del Club</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>{staff.length} empleados · {units.length} unidades · {totalAssignments} asignaciones de servicio</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Personal del Club</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>{staff.length} empleados · {units.length} unidades · {totalAssignments} asignaciones de servicio</p>
             </div>
 
             <div style={{ position: 'relative' }}>
-                <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} size={16} />
+                <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-tertiary)' }} size={16} />
                 <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre o puesto..."
-                    style={{ width: '100%', paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10, background: '#0F172A', border: '1px solid #334155', borderRadius: 12, fontSize: 14, color: '#CBD5E1', outline: 'none', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 12, fontSize: 14, color: 'var(--color-text-secondary)', outline: 'none', boxSizing: 'border-box' }} />
             </div>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 {loading ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando personal...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 14 }}>Cargando personal...</div>
                 ) : filtered.length === 0 ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin resultados</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Sin resultados</div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 14, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid #1E293B' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid var(--color-border)' }}>
                             <tr>
                                 <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Empleado</th>
                                 <th style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16 }}>Puesto</th>
@@ -487,14 +487,14 @@ const FinanzasTab = () => {
             .finally(() => setLoadingComm(false));
     }, []);
 
-    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando datos financieros...</div>;
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando datos financieros...</div>;
     if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar finanzas</div>;
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Finanzas</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Resumen financiero del club</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Finanzas</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Resumen financiero del club</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -504,20 +504,20 @@ const FinanzasTab = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 4 }}>Ingresos Totales</h3>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 4 }}>Ingresos Totales</h3>
                     <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-gold)', letterSpacing: -1 }}>${Number(data.total_revenue).toLocaleString('es-MX')}</p>
-                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>{data.total_transactions} transacciones completadas</p>
+                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>{data.total_transactions} transacciones completadas</p>
                 </div>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 4 }}>Lockers Activos</h3>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 4 }}>Lockers Activos</h3>
                     <p style={{ fontSize: 32, fontWeight: 700, color: '#10B981', letterSpacing: -1 }}>{data.active_locker_count}</p>
-                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>Ingreso: ${Number(data.active_locker_revenue).toLocaleString('es-MX')}</p>
+                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Ingreso: ${Number(data.active_locker_revenue).toLocaleString('es-MX')}</p>
                 </div>
             </div>
 
             {/* Commission Tracking */}
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 <button onClick={() => setShowComm(!showComm)}
                     style={{
                         width: '100%', padding: '16px 24px', borderBottom: showComm ? '1px solid #1E293B' : 'none',
@@ -525,37 +525,37 @@ const FinanzasTab = () => {
                         background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation',
                     }}>
                     <div>
-                        <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', textAlign: 'left' }}>Comisiones Independientes</h3>
-                        <p style={{ fontSize: 11, color: '#64748B', marginTop: 2, textAlign: 'left' }}>
+                        <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', textAlign: 'left' }}>Comisiones Independientes</h3>
+                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginTop: 2, textAlign: 'left' }}>
                             {commissions ? `${commissions.staff?.length || 0} proveedores · Corte del club: $${commissions.totals?.club_cut?.toLocaleString('es-MX') || '0'}` : 'Cargando...'}
                         </p>
                     </div>
-                    {showComm ? <ChevronDown size={16} style={{ color: '#64748B' }} /> : <ChevronRight size={16} style={{ color: '#64748B' }} />}
+                    {showComm ? <ChevronDown size={16} style={{ color: 'var(--color-text-tertiary)' }} /> : <ChevronRight size={16} style={{ color: 'var(--color-text-tertiary)' }} />}
                 </button>
                 {showComm && (
                     <div>
                         {loadingComm ? (
-                            <div style={{ padding: 32, textAlign: 'center', color: '#64748B', fontSize: 12 }}>Cargando comisiones...</div>
+                            <div style={{ padding: 32, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 12 }}>Cargando comisiones...</div>
                         ) : !commissions?.staff?.length ? (
-                            <div style={{ padding: 32, textAlign: 'center', color: '#64748B', fontSize: 12 }}>No hay proveedores independientes</div>
+                            <div style={{ padding: 32, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 12 }}>No hay proveedores independientes</div>
                         ) : (
                             <>
                                 {/* Summary row */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: '#1E293B', borderBottom: '1px solid #1E293B' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--color-surface-hover)', borderBottom: '1px solid var(--color-border)' }}>
                                     {[
-                                        { label: 'Ingresos Brutos', value: `$${commissions.totals.gross.toLocaleString('es-MX')}`, color: 'white' },
+                                        { label: 'Ingresos Brutos', value: `$${commissions.totals.gross.toLocaleString('es-MX')}`, color: 'var(--color-text-primary)' },
                                         { label: 'Corte del Club', value: `$${commissions.totals.club_cut.toLocaleString('es-MX')}`, color: 'var(--color-gold)' },
-                                        { label: 'Período', value: commissions.period, color: '#94A3B8' },
+                                        { label: 'Período', value: commissions.period, color: 'var(--color-text-tertiary)' },
                                     ].map(s => (
-                                        <div key={s.label} style={{ background: '#05080F', padding: '12px 16px', textAlign: 'center' }}>
-                                            <p style={{ fontSize: 9, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>{s.label}</p>
+                                        <div key={s.label} style={{ background: 'var(--color-surface-hover)', padding: '12px 16px', textAlign: 'center' }}>
+                                            <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>{s.label}</p>
                                             <p style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</p>
                                         </div>
                                     ))}
                                 </div>
                                 {/* Staff breakdown */}
                                 <table style={{ width: '100%', textAlign: 'left', fontSize: 12, borderCollapse: 'collapse' }}>
-                                    <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                    <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                                         <tr>
                                             <th style={{ padding: '10px 16px' }}>Proveedor</th>
                                             <th style={{ padding: '10px 16px' }}>Servicios</th>
@@ -568,13 +568,13 @@ const FinanzasTab = () => {
                                         {commissions.staff.map((s: any, idx: number) => (
                                             <tr key={s.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
                                                 <td style={{ padding: '10px 16px' }}>
-                                                    <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{s.name}</p>
-                                                    <p style={{ fontSize: 10, color: '#64748B', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')} · {s.unit}</p>
+                                                    <p style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{s.name}</p>
+                                                    <p style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')} · {s.unit}</p>
                                                 </td>
-                                                <td style={{ padding: '10px 16px', color: '#94A3B8', textAlign: 'center' }}>{s.month_services}</td>
-                                                <td style={{ padding: '10px 16px', color: '#E2E8F0', fontWeight: 600 }}>${s.month_gross.toLocaleString('es-MX')}</td>
+                                                <td style={{ padding: '10px 16px', color: 'var(--color-text-tertiary)', textAlign: 'center' }}>{s.month_services}</td>
+                                                <td style={{ padding: '10px 16px', color: 'var(--color-text-primary)', fontWeight: 600 }}>${s.month_gross.toLocaleString('es-MX')}</td>
                                                 <td style={{ padding: '10px 16px', color: 'var(--color-gold)', fontWeight: 700 }}>${s.month_club_cut.toLocaleString('es-MX')}</td>
-                                                <td style={{ padding: '10px 16px', color: '#94A3B8' }}>${s.month_staff_payout.toLocaleString('es-MX')}</td>
+                                                <td style={{ padding: '10px 16px', color: 'var(--color-text-tertiary)' }}>${s.month_staff_payout.toLocaleString('es-MX')}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -586,16 +586,16 @@ const FinanzasTab = () => {
             </div>
 
             {/* Recent payments table */}
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
-                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Últimos Pagos</h3>
-                    <span style={{ fontSize: 11, color: '#64748B' }}>{data.recent_payments.length} registros</span>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Últimos Pagos</h3>
+                    <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>{data.recent_payments.length} registros</span>
                 </div>
                 {data.recent_payments.length === 0 ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin pagos registrados</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Sin pagos registrados</div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
                                 <th style={{ padding: '12px 24px' }}>Socio</th>
                                 <th style={{ padding: '12px 24px' }}>Tipo</th>
@@ -607,11 +607,11 @@ const FinanzasTab = () => {
                         <tbody>
                             {data.recent_payments.slice(0, 10).map((p: any, idx: number) => (
                                 <tr key={p.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
-                                    <td style={{ padding: '12px 24px', color: '#E2E8F0', fontWeight: 500 }}>
+                                    <td style={{ padding: '12px 24px', color: 'var(--color-text-primary)', fontWeight: 500 }}>
                                         {p.profile ? `${p.profile.first_name} ${p.profile.last_name}` : `#${p.membership?.member_number || '—'}`}
                                     </td>
-                                    <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{p.type?.replace(/_/g, ' ')}</td>
-                                    <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white' }}>${Number(p.amount).toLocaleString('es-MX')}</td>
+                                    <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)', textTransform: 'capitalize' }}>{p.type?.replace(/_/g, ' ')}</td>
+                                    <td style={{ padding: '12px 24px', fontWeight: 700, color: 'var(--color-text-primary)' }}>${Number(p.amount).toLocaleString('es-MX')}</td>
                                     <td style={{ padding: '12px 24px' }}>
                                         <span style={{
                                             padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
@@ -620,7 +620,7 @@ const FinanzasTab = () => {
                                             border: `1px solid ${p.status === 'pagado' ? 'rgba(52,211,153,0.3)' : 'rgba(239,68,68,0.3)'}`,
                                         }}>{p.status}</span>
                                     </td>
-                                    <td style={{ padding: '12px 24px', color: '#64748B', fontSize: 12 }}>
+                                    <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)', fontSize: 12 }}>
                                         {new Date(p.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
                                     </td>
                                 </tr>
@@ -646,7 +646,7 @@ const LockersTab = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando lockers...</div>;
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando lockers...</div>;
     if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar lockers</div>;
 
     const filtered = data.lockers.filter((l: any) => {
@@ -658,8 +658,8 @@ const LockersTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Control de Lockers</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>{data.total} lockers · {data.occupancy_rate}% ocupación</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Control de Lockers</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>{data.total} lockers · {data.occupancy_rate}% ocupación</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -681,12 +681,12 @@ const LockersTab = () => {
                 ))}
             </div>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 {filtered.length === 0 ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin lockers en esta categoría</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Sin lockers en esta categoría</div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
                                 <th style={{ padding: '12px 24px' }}>Locker</th>
                                 <th style={{ padding: '12px 24px' }}>Unidad</th>
@@ -701,11 +701,11 @@ const LockersTab = () => {
                                 const rental = l.rentals[0];
                                 return (
                                     <tr key={l.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
-                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white' }}>#{l.number}</td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{l.unit?.short_name}</td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{l.zone}</td>
+                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'var(--color-text-primary)' }}>#{l.number}</td>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>{l.unit?.short_name}</td>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)', textTransform: 'capitalize' }}>{l.zone}</td>
                                         <td style={{ padding: '12px 24px' }}>
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', background: '#1E293B', color: '#CBD5E1' }}>{l.size}</span>
+                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)' }}>{l.size}</span>
                                         </td>
                                         <td style={{ padding: '12px 24px' }}>
                                             <span style={{
@@ -716,7 +716,7 @@ const LockersTab = () => {
                                                 {rental ? 'Ocupado' : 'Libre'}
                                             </span>
                                         </td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>
                                             {rental ? `${rental.profile?.first_name} ${rental.profile?.last_name} (#${rental.membership?.member_number})` : '—'}
                                         </td>
                                     </tr>
@@ -749,14 +749,14 @@ const AgendaTab = () => {
         pendiente: { label: 'Pendiente', color: '#C9A84C', bg: 'rgba(201,168,76,0.1)' },
         pendiente_aprobacion: { label: 'Por aprobar', color: '#C9A84C', bg: 'rgba(201,168,76,0.1)' },
         en_curso: { label: 'En curso', color: '#06B6D4', bg: 'rgba(6,182,212,0.1)' },
-        completada: { label: 'Completada', color: '#64748B', bg: 'rgba(100,116,139,0.1)' },
+        completada: { label: 'Completada', color: 'var(--color-text-tertiary)', bg: 'rgba(100,116,139,0.1)' },
     };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Agenda del Día</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4, textTransform: 'capitalize' }}>{today} · {reservations.length} reservas</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Agenda del Día</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4, textTransform: 'capitalize' }}>{today} · {reservations.length} reservas</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -765,17 +765,17 @@ const AgendaTab = () => {
                 <MetricCard title="Pendientes" value={reservations.filter(r => r.status === 'pendiente' || r.status === 'pendiente_aprobacion').length} icon={Clock} trend="Por confirmar" />
             </div>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 {loading ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando agenda...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando agenda...</div>
                 ) : reservations.length === 0 ? (
                     <div style={{ padding: 48, textAlign: 'center' }}>
                         <CalendarDays size={32} style={{ color: '#334155', margin: '0 auto 12px' }} />
-                        <p style={{ color: '#64748B' }}>Sin reservas para hoy</p>
+                        <p style={{ color: 'var(--color-text-tertiary)' }}>Sin reservas para hoy</p>
                     </div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
                                 <th style={{ padding: '12px 24px' }}>Hora</th>
                                 <th style={{ padding: '12px 24px' }}>Socio</th>
@@ -792,15 +792,15 @@ const AgendaTab = () => {
                                 const endTime = r.end_time ? new Date(r.end_time).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '';
                                 return (
                                     <tr key={r.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
-                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'white', fontFamily: 'monospace' }}>
+                                        <td style={{ padding: '12px 24px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'monospace' }}>
                                             {startTime}{endTime ? `–${endTime}` : ''}
                                         </td>
-                                        <td style={{ padding: '12px 24px', color: '#E2E8F0' }}>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-primary)' }}>
                                             {r.profile?.first_name} {r.profile?.last_name}
                                         </td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.service?.name || '—'}</td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.staff?.name || '—'}</td>
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{r.unit?.short_name || '—'}</td>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>{r.service?.name || '—'}</td>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>{r.staff?.name || '—'}</td>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>{r.unit?.short_name || '—'}</td>
                                         <td style={{ padding: '12px 24px' }}>
                                             <span style={{
                                                 padding: '3px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
@@ -861,21 +861,21 @@ const RecepcionTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Recepción</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Control de acceso y pases de invitado</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Recepción</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Control de acceso y pases de invitado</p>
             </div>
 
             {/* QR / Member Code Validator */}
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                     <QrCode size={16} style={{ color: 'var(--color-gold)' }} />
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Validar Acceso</h3>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Validar Acceso</h3>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                     <input value={qrInput} onChange={e => setQrInput(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && handleQrValidate()}
                         placeholder="Escanea QR o ingresa código (CL-0001)..."
-                        style={{ flex: 1, paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: '#0F172A', border: '1px solid #334155', borderRadius: 10, fontSize: 14, color: '#CBD5E1', outline: 'none' }} />
+                        style={{ flex: 1, paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, fontSize: 14, color: 'var(--color-text-secondary)', outline: 'none' }} />
                     <button onClick={handleQrValidate} disabled={validating}
                         style={{ paddingLeft: 16, paddingRight: 16, background: 'var(--color-gold)', color: '#020617', fontWeight: 700, fontSize: 12, borderRadius: 10, border: 'none', cursor: 'pointer', touchAction: 'manipulation' }}>
                         Validar
@@ -893,9 +893,9 @@ const RecepcionTab = () => {
                                 {qrResult.valid ? 'ACCESO PERMITIDO' : 'ACCESO DENEGADO'}
                             </p>
                         </div>
-                        {qrResult.titular && <p style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 500 }}>{qrResult.titular}</p>}
-                        {qrResult.member_number && <p style={{ fontSize: 11, color: '#94A3B8' }}>Socio #{qrResult.member_number} · {qrResult.tier}</p>}
-                        <p style={{ fontSize: 11, color: '#64748B', marginTop: 4 }}>{qrResult.message}</p>
+                        {qrResult.titular && <p style={{ fontSize: 13, color: 'var(--color-text-primary)', fontWeight: 500 }}>{qrResult.titular}</p>}
+                        {qrResult.member_number && <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>Socio #{qrResult.member_number} · {qrResult.tier}</p>}
+                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginTop: 4 }}>{qrResult.message}</p>
                     </div>
                 )}
             </div>
@@ -907,17 +907,17 @@ const RecepcionTab = () => {
                 <MetricCard title="Ingresaron" value={String(stats.checked_in)} icon={Check} trend="Check-in" />
             </div>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
-                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>Pases de Invitado — Hoy</h3>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--color-border)' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Pases de Invitado — Hoy</h3>
                 </div>
                 {loading ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando...</div>
                 ) : passes.length === 0 ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 13 }}>No hay invitados esperados hoy</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 13 }}>No hay invitados esperados hoy</div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
                                 <th style={{ padding: '12px 20px' }}>Invitado</th>
                                 <th style={{ padding: '12px 20px' }}>Código</th>
@@ -930,13 +930,13 @@ const RecepcionTab = () => {
                             {passes.map((p: any, idx: number) => (
                                 <tr key={p.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
                                     <td style={{ padding: '12px 20px' }}>
-                                        <p style={{ fontWeight: 600, color: '#E2E8F0' }}>{p.guest_name}</p>
-                                        {p.guest_phone && <p style={{ fontSize: 10, color: '#64748B' }}>{p.guest_phone}</p>}
+                                        <p style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{p.guest_name}</p>
+                                        {p.guest_phone && <p style={{ fontSize: 10, color: 'var(--color-text-tertiary)' }}>{p.guest_phone}</p>}
                                     </td>
                                     <td style={{ padding: '12px 20px', fontFamily: 'monospace', fontWeight: 700, color: 'var(--color-gold)', fontSize: 13, letterSpacing: 1 }}>{p.pass_code}</td>
-                                    <td style={{ padding: '12px 20px', color: '#94A3B8', fontSize: 12 }}>
+                                    <td style={{ padding: '12px 20px', color: 'var(--color-text-tertiary)', fontSize: 12 }}>
                                         {p.invited_by ? `${p.invited_by.first_name} ${p.invited_by.last_name}` : '—'}
-                                        {p.invited_by?.membership && <span style={{ color: '#64748B' }}> #{p.invited_by.membership.member_number}</span>}
+                                        {p.invited_by?.membership && <span style={{ color: 'var(--color-text-tertiary)' }}> #{p.invited_by.membership.member_number}</span>}
                                     </td>
                                     <td style={{ padding: '12px 20px' }}>
                                         <span style={{
@@ -956,7 +956,7 @@ const RecepcionTab = () => {
                                                     cursor: 'pointer', touchAction: 'manipulation', textTransform: 'uppercase',
                                                 }}>Check-in</button>
                                         ) : (
-                                            <span style={{ fontSize: 10, color: '#64748B' }}>
+                                            <span style={{ fontSize: 10, color: 'var(--color-text-tertiary)' }}>
                                                 {p.checked_in_at ? new Date(p.checked_in_at).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '—'}
                                             </span>
                                         )}
@@ -984,7 +984,7 @@ const CatalogoTab = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando catálogo...</div>;
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando catálogo...</div>;
     if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171' }}>Error al cargar catálogo</div>;
 
     const items = view === 'services' ? data.services : view === 'resources' ? data.resources : data.activities;
@@ -992,8 +992,8 @@ const CatalogoTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Catálogo del Club</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Servicios, canchas y actividades</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Catálogo del Club</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Servicios, canchas y actividades</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
@@ -1016,12 +1016,12 @@ const CatalogoTab = () => {
                 ))}
             </div>
 
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                 {items.length === 0 ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Sin items en esta categoría</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Sin items en esta categoría</div>
                 ) : (
                     <table style={{ width: '100%', textAlign: 'left', fontSize: 13, borderCollapse: 'collapse' }}>
-                        <thead style={{ background: '#05080F', color: '#64748B', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <thead style={{ background: 'var(--color-surface-hover)', color: 'var(--color-text-tertiary)', fontWeight: 500, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             <tr>
                                 <th style={{ padding: '12px 24px' }}>Nombre</th>
                                 <th style={{ padding: '12px 24px' }}>Categoría</th>
@@ -1034,14 +1034,14 @@ const CatalogoTab = () => {
                         <tbody>
                             {items.map((item: any, idx: number) => (
                                 <tr key={item.id} style={{ borderTop: idx > 0 ? '1px solid rgba(30,41,59,0.5)' : undefined }}>
-                                    <td style={{ padding: '12px 24px', fontWeight: 600, color: '#E2E8F0' }}>{item.name}</td>
-                                    <td style={{ padding: '12px 24px', color: '#94A3B8', textTransform: 'capitalize' }}>{item.category || item.resource_type || '—'}</td>
-                                    <td style={{ padding: '12px 24px', color: '#94A3B8' }}>{item.unit?.short_name || '—'}</td>
+                                    <td style={{ padding: '12px 24px', fontWeight: 600, color: 'var(--color-text-primary)' }}>{item.name}</td>
+                                    <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)', textTransform: 'capitalize' }}>{item.category || item.resource_type || '—'}</td>
+                                    <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>{item.unit?.short_name || '—'}</td>
                                     <td style={{ padding: '12px 24px', fontWeight: 600, color: Number(item.price) > 0 ? 'white' : '#34D399' }}>
                                         {Number(item.price) > 0 ? `$${Number(item.price).toLocaleString('es-MX')}` : 'Incluido'}
                                     </td>
                                     {view === 'activities' && (
-                                        <td style={{ padding: '12px 24px', color: '#94A3B8' }}>
+                                        <td style={{ padding: '12px 24px', color: 'var(--color-text-tertiary)' }}>
                                             {item._count?.enrollments ?? 0}{item.max_capacity ? `/${item.max_capacity}` : ''}
                                         </td>
                                     )}
@@ -1133,8 +1133,8 @@ const ContenidoTab = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Gestión de Contenido</h2>
-                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Administra destacados, explorar y banners del home</p>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Gestión de Contenido</h2>
+                    <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Administra destacados, explorar y banners del home</p>
                 </div>
                 <button onClick={() => { setCreating(true); setEditing(null); }}
                     style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 10, background: 'var(--color-gold)', color: '#000', fontWeight: 700, fontSize: 13, cursor: 'pointer', touchAction: 'manipulation', border: 'none' }}>
@@ -1167,14 +1167,14 @@ const ContenidoTab = () => {
             {loading ? (
                 <div style={{ padding: 40, textAlign: 'center' }}><div className="animate-spin" style={{ width: 24, height: 24, borderRadius: 12, border: '2px solid var(--color-gold)', borderTopColor: 'transparent', margin: '0 auto' }} /></div>
             ) : items.length === 0 ? (
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 40, textAlign: 'center' }}>
-                    <p style={{ color: '#475569', fontSize: 14 }}>No hay contenido en esta sección</p>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 40, textAlign: 'center' }}>
+                    <p style={{ color: 'var(--color-text-tertiary)', fontSize: 14 }}>No hay contenido en esta sección</p>
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {items.map((item, idx) => (
                         <div key={item.id} style={{
-                            background: '#0B1120', borderRadius: 12, border: '1px solid #1E293B', padding: '14px 18px',
+                            background: 'var(--color-surface)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '14px 18px',
                             display: 'flex', alignItems: 'center', gap: 14, opacity: item.is_active ? 1 : 0.5,
                         }}>
                             {/* Preview swatch */}
@@ -1208,8 +1208,8 @@ const ContenidoTab = () => {
 
                             {/* Info */}
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{item.title || item.name}</p>
-                                <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                                <p style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: 14 }}>{item.title || item.name}</p>
+                                <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
                                     {item.subtitle || item.link || item.cta_text || '—'}
                                     {' · '}icon: {item.icon || '—'}
                                 </p>
@@ -1218,19 +1218,19 @@ const ContenidoTab = () => {
                             {/* Actions */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                                 <button onClick={() => handleReorder(item.id, 'up')} disabled={idx === 0}
-                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: idx === 0 ? 'default' : 'pointer', opacity: idx === 0 ? 0.3 : 1 }}>
-                                    <ArrowUp size={12} style={{ color: '#94A3B8' }} />
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid var(--color-border)', cursor: idx === 0 ? 'default' : 'pointer', opacity: idx === 0 ? 0.3 : 1 }}>
+                                    <ArrowUp size={12} style={{ color: 'var(--color-text-tertiary)' }} />
                                 </button>
                                 <button onClick={() => handleReorder(item.id, 'down')} disabled={idx === items.length - 1}
-                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: idx === items.length - 1 ? 'default' : 'pointer', opacity: idx === items.length - 1 ? 0.3 : 1 }}>
-                                    <ArrowDown size={12} style={{ color: '#94A3B8' }} />
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid var(--color-border)', cursor: idx === items.length - 1 ? 'default' : 'pointer', opacity: idx === items.length - 1 ? 0.3 : 1 }}>
+                                    <ArrowDown size={12} style={{ color: 'var(--color-text-tertiary)' }} />
                                 </button>
                                 <button onClick={() => handleToggle(item.id, item.is_active)}
-                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: 'pointer' }}>
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid var(--color-border)', cursor: 'pointer' }}>
                                     {item.is_active ? <Eye size={12} style={{ color: '#10B981' }} /> : <EyeOff size={12} style={{ color: '#EF4444' }} />}
                                 </button>
                                 <button onClick={() => { setEditing(item); setCreating(false); }}
-                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid #1E293B', cursor: 'pointer' }}>
+                                    style={{ width: 28, height: 28, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: '1px solid var(--color-border)', cursor: 'pointer' }}>
                                     <Edit3 size={12} style={{ color: '#C9A84C' }} />
                                 </button>
                                 <button onClick={() => handleDelete(item.id)}
@@ -1253,41 +1253,41 @@ const ContentForm = ({ section, item, onSave, onCancel }: { section: string; ite
 
     const inputStyle: React.CSSProperties = {
         width: '100%', padding: '10px 14px', borderRadius: 8, fontSize: 13,
-        background: '#0F172A', border: '1px solid #1E293B', color: '#E2E8F0',
+        background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)',
         outline: 'none',
     };
 
     return (
-        <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid rgba(201,168,76,0.15)', padding: 24 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>
+        <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid rgba(201,168,76,0.15)', padding: 24 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 16 }}>
                 {item ? 'Editar' : 'Nuevo'} {section === 'featured' ? 'Destacado' : section === 'explore' ? 'Item Explorar' : 'Banner'}
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 {section === 'featured' && <>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Inicio</label><input type="color" value={form.gradient_start || '#005A36'} onChange={e => set('gradient_start', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Fin</label><input type="color" value={form.gradient_end || '#007A4A'} onChange={e => set('gradient_end', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Color Inicio</label><input type="color" value={form.gradient_start || '#005A36'} onChange={e => set('gradient_start', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--color-border)', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Color Fin</label><input type="color" value={form.gradient_end || '#007A4A'} onChange={e => set('gradient_end', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--color-border)', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
                 </>}
                 {section === 'explore' && <>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Nombre *</label><input style={inputStyle} value={form.name || ''} onChange={e => set('name', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color</label><input type="color" value={form.color || '#007A4A'} onChange={e => set('color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Nombre *</label><input style={inputStyle} value={form.name || ''} onChange={e => set('name', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Icono</label><select style={inputStyle} value={form.icon || 'dumbbell'} onChange={e => set('icon', e.target.value)}>{ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Color</label><input type="color" value={form.color || '#007A4A'} onChange={e => set('color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--color-border)', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Link</label><input style={inputStyle} value={form.link || '/reservations'} onChange={e => set('link', e.target.value)} /></div>
                 </>}
                 {section === 'banners' && <>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Color Fondo</label><input type="color" value={form.background_color || '#007A4A'} onChange={e => set('background_color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid #1E293B', cursor: 'pointer' }} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>CTA Texto</label><input style={inputStyle} value={form.cta_text || ''} onChange={e => set('cta_text', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>CTA Link</label><input style={inputStyle} value={form.cta_link || ''} onChange={e => set('cta_link', e.target.value)} /></div>
-                    <div><label style={{ fontSize: 11, color: '#64748B', display: 'block', marginBottom: 4 }}>Ubicación</label><select style={inputStyle} value={form.placement || 'home_top'} onChange={e => set('placement', e.target.value)}><option value="home_top">Home Superior</option><option value="home_middle">Home Medio</option><option value="home_bottom">Home Inferior</option></select></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Título *</label><input style={inputStyle} value={form.title || ''} onChange={e => set('title', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Subtítulo</label><input style={inputStyle} value={form.subtitle || ''} onChange={e => set('subtitle', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Color Fondo</label><input type="color" value={form.background_color || '#007A4A'} onChange={e => set('background_color', e.target.value)} style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--color-border)', cursor: 'pointer' }} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>CTA Texto</label><input style={inputStyle} value={form.cta_text || ''} onChange={e => set('cta_text', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>CTA Link</label><input style={inputStyle} value={form.cta_link || ''} onChange={e => set('cta_link', e.target.value)} /></div>
+                    <div><label style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 4 }}>Ubicación</label><select style={inputStyle} value={form.placement || 'home_top'} onChange={e => set('placement', e.target.value)}><option value="home_top">Home Superior</option><option value="home_middle">Home Medio</option><option value="home_bottom">Home Inferior</option></select></div>
                 </>}
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 16, justifyContent: 'flex-end' }}>
-                <button onClick={onCancel} style={{ padding: '8px 20px', borderRadius: 8, background: 'transparent', border: '1px solid #1E293B', color: '#94A3B8', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Cancelar</button>
+                <button onClick={onCancel} style={{ padding: '8px 20px', borderRadius: 8, background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-text-tertiary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Cancelar</button>
                 <button onClick={() => onSave(form, item?.id)} style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--color-gold)', border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{item ? 'Guardar' : 'Crear'}</button>
             </div>
         </div>
@@ -1309,20 +1309,20 @@ const SistemaTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Sistema</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Configuración y unidades del club</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Sistema</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Configuración y unidades del club</p>
             </div>
 
             {/* Units */}
-            <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
-                <div style={{ padding: '16px 24px', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <MapPin size={16} style={{ color: 'var(--color-gold)' }} /> Unidades / Sedes
                     </h3>
-                    <span style={{ fontSize: 11, color: '#64748B' }}>{units.length} unidades</span>
+                    <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>{units.length} unidades</span>
                 </div>
                 {loading ? (
-                    <div style={{ padding: 48, textAlign: 'center', color: '#64748B' }}>Cargando...</div>
+                    <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)' }}>Cargando...</div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         {units.map((u, idx) => (
@@ -1334,13 +1334,13 @@ const SistemaTab = () => {
                                     <MapPin size={17} style={{ color: 'var(--color-gold)' }} />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{u.name}</p>
-                                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                                    <p style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: 14 }}>{u.name}</p>
+                                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
                                         Código: {u.code} · {u.short_name}
                                     </p>
                                 </div>
                                 {u.operating_hours && (
-                                    <span style={{ fontSize: 11, color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                    <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)', display: 'flex', alignItems: 'center', gap: 4 }}>
                                         <Clock size={12} /> {u.operating_hours}
                                     </span>
                                 )}
@@ -1352,8 +1352,8 @@ const SistemaTab = () => {
 
             {/* System info */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>Información del Sistema</h3>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 16 }}>Información del Sistema</h3>
                     {[
                         { label: 'Versión', value: 'v2.0.0' },
                         { label: 'Plataforma', value: 'React 19 + Vite' },
@@ -1361,13 +1361,13 @@ const SistemaTab = () => {
                         { label: 'Base de datos', value: 'PostgreSQL (Supabase)' },
                     ].map(item => (
                         <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(30,41,59,0.3)' }}>
-                            <span style={{ fontSize: 13, color: '#64748B' }}>{item.label}</span>
-                            <span style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 500 }}>{item.value}</span>
+                            <span style={{ fontSize: 13, color: 'var(--color-text-tertiary)' }}>{item.label}</span>
+                            <span style={{ fontSize: 13, color: 'var(--color-text-primary)', fontWeight: 500 }}>{item.value}</span>
                         </div>
                     ))}
                 </div>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 16 }}>Módulos Activos</h3>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 16 }}>Módulos Activos</h3>
                     {[
                         { name: 'Reservaciones', active: true },
                         { name: 'Torneos', active: true },
@@ -1410,8 +1410,8 @@ const DashboardTab = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Panel Principal</h2>
-                <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Resumen operativo del club</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Panel Principal</h2>
+                <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Resumen operativo del club</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -1421,8 +1421,8 @@ const DashboardTab = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24, display: 'flex', flexDirection: 'column' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24, display: 'flex', flexDirection: 'column' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                         <TrendingUp size={16} style={{ color: 'var(--color-gold)' }} />
                         Accesos Rápidos
                     </h3>
@@ -1435,7 +1435,7 @@ const DashboardTab = () => {
                         ].map(item => (
                             <button key={item.tab}
                                 onClick={() => document.dispatchEvent(new CustomEvent('admin-tab', { detail: item.tab }))}
-                                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 14, borderRadius: 12, background: 'rgba(15,23,42,0.6)', border: '1px solid #1E293B', textAlign: 'left', cursor: 'pointer', touchAction: 'manipulation', transition: 'border-color 200ms' }}
+                                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 14, borderRadius: 12, background: 'rgba(15,23,42,0.6)', border: '1px solid var(--color-border)', textAlign: 'left', cursor: 'pointer', touchAction: 'manipulation', transition: 'border-color 200ms' }}
                                 onMouseEnter={e => (e.currentTarget.style.borderColor = '#475569')}
                                 onMouseLeave={e => (e.currentTarget.style.borderColor = '#1E293B')}
                             >
@@ -1443,17 +1443,17 @@ const DashboardTab = () => {
                                     <item.icon size={17} style={{ color: 'var(--color-gold)' }} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>{item.label}</p>
-                                    <p style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>{item.desc}</p>
+                                    <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)' }}>{item.label}</p>
+                                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginTop: 2 }}>{item.desc}</p>
                                 </div>
-                                <ChevronRight size={14} style={{ color: '#475569', flexShrink: 0 }} />
+                                <ChevronRight size={14} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />
                             </button>
                         ))}
                     </div>
                 </div>
 
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24, display: 'flex', flexDirection: 'column' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24, display: 'flex', flexDirection: 'column' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                         <Activity size={16} style={{ color: 'var(--color-gold)' }} />
                         Estado de Módulos
                     </h3>
@@ -1525,7 +1525,7 @@ const ComisionesTab = () => {
         } finally { setGenerating(false); }
     };
 
-    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#64748B', fontSize: 14 }}>Cargando comisiones...</div>;
+    if (loading) return <div style={{ padding: 48, textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: 14 }}>Cargando comisiones...</div>;
     if (!data) return <div style={{ padding: 48, textAlign: 'center', color: '#F87171', fontSize: 14 }}>Error al cargar comisiones</div>;
 
     const statusColor = (status: string) => {
@@ -1538,8 +1538,8 @@ const ComisionesTab = () => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'white' }}>Comisiones</h2>
-                    <p style={{ fontSize: 13, color: '#64748B', marginTop: 4 }}>Gestión de comisiones y liquidaciones del personal independiente</p>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)' }}>Comisiones</h2>
+                    <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', marginTop: 4 }}>Gestión de comisiones y liquidaciones del personal independiente</p>
                 </div>
                 <button onClick={handleGenerate} disabled={generating}
                     style={{
@@ -1555,36 +1555,36 @@ const ComisionesTab = () => {
 
             {/* Summary Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                         <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201,168,76,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <TrendingUp size={18} style={{ color: 'var(--color-gold)' }} />
                         </div>
-                        <p style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Total Bruto del Mes</p>
+                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Total Bruto del Mes</p>
                     </div>
-                    <p style={{ fontSize: 32, fontWeight: 700, color: 'white', letterSpacing: -1 }}>${data.totals.gross.toLocaleString('es-MX')}</p>
-                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 6 }}>Período: {data.period}</p>
+                    <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-text-primary)', letterSpacing: -1 }}>${data.totals.gross.toLocaleString('es-MX')}</p>
+                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 6 }}>Período: {data.period}</p>
                 </div>
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 24 }}>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                         <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201,168,76,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <DollarSign size={18} style={{ color: 'var(--color-gold)' }} />
                         </div>
-                        <p style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Comisión del Club</p>
+                        <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500 }}>Comisión del Club</p>
                     </div>
                     <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-gold)', letterSpacing: -1 }}>${data.totals.club_cut.toLocaleString('es-MX')}</p>
-                    <p style={{ fontSize: 12, color: '#64748B', marginTop: 6 }}>{data.staff?.length || 0} proveedores activos</p>
+                    <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 6 }}>{data.staff?.length || 0} proveedores activos</p>
                 </div>
             </div>
 
             {/* Staff List */}
             {!data.staff?.length ? (
-                <div style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', padding: 48, textAlign: 'center' }}>
+                <div style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', padding: 48, textAlign: 'center' }}>
                     <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(100,116,139,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                        <Users size={22} style={{ color: '#64748B' }} />
+                        <Users size={22} style={{ color: 'var(--color-text-tertiary)' }} />
                     </div>
-                    <p style={{ color: '#94A3B8' }}>Sin proveedores independientes</p>
-                    <p style={{ color: '#475569', fontSize: 12, marginTop: 4 }}>Registra personal con tipo "independiente" para ver comisiones</p>
+                    <p style={{ color: 'var(--color-text-tertiary)' }}>Sin proveedores independientes</p>
+                    <p style={{ color: 'var(--color-text-tertiary)', fontSize: 12, marginTop: 4 }}>Registra personal con tipo "independiente" para ver comisiones</p>
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -1595,7 +1595,7 @@ const ComisionesTab = () => {
                             : `Comisión: ${Math.round(s.commission_rate * 100)}%`;
 
                         return (
-                            <div key={s.id} style={{ background: '#0B1120', borderRadius: 16, border: '1px solid #1E293B', overflow: 'hidden' }}>
+                            <div key={s.id} style={{ background: 'var(--color-surface)', borderRadius: 16, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                                 {/* Staff Row */}
                                 <button onClick={() => setExpandedStaff(isExpanded ? null : s.id)}
                                     style={{
@@ -1605,16 +1605,16 @@ const ComisionesTab = () => {
                                         borderBottom: isExpanded ? '1px solid #1E293B' : 'none',
                                     }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                                        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#1E293B', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
+                                        <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--color-surface-hover)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
                                             {s.name?.charAt(0) || '?'}
                                         </div>
                                         <div style={{ textAlign: 'left' }}>
-                                            <p style={{ fontWeight: 600, color: '#E2E8F0', fontSize: 14 }}>{s.name}</p>
+                                            <p style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: 14 }}>{s.name}</p>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
-                                                <span style={{ fontSize: 11, color: '#64748B', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')}</span>
-                                                {s.unit && <span style={{ fontSize: 11, color: '#475569' }}>·</span>}
-                                                {s.unit && <span style={{ fontSize: 11, color: '#64748B' }}>{s.unit}</span>}
-                                                <span style={{ fontSize: 11, color: '#475569' }}>·</span>
+                                                <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)', textTransform: 'capitalize' }}>{s.role?.replace(/_/g, ' ')}</span>
+                                                {s.unit && <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>·</span>}
+                                                {s.unit && <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>{s.unit}</span>}
+                                                <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>·</span>
                                                 <span style={{ fontSize: 11, color: 'var(--color-gold)' }}>{rateLabel}</span>
                                             </div>
                                         </div>
@@ -1622,46 +1622,46 @@ const ComisionesTab = () => {
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                                         <div style={{ textAlign: 'right' }}>
-                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>{s.month_services} servicios</p>
-                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'white' }}>${s.month_gross.toLocaleString('es-MX')}</p>
+                                            <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginBottom: 2 }}>{s.month_services} servicios</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>${s.month_gross.toLocaleString('es-MX')}</p>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>Club</p>
+                                            <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginBottom: 2 }}>Club</p>
                                             <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-gold)' }}>${s.month_club_cut.toLocaleString('es-MX')}</p>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <p style={{ fontSize: 11, color: '#64748B', marginBottom: 2 }}>Pago Staff</p>
-                                            <p style={{ fontSize: 16, fontWeight: 700, color: '#94A3B8' }}>${s.month_staff_payout.toLocaleString('es-MX')}</p>
+                                            <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginBottom: 2 }}>Pago Staff</p>
+                                            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-tertiary)' }}>${s.month_staff_payout.toLocaleString('es-MX')}</p>
                                         </div>
-                                        {isExpanded ? <ChevronDown size={16} style={{ color: '#64748B', flexShrink: 0 }} /> : <ChevronRight size={16} style={{ color: '#64748B', flexShrink: 0 }} />}
+                                        {isExpanded ? <ChevronDown size={16} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} /> : <ChevronRight size={16} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />}
                                     </div>
                                 </button>
 
                                 {/* Settlement History (expanded) */}
                                 {isExpanded && (
-                                    <div style={{ padding: '16px 20px', background: '#05080F' }}>
-                                        <p style={{ fontSize: 10, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500, marginBottom: 12 }}>Historial de Liquidaciones</p>
+                                    <div style={{ padding: '16px 20px', background: 'var(--color-surface-hover)' }}>
+                                        <p style={{ fontSize: 10, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 500, marginBottom: 12 }}>Historial de Liquidaciones</p>
                                         {!s.settlements?.length ? (
-                                            <p style={{ fontSize: 12, color: '#475569', fontStyle: 'italic' }}>Sin liquidaciones registradas</p>
+                                            <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', fontStyle: 'italic' }}>Sin liquidaciones registradas</p>
                                         ) : (
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                                 {s.settlements.slice(0, 3).map((st: any) => {
                                                     const sc = statusColor(st.status);
                                                     return (
-                                                        <div key={st.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#0B1120', borderRadius: 10, border: '1px solid #1E293B' }}>
+                                                        <div key={st.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-surface)', borderRadius: 10, border: '1px solid var(--color-border)' }}>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                                                <Clock size={14} style={{ color: '#475569', flexShrink: 0 }} />
+                                                                <Clock size={14} style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />
                                                                 <div>
-                                                                    <p style={{ fontSize: 12, color: '#E2E8F0' }}>
+                                                                    <p style={{ fontSize: 12, color: 'var(--color-text-primary)' }}>
                                                                         {new Date(st.period_start).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })} — {new Date(st.period_end).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}
                                                                     </p>
-                                                                    <p style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>{st.total_services} servicios · Bruto: ${st.gross_revenue.toLocaleString('es-MX')}</p>
+                                                                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)', marginTop: 2 }}>{st.total_services} servicios · Bruto: ${st.gross_revenue.toLocaleString('es-MX')}</p>
                                                                 </div>
                                                             </div>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                                                 <div style={{ textAlign: 'right' }}>
-                                                                    <p style={{ fontSize: 11, color: '#64748B' }}>Pago</p>
-                                                                    <p style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>${st.staff_payout.toLocaleString('es-MX')}</p>
+                                                                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>Pago</p>
+                                                                    <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)' }}>${st.staff_payout.toLocaleString('es-MX')}</p>
                                                                 </div>
                                                                 <span style={{
                                                                     padding: '3px 10px', borderRadius: 6, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
@@ -1698,13 +1698,13 @@ export const AdminView = () => {
     if (!user) return null;
 
     return (
-        <div style={{ display: 'flex', height: '100vh', background: '#020617', overflow: 'hidden', color: '#CBD5E1' }}>
+        <div style={{ display: 'flex', height: '100vh', background: '#020617', overflow: 'hidden', color: 'var(--color-text-secondary)' }}>
 
             {/* ── Sidebar ── */}
-            <div style={{ width: 240, background: '#0B1120', borderRight: '1px solid #1E293B', flexDirection: 'column', flexShrink: 0, display: 'flex' }}>
-                <div style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 20px', borderBottom: '1px solid #1E293B', gap: 10 }}>
+            <div style={{ width: 240, background: 'var(--color-surface)', borderRight: '1px solid #1E293B', flexDirection: 'column', flexShrink: 0, display: 'flex' }}>
+                <div style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 20px', borderBottom: '1px solid var(--color-border)', gap: 10 }}>
                     <ShieldCheck size={20} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
-                    <span style={{ fontWeight: 700, fontSize: 14, color: 'white', letterSpacing: 0.3 }}>Centro de Control</span>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color-text-primary)', letterSpacing: 0.3 }}>Centro de Control</span>
                 </div>
                 <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {TABS.map(tab => (
@@ -1728,11 +1728,11 @@ export const AdminView = () => {
                 </div>
                 <div style={{ padding: 16, borderTop: '1px solid #1E293B' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 18, background: '#1E293B', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 13 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 18, background: 'var(--color-surface-hover)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', fontWeight: 700, fontSize: 13 }}>
                             {user.first_name[0]}
                         </div>
                         <div>
-                            <p style={{ fontSize: 13, fontWeight: 700, color: 'white', lineHeight: 1 }}>{user.first_name} {user.last_name}</p>
+                            <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>{user.first_name} {user.last_name}</p>
                             <p style={{ fontSize: 10, color: 'var(--color-gold)', marginTop: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Administrador</p>
                         </div>
                     </div>
@@ -1741,8 +1741,8 @@ export const AdminView = () => {
 
             {/* ── Main Content ── */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-                <header style={{ height: 64, background: '#0B1120', borderBottom: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', flexShrink: 0 }}>
-                    <h1 style={{ fontSize: 16, fontWeight: 700, color: 'white' }}>{TABS.find(t => t.id === activeTab)?.label}</h1>
+                <header style={{ height: 64, background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', flexShrink: 0 }}>
+                    <h1 style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>{TABS.find(t => t.id === activeTab)?.label}</h1>
                     <span style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)', color: '#10B981', padding: '4px 12px', borderRadius: 6, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ width: 6, height: 6, borderRadius: 3, background: '#10B981' }} className="animate-pulse" />
                         En línea
@@ -1769,7 +1769,7 @@ export const AdminView = () => {
             </div>
 
             {/* Mobile Nav */}
-            <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 64, background: '#0B1120', borderTop: '1px solid #1E293B', display: 'none', justifyContent: 'space-around', alignItems: 'center', padding: '0 16px', zIndex: 50 }}>
+            <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 64, background: 'var(--color-surface)', borderTop: '1px solid #1E293B', display: 'none', justifyContent: 'space-around', alignItems: 'center', padding: '0 16px', zIndex: 50 }}>
                 {[
                     { id: 'dashboard', icon: LayoutDashboard, label: 'Panel' },
                     { id: 'eventos', icon: Megaphone, label: 'Eventos' },
@@ -1805,9 +1805,9 @@ const MetricCard = ({ title, value, icon: Icon, trend, color }: MetricCardProps)
     const isRed = color?.includes('red');
     return (
         <div style={{
-            background: '#0B1120',
+            background: 'var(--color-surface)',
             borderRadius: 16,
-            border: '1px solid #1E293B',
+            border: '1px solid var(--color-border)',
             padding: 24,
             display: 'flex',
             flexDirection: 'column',
@@ -1828,10 +1828,10 @@ const MetricCard = ({ title, value, icon: Icon, trend, color }: MetricCardProps)
                 <Icon size={20} style={{ color: isRed ? '#EF4444' : 'var(--color-gold)' }} />
             </div>
             <div>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: 1.2 }}>{title}</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: 1.2 }}>{title}</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 6 }}>
-                    <span style={{ fontSize: 32, fontWeight: 700, color: 'white', letterSpacing: -1, lineHeight: 1 }}>{value}</span>
-                    <span style={{ fontSize: 10, fontWeight: 600, color: '#475569', background: '#0F172A', border: '1px solid #1E293B', padding: '3px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>{trend}</span>
+                    <span style={{ fontSize: 32, fontWeight: 700, color: 'var(--color-text-primary)', letterSpacing: -1, lineHeight: 1 }}>{value}</span>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-tertiary)', background: 'var(--color-surface)', border: '1px solid var(--color-border)', padding: '3px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>{trend}</span>
                 </div>
             </div>
         </div>
