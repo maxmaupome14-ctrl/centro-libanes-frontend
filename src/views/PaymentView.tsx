@@ -55,12 +55,16 @@ export const PaymentView = () => {
             const res = await api.post('/payments/create-intent', {
                 amount: statement.totals.total_due,
                 source_type: 'mantenimiento',
-                source_id: statement.maintenance?.find((b: any) => b.status === 'pendiente')?.id || null,
+                source_id: statement.maintenance?.find((b: any) => b.status === 'pendiente' || b.status === 'vencido')?.id || null,
                 currency: 'mxn',
             });
             setPaymentId(res.data.payment_id);
             if (res.data.dev_mode) {
-                await api.post(`/payments/${res.data.payment_id}/confirm`, {});
+                const c = await api.post(`/payments/${res.data.payment_id}/confirm`, {});
+                if (c.data?.membership_status === 'activa' && user) {
+                    const { token, login } = useAuthStore.getState();
+                    if (token) login({ ...user, membership_status: 'activa' }, token);
+                }
             }
             setView('success');
         } catch (err: any) {
