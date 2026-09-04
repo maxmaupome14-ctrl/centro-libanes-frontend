@@ -75,6 +75,7 @@ export const LoginView = () => {
             const userData = {
                 id: res.data.user?.id || profile.id,
                 membership_id: res.data.user?.membership_id || '',
+                membership_status: res.data.user?.membership_status,
                 member_number: String(res.data.user?.member_number || memberNum),
                 role: res.data.user?.role || profile.role,
                 first_name: res.data.user?.first_name || profile.first_name,

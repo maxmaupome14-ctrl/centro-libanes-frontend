@@ -65,6 +65,7 @@ api.interceptors.response.use(
             window.location.href = '/login';
         }
         if (error.response?.status === 403 && error.response?.data?.error === 'suspension') {
+            emit('api:suspended');
             if (window.location.pathname !== '/' && window.location.pathname !== '/payment') {
                 window.location.href = '/';
             }

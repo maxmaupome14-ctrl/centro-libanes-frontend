@@ -85,7 +85,7 @@ export const HomeView = () => {
             if (!user?.membership_id) return;
             try {
                 const res = await api.get(`/payments/${user.membership_id}/statement`);
-                const pending = res.data.maintenance?.find((b: any) => b.status === 'pendiente');
+                const pending = res.data.maintenance?.find((b: any) => b.status === 'pendiente' || b.status === 'vencido');
                 setMaintenance({
                     status: pending ? 'pendiente' : 'al_corriente',
                     nextDue: pending ? pending.due_date : (res.data.maintenance?.[0]?.due_date || ''),
@@ -158,6 +158,7 @@ export const HomeView = () => {
     if (!user) return null;
 
     const isEmployee = user.user_type === 'employee';
+    const suspended = !isEmployee && user.membership_status === 'suspendida';
 
     const f = (delay: number) => ({
         initial: { opacity: 0, y: 16 } as const,
@@ -347,10 +348,10 @@ export const HomeView = () => {
                                 <div style={{ textAlign: 'right' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'flex-end' }}>
                                         <span style={{ position: 'relative', display: 'flex', height: 6, width: 6 }}>
-                                            <span className="animate-ping" style={{ position: 'absolute', height: '100%', width: '100%', borderRadius: '9999px', backgroundColor: '#4ade80', opacity: 0.75 }} />
-                                            <span style={{ position: 'relative', borderRadius: '9999px', height: 6, width: 6, backgroundColor: '#4ade80' }} />
+                                            <span className="animate-ping" style={{ position: 'absolute', height: '100%', width: '100%', borderRadius: '9999px', backgroundColor: suspended ? '#f87171' : '#4ade80', opacity: 0.75 }} />
+                                            <span style={{ position: 'relative', borderRadius: '9999px', height: 6, width: 6, backgroundColor: suspended ? '#f87171' : '#4ade80' }} />
                                         </span>
-                                        <span style={{ color: '#4ADE80', fontSize: 12, fontWeight: 500 }}>Activo</span>
+                                        <span style={{ color: suspended ? '#F87171' : '#4ADE80', fontSize: 12, fontWeight: 500 }}>{suspended ? 'Suspendida' : 'Activo'}</span>
                                     </div>
                                     <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 10, marginTop: 6 }}>Toca para ver QR</p>
                                 </div>
@@ -506,11 +507,11 @@ export const HomeView = () => {
                         </div>
                         <div style={{ flex: 1 }}>
                             <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                                {maintenance.status === 'pendiente' ? 'Mantenimiento pendiente' : 'Mantenimiento al corriente'}
+                                {suspended ? 'Membresía suspendida' : maintenance.status === 'pendiente' ? 'Mantenimiento pendiente' : 'Mantenimiento al corriente'}
                             </p>
                             <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 3 }}>
                                 {maintenance.status === 'pendiente'
-                                    ? `Debes $${maintenance.amount.toLocaleString('es-MX')} MXN`
+                                    ? (suspended ? 'Paga $' + maintenance.amount.toLocaleString('es-MX') + ' MXN para reactivarla' : 'Debes $' + maintenance.amount.toLocaleString('es-MX') + ' MXN')
                                     : `Próximo: ${maintenance.nextDue ? new Date(maintenance.nextDue).toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }) : '—'}`
                                 }
                             </p>

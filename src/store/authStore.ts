@@ -13,6 +13,7 @@ export interface User {
     photo_url?: string;
     tier?: string;
     join_date?: string;
+    membership_status?: string;
 }
 
 export interface FamilyProfile {
