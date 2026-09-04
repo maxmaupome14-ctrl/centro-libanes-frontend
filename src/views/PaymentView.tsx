@@ -33,6 +33,7 @@ export const PaymentView = () => {
     const [view, setView] = useState<'statement' | 'checkout' | 'processing' | 'success'>('statement');
     const [selectedMethod, setSelectedMethod] = useState<'card' | 'apple_pay'>('card');
     const [paymentId, setPaymentId] = useState<string | null>(null);
+    const [paidAmount, setPaidAmount] = useState(0);
     const [categoryFilter, setCategoryFilter] = useState<string>('todos');
     const [dateRangeFilter, setDateRangeFilter] = useState<string>('todos');
 
@@ -50,6 +51,7 @@ export const PaymentView = () => {
 
     const handleCheckout = async () => {
         if (!statement?.totals?.total_due) return;
+        setPaidAmount(Number(statement.totals.total_due));
         setView('processing');
         try {
             const res = await api.post('/payments/create-intent', {
@@ -537,7 +539,7 @@ export const PaymentView = () => {
                                 </div>
                                 <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4 }}>Pago Exitoso</h2>
                                 <p style={{ fontSize: 13, color: 'var(--color-text-tertiary)', maxWidth: 220, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
-                                    Hemos recibido tu pago de ${statement.totals?.total_due?.toLocaleString('es-MX')} MXN correctamente.
+                                    Hemos recibido tu pago de ${paidAmount.toLocaleString('es-MX')} MXN correctamente.
                                 </p>
 
                                 <div style={{ background: 'var(--color-surface-hover)', padding: 16, borderRadius: 12, textAlign: 'left', marginTop: 20, border: '1px solid var(--color-border)' }}>
