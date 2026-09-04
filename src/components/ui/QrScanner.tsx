@@ -77,9 +77,16 @@ export const QrScanner = ({ onScan, onClose, title = 'Escanear QR', hint = 'Apun
             }
         };
         start();
+        // Si la cámara no arranca en 6 s (sin dispositivo, permiso colgado), ofrecer captura manual
+        const watchdog = window.setTimeout(() => {
+            if (!cancelled && !doneRef.current && !(videoRef.current && videoRef.current.srcObject)) {
+                setError('No se pudo abrir la cámara. Escribe el código a mano.');
+            }
+        }, 6000);
 
         return () => {
             cancelled = true;
+            clearTimeout(watchdog);
             cancelAnimationFrame(raf);
             stream?.getTracks().forEach(t => t.stop());
         };
