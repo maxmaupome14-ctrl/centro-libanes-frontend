@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { PLATFORM } from '../../store/platformStore';
 import { useThemeStore } from '../../store/themeStore';
+import { ConnectionBanner } from '../ui/ConnectionBanner';
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
     const resolved = useThemeStore((s) => s.resolved);
@@ -13,5 +14,5 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         document.documentElement.setAttribute('data-theme', resolved);
     }, [resolved]);
 
-    return <>{children}</>;
+    return <>{children}<ConnectionBanner /></>;
 }

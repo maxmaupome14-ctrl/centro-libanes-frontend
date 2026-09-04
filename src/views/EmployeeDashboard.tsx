@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { TowelDeskTab } from '../components/towels/TowelDeskTab';
+import { QrScanner } from '../components/ui/QrScanner';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../services/api';
 import { useToast } from '../components/ui/Toast';
-import { CalendarDays, Clock, CheckCircle2, Check, UserX, DollarSign, TrendingUp, Receipt, QrCode, ShieldCheck, UserCheck, Loader2, Search } from 'lucide-react';
+import { CalendarDays, Clock, CheckCircle2, Check, UserX, DollarSign, TrendingUp, Receipt, QrCode, ShieldCheck, UserCheck, Loader2, Search, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Appointment {
@@ -29,6 +32,7 @@ const RecepcionTab = () => {
     const [validating, setValidating] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [checkingIn, setCheckingIn] = useState(false);
+    const [scanning, setScanning] = useState(false);
 
     const getResultType = (res: any): 'granted' | 'denied' | 'suspended' => {
         if (!res) return 'denied';
@@ -50,8 +54,8 @@ const RecepcionTab = () => {
         suspended: { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)', text: '#F59E0B', label: 'MEMBRESIA SUSPENDIDA' },
     };
 
-    const handleValidate = async () => {
-        const code = codeInput.trim();
+    const handleValidate = async (raw?: string) => {
+        const code = (raw ?? codeInput).trim();
         if (!code) return;
         setValidating(true);
         setResult(null);
@@ -67,7 +71,7 @@ const RecepcionTab = () => {
                 setResult({ type: 'guest', ...res.data });
             }
         } catch (err: any) {
-            const errorMsg = err.response?.data?.error || 'Codigo invalido';
+            const errorMsg = err.response?.data?.error || 'Código inválido';
             setResult({ type: 'error', valid: false, message: errorMsg });
         } finally {
             setValidating(false);
@@ -97,6 +101,14 @@ const RecepcionTab = () => {
 
     return (
         <motion.div {...f(0.08)} style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {scanning && (
+                <QrScanner
+                    title="Control de acceso"
+                    hint="Apunta a la credencial digital del socio o al pase de invitado"
+                    onScan={code => { setScanning(false); setCodeInput(code); handleValidate(code); }}
+                    onClose={() => setScanning(false)}
+                />
+            )}
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                 <div style={{
@@ -108,7 +120,7 @@ const RecepcionTab = () => {
                 </div>
                 <div>
                     <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>Control de Acceso</p>
-                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>Valida codigos de socio o pases de invitado</p>
+                    <p style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }}>Valida códigos de socio o pases de invitado</p>
                 </div>
             </div>
 
@@ -124,7 +136,7 @@ const RecepcionTab = () => {
                             value={codeInput}
                             onChange={e => setCodeInput(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && handleValidate()}
-                            placeholder="CL-0001 o codigo de invitado..."
+                            placeholder="Escanea o escribe el código…"
                             style={{
                                 width: '100%', boxSizing: 'border-box',
                                 paddingLeft: 36, paddingRight: 14, paddingTop: 12, paddingBottom: 12,
@@ -136,8 +148,11 @@ const RecepcionTab = () => {
                             }}
                         />
                     </div>
+                    <button onClick={() => setScanning(true)} aria-label="Escanear QR con la cámara" style={{ width: 46, borderRadius: 12, border: '1px solid var(--color-border)', background: 'var(--color-surface-hover)', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', touchAction: 'manipulation', flexShrink: 0 }}>
+                        <Camera size={18} />
+                    </button>
                     <button
-                        onClick={handleValidate}
+                        onClick={() => handleValidate()}
                         disabled={validating || !codeInput.trim()}
                         style={{
                             paddingLeft: 20, paddingRight: 20, paddingTop: 12, paddingBottom: 12,
@@ -306,7 +321,7 @@ const RecepcionTab = () => {
                                                 flex: 1, padding: '8px 12px', borderRadius: 10,
                                                 background: 'var(--color-surface-hover)', textAlign: 'center',
                                             }}>
-                                                <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Codigo</p>
+                                                <p style={{ fontSize: 9, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Código</p>
                                                 <p style={{ fontSize: 13, fontWeight: 700, color: '#C9A84C', fontFamily: 'monospace', letterSpacing: 1 }}>{result.pass.pass_code}</p>
                                             </div>
                                             <div style={{
@@ -381,9 +396,9 @@ const RecepcionTab = () => {
                                         <ShieldCheck size={22} style={{ color: '#EF4444' }} strokeWidth={1.6} />
                                     </div>
                                     <div>
-                                        <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Codigo no encontrado</p>
+                                        <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-text-primary)' }}>Código no encontrado</p>
                                         <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 2 }}>
-                                            {result.message || 'Verifica el codigo e intenta de nuevo'}
+                                            {result.message || 'Verifica el código e intenta de nuevo'}
                                         </p>
                                     </div>
                                 </div>
@@ -405,10 +420,10 @@ const RecepcionTab = () => {
                         <QrCode size={26} style={{ color: 'var(--color-text-tertiary)' }} strokeWidth={1.4} />
                     </div>
                     <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text-secondary)' }}>
-                        Escanea o ingresa un codigo
+                        Escanea o ingresa un código
                     </p>
                     <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 6, lineHeight: 1.5 }}>
-                        Ingresa el codigo QR del socio (CL-XXXX) o el codigo del pase de invitado para validar el acceso
+                        Escanea la credencial digital del socio con la cámara, o escribe su número (CL-0001) o el código del pase de invitado
                     </p>
                 </motion.div>
             )}
@@ -418,7 +433,11 @@ const RecepcionTab = () => {
 
 export const EmployeeDashboard = () => {
     const { user } = useAuthStore();
-    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias' | 'recepcion'>('hoy');
+    const [searchParams] = useSearchParams();
+    const requestedTab = searchParams.get('tab');
+    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias' | 'recepcion' | 'toallas'>(
+        requestedTab === 'toallas' || requestedTab === 'recepcion' || requestedTab === 'agenda' || requestedTab === 'ganancias' ? requestedTab : 'hoy'
+    );
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0 });
     const [loadingToday, setLoadingToday] = useState(true);
@@ -488,7 +507,7 @@ export const EmployeeDashboard = () => {
             {/* ═══ Tab bar ═══ */}
             <motion.div {...f(0.05)} style={{ padding: '16px 16px 8px' }}>
                 <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: 'rgba(120,120,128,0.16)' }}>
-                    {(['hoy', 'agenda', 'ganancias', 'recepcion'] as const).map(tab => (
+                    {(['hoy', 'agenda', 'ganancias', 'recepcion', 'toallas'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
                             style={{
                                 flex: 1, padding: '7px 0', borderRadius: 7, fontSize: 12, fontWeight: 500,
@@ -498,7 +517,7 @@ export const EmployeeDashboard = () => {
                                 background: activeTab === tab ? 'var(--color-surface)' : 'transparent',
                                 boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)' : 'none',
                             }}>
-                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : tab === 'ganancias' ? 'Ganancias' : 'Recepcion'}
+                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : tab === 'ganancias' ? 'Ganancias' : tab === 'recepcion' ? 'Recepción' : 'Toallas'}
                         </button>
                     ))}
                 </div>
@@ -781,6 +800,9 @@ export const EmployeeDashboard = () => {
 
                 {/* RECEPCION */}
                 {activeTab === 'recepcion' && <RecepcionTab />}
+
+                {/* TOALLAS */}
+                {activeTab === 'toallas' && <TowelDeskTab />}
 
             </div>
         </div>

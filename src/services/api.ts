@@ -10,6 +10,19 @@ export const api = axios.create({
     },
 });
 
+// ── Estado de conexión (ConnectionBanner): servidor lento (cold start) / sin conexión ──
+let slowTimer: number | null = null;
+let pending = 0;
+const emit = (name: string) => window.dispatchEvent(new Event(name));
+const trackStart = () => {
+    pending++;
+    if (slowTimer === null) slowTimer = window.setTimeout(() => emit('api:slow'), 2500);
+};
+const trackEnd = () => {
+    pending = Math.max(0, pending - 1);
+    if (pending === 0 && slowTimer !== null) { clearTimeout(slowTimer); slowTimer = null; }
+};
+
 // Retry once on timeout/network error (Railway cold starts take ~15s)
 api.interceptors.response.use(undefined, async (error) => {
     const config = error.config;
@@ -26,14 +39,21 @@ api.interceptors.response.use(undefined, async (error) => {
 });
 
 api.interceptors.request.use((config) => {
+    trackStart();
     const token = localStorage.getItem('auth_token');
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 
 api.interceptors.response.use(
-    (response) => response,
+    (response) => { trackEnd(); emit('api:ok'); return response; },
     (error) => {
+        trackEnd();
+        if (!error.response) {
+            if (error.config?._retried) emit('api:offline');
+        } else {
+            emit('api:ok');
+        }
         const isAuthEndpoint = error.config?.url?.includes('/auth/');
         const isAlreadyOnLogin = window.location.pathname === '/login';
         // Don't auto-logout employees for 401s on member-only endpoints

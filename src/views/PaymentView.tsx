@@ -74,6 +74,7 @@ export const PaymentView = () => {
         mantenimiento: ['mantenimiento'],
         reservaciones: ['reserva'],
         lockers: ['locker'],
+        toallas: ['toalla'],
         otros: ['enrollment', 'pase_invitado'],
     };
 
@@ -301,6 +302,7 @@ export const PaymentView = () => {
                                         { key: 'mantenimiento', label: 'Mantenimiento' },
                                         { key: 'reservaciones', label: 'Reservaciones' },
                                         { key: 'lockers', label: 'Lockers' },
+                                        { key: 'toallas', label: 'Toallas' },
                                         { key: 'otros', label: 'Otros' },
                                     ] as const).map(chip => {
                                         const active = categoryFilter === chip.key;

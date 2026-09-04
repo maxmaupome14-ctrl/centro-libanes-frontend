@@ -19,6 +19,7 @@ import { useToast } from '../components/ui/Toast';
 import { CredentialCardModal } from '../components/credential/CredentialCardModal';
 import { HospitalityCard } from '../components/ui/HospitalityCard';
 import { WeatherCard } from '../components/ui/WeatherCard';
+import { TowelIcon } from '../components/towels/TowelIcon';
 import { downloadICS } from '../lib/calendar';
 
 /* ── Cedar Tree SVG (watermark for the credential card) ── */
@@ -58,6 +59,17 @@ export const HomeView = () => {
     const [banners, setBanners] = useState<any[]>([]);
     const [cancelTarget, setCancelTarget] = useState<any>(null);
     const [isCancelling, setIsCancelling] = useState(false);
+    const [towels, setTowels] = useState<{ pending: number; overdue: boolean; due: string | null } | null>(null);
+
+    useEffect(() => {
+        if (!user || user.user_type === 'employee') return;
+        api.get('/towels/my').then(r => {
+            const open = r.data?.open || [];
+            const pending = open.reduce((s: number, l: any) => s + (l.pending || 0), 0);
+            const due = open.length ? open.map((l: any) => l.due_at).sort()[0] : null;
+            setTowels({ pending, overdue: open.some((l: any) => l.overdue), due });
+        }).catch(() => {});
+    }, [user]);
     const { showToast } = useToast();
 
     useEffect(() => {
@@ -348,19 +360,36 @@ export const HomeView = () => {
                 </motion.div>
             )}
 
+            {/* ═══════════ TOALLAS EN TU PODER ═══════════ */}
+            {!isEmployee && towels && towels.pending > 0 && (
+                <motion.div {...f(0.1)} style={{ padding: '16px 16px 0' }}>
+                    <button onClick={() => navigate('/towels')} className="card-interactive" style={{ width: '100%', padding: 14, display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', touchAction: 'manipulation', textAlign: 'left', border: towels.overdue ? '1px solid rgba(239,68,68,0.35)' : '1px solid rgba(0,122,74,0.25)' }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 12, background: towels.overdue ? 'rgba(239,68,68,0.1)' : 'rgba(0,122,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <TowelIcon size={18} style={{ color: towels.overdue ? '#EF4444' : '#007A4A' }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>{towels.pending} {towels.pending === 1 ? 'toalla' : 'toallas'} en tu poder</p>
+                            <p style={{ fontSize: 11, color: towels.overdue ? '#EF4444' : 'var(--color-text-tertiary)', marginTop: 2 }}>{towels.overdue ? 'Vencidas — devuélvelas hoy en vestidores' : 'Devuélvelas antes de las ' + (towels.due ? new Date(towels.due).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false }) : '22:00') + ' hrs'}</p>
+                        </div>
+                        <ChevronRight size={16} style={{ color: 'var(--color-text-tertiary)' }} />
+                    </button>
+                </motion.div>
+            )}
+
             {/* ═══════════ QUICK ACTIONS ═══════════ */}
             <motion.div {...f(0.12)} style={{ padding: '24px 16px 0' }}>
                 <p className="section-header" style={{ marginBottom: 12 }}>Acceso Rápido</p>
-                <div style={{ display: 'grid', gridTemplateColumns: isEmployee ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isEmployee && user.role !== 'administrador' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
                     {(isEmployee ? [
                         { label: 'Panel', icon: Briefcase, path: '/employee', color: '#C9A84C', bg: 'rgba(201,168,76,0.08)' },
+                        { label: 'Toallas', icon: TowelIcon as unknown as LucideIcon, path: '/employee?tab=toallas', color: '#007A4A', bg: 'rgba(0,122,74,0.08)' },
                         ...(user.role === 'administrador' ? [{ label: 'Admin', icon: ShieldCheck, path: '/admin', color: '#6366F1', bg: 'rgba(99,102,241,0.08)' }] : []),
                         { label: 'Perfil', icon: User, path: '/profile', color: '#06B6D4', bg: 'rgba(6,182,212,0.08)' },
                     ] : [
                         { label: 'Reservar', icon: CalendarDays, path: '/reservations', color: '#007A4A', bg: 'rgba(0,122,74,0.08)' },
                         { label: 'Torneos', icon: Trophy, path: '/tournaments', color: '#C9A84C', bg: 'rgba(201,168,76,0.08)' },
                         { label: 'Lockers', icon: Lock, path: '/lockers', color: '#6366F1', bg: 'rgba(99,102,241,0.08)' },
-                        { label: 'Perfil', icon: User, path: '/profile', color: '#06B6D4', bg: 'rgba(6,182,212,0.08)' },
+                        { label: 'Toallas', icon: TowelIcon as unknown as LucideIcon, path: '/towels', color: '#0E7490', bg: 'rgba(6,182,212,0.08)' },
                     ]).map((a) => {
                         const Icon = a.icon;
                         return (

@@ -147,8 +147,8 @@ export const LoginView = () => {
         <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingLeft: '1.5rem', paddingRight: '1.5rem', position: 'relative', overflow: 'hidden' }}>
 
             {/* Background blurs */}
-            <div style={{ position: 'absolute', top: '-20%', left: '-15%', width: '500px', height: '500px', borderRadius: '9999px', background: 'var(--color-green-cedar)', opacity: 0.03, filter: 'blur(120px)' }} />
-            <div style={{ position: 'absolute', bottom: '-20%', right: '-15%', width: '500px', height: '500px', borderRadius: '9999px', background: 'var(--color-gold)', opacity: 0.04, filter: 'blur(120px)' }} />
+            <div style={{ position: 'absolute', top: '-20%', left: '-15%', width: '500px', height: '500px', borderRadius: '9999px', background: 'var(--color-green-cedar)', opacity: 0.03, filter: 'blur(120px)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '-20%', right: '-15%', width: '500px', height: '500px', borderRadius: '9999px', background: 'var(--color-gold)', opacity: 0.04, filter: 'blur(120px)', pointerEvents: 'none' }} />
 
             <AnimatePresence mode="wait">
 

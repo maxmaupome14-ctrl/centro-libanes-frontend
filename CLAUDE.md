@@ -3,7 +3,9 @@
 ## Stack
 - React 19 + TypeScript + Vite + Tailwind CSS v4 + Framer Motion 12 + Zustand + Capacitor 8
 - Backend: Node.js + Express + Prisma ORM + PostgreSQL + Stripe + JWT auth
-- Backend path: `C:\Users\Nuebe\Documents\centro-libanes-backend`
+- Frontend path: `C:\Users\maxma\Desktop\projects\centro-libanes-frontend`
+- Backend path: `C:\Users\maxma\Desktop\projects\centro-libanes-backend`
+- Deploy: push a `main` = Vercel (front) y Railway (back, corre `prisma migrate deploy`). Trabajar en ramas `feat/*` y hacer merge solo con luz verde de Max.
 
 ## CRITICAL: Tailwind v4 HMR Constraint
 Tailwind v4 HMR does NOT reliably compile utility classes. ALL layout/spacing MUST use inline `style={{}}` objects.
