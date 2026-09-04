@@ -19,6 +19,7 @@ import { useToast } from '../components/ui/Toast';
 import { CredentialCardModal } from '../components/credential/CredentialCardModal';
 import { HospitalityCard } from '../components/ui/HospitalityCard';
 import { WeatherCard } from '../components/ui/WeatherCard';
+import { TowelIcon } from '../components/towels/TowelIcon';
 import { downloadICS } from '../lib/calendar';
 
 /* ── Cedar Tree SVG (watermark for the credential card) ── */
@@ -351,16 +352,17 @@ export const HomeView = () => {
             {/* ═══════════ QUICK ACTIONS ═══════════ */}
             <motion.div {...f(0.12)} style={{ padding: '24px 16px 0' }}>
                 <p className="section-header" style={{ marginBottom: 12 }}>Acceso Rápido</p>
-                <div style={{ display: 'grid', gridTemplateColumns: isEmployee ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isEmployee && user.role !== 'administrador' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
                     {(isEmployee ? [
                         { label: 'Panel', icon: Briefcase, path: '/employee', color: '#C9A84C', bg: 'rgba(201,168,76,0.08)' },
+                        { label: 'Toallas', icon: TowelIcon as unknown as LucideIcon, path: '/employee?tab=toallas', color: '#007A4A', bg: 'rgba(0,122,74,0.08)' },
                         ...(user.role === 'administrador' ? [{ label: 'Admin', icon: ShieldCheck, path: '/admin', color: '#6366F1', bg: 'rgba(99,102,241,0.08)' }] : []),
                         { label: 'Perfil', icon: User, path: '/profile', color: '#06B6D4', bg: 'rgba(6,182,212,0.08)' },
                     ] : [
                         { label: 'Reservar', icon: CalendarDays, path: '/reservations', color: '#007A4A', bg: 'rgba(0,122,74,0.08)' },
                         { label: 'Torneos', icon: Trophy, path: '/tournaments', color: '#C9A84C', bg: 'rgba(201,168,76,0.08)' },
                         { label: 'Lockers', icon: Lock, path: '/lockers', color: '#6366F1', bg: 'rgba(99,102,241,0.08)' },
-                        { label: 'Perfil', icon: User, path: '/profile', color: '#06B6D4', bg: 'rgba(6,182,212,0.08)' },
+                        { label: 'Toallas', icon: TowelIcon as unknown as LucideIcon, path: '/towels', color: '#0E7490', bg: 'rgba(6,182,212,0.08)' },
                     ]).map((a) => {
                         const Icon = a.icon;
                         return (
