@@ -32,3 +32,11 @@ Revisión de código, seguridad, UX y operación de la app en vivo (`centro-liba
 4. **Railway sin cold start**: pasar el servicio a un plan que no duerma; es lo único que hoy se siente lento.
 5. **Módulos Club OS** siguientes (reutilizan el motor de toallas): préstamo de equipo, incidencias con foto, objetos perdidos, estacionamiento, pase de lista en clases.
 6. Pruebas automatizadas mínimas (login, reserva, toallas) para que cada deploy se verifique solo.
+
+## Hallazgo 13 (encontrado al publicar) — Morosidad bloqueaba TODO
+
+En producción **las dos membresías demo estaban suspendidas desde abril** (el cron de mora las suspendió porque el recibo de marzo nunca se pagó) y un socio suspendido **no podía ni entrar a la app**, mucho menos pagar. La demo para socios llevaba meses muerta sin que nadie lo viera.
+
+✅ Corregido (PRs #2 de ambos repos): el suspendido entra, ve su adeudo con claridad ("Membresía suspendida — paga $X para reactivarla"), paga desde el estado de cuenta y **se reactiva solo**; no puede reservar, rentar ni invitar hasta ponerse al corriente. Caja puede regularizar a un socio desde la API (`POST /api/admin/memberships/:n/regularize`) y consultar la lista de suspendidos con su adeudo. Las dos membresías demo quedaron regularizadas en producción el 3-sep-2026.
+
+Pendiente: pantalla de caja en el admin para esos dos endpoints (hoy solo por API), y recordar que el cron genera un recibo nuevo cada día 1 (vence el 10, gracia al 20): si no se paga en la app o en caja, la membresía se vuelve a suspender.
