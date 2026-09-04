@@ -7,11 +7,12 @@ import {
     Activity, TrendingUp, AlertCircle,
     Lock, Megaphone, Plus, Trash2, Edit3, X, Check, Search, UserCheck,
     DollarSign, Clock, MapPin, Dumbbell, Scissors, BookOpen,
-    FileText, Image, Star, ArrowUp, ArrowDown, Eye, EyeOff, Loader2, Link2, UserPlus, QrCode
+    FileText, Image, Star, ArrowUp, ArrowDown, Eye, EyeOff, Loader2, Link2, UserPlus, QrCode, Layers
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import { useToast } from '../components/ui/Toast';
+import { TowelAdminTab } from '../components/towels/TowelAdminTab';
 
 const TABS = [
     { id: 'dashboard', label: 'Panel Principal', icon: LayoutDashboard },
@@ -19,6 +20,7 @@ const TABS = [
     { id: 'staff', label: 'Personal', icon: Users },
     { id: 'agenda', label: 'Agenda Staff', icon: CalendarDays },
     { id: 'lockers', label: 'Control Lockers', icon: Lock },
+    { id: 'toallas', label: 'Control Toallas', icon: Layers },
     { id: 'finanzas', label: 'Finanzas', icon: Wallet },
     { id: 'comisiones', label: 'Comisiones', icon: DollarSign },
     { id: 'contenido', label: 'Contenido', icon: FileText },
@@ -1758,6 +1760,7 @@ export const AdminView = () => {
                             {activeTab === 'finanzas' && <FinanzasTab />}
                             {activeTab === 'comisiones' && <ComisionesTab />}
                             {activeTab === 'lockers' && <LockersTab />}
+                            {activeTab === 'toallas' && <TowelAdminTab />}
                             {activeTab === 'agenda' && <AgendaTab />}
                             {activeTab === 'contenido' && <ContenidoTab />}
                             {activeTab === 'recepcion' && <RecepcionTab />}

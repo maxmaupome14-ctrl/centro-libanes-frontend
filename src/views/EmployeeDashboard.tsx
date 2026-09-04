@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { TowelDeskTab } from '../components/towels/TowelDeskTab';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../services/api';
 import { useToast } from '../components/ui/Toast';
@@ -418,7 +420,11 @@ const RecepcionTab = () => {
 
 export const EmployeeDashboard = () => {
     const { user } = useAuthStore();
-    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias' | 'recepcion'>('hoy');
+    const [searchParams] = useSearchParams();
+    const requestedTab = searchParams.get('tab');
+    const [activeTab, setActiveTab] = useState<'hoy' | 'agenda' | 'ganancias' | 'recepcion' | 'toallas'>(
+        requestedTab === 'toallas' || requestedTab === 'recepcion' || requestedTab === 'agenda' || requestedTab === 'ganancias' ? requestedTab : 'hoy'
+    );
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0 });
     const [loadingToday, setLoadingToday] = useState(true);
@@ -488,7 +494,7 @@ export const EmployeeDashboard = () => {
             {/* ═══ Tab bar ═══ */}
             <motion.div {...f(0.05)} style={{ padding: '16px 16px 8px' }}>
                 <div style={{ display: 'flex', padding: 2, borderRadius: 8, background: 'rgba(120,120,128,0.16)' }}>
-                    {(['hoy', 'agenda', 'ganancias', 'recepcion'] as const).map(tab => (
+                    {(['hoy', 'agenda', 'ganancias', 'recepcion', 'toallas'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
                             style={{
                                 flex: 1, padding: '7px 0', borderRadius: 7, fontSize: 12, fontWeight: 500,
@@ -498,7 +504,7 @@ export const EmployeeDashboard = () => {
                                 background: activeTab === tab ? 'var(--color-surface)' : 'transparent',
                                 boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)' : 'none',
                             }}>
-                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : tab === 'ganancias' ? 'Ganancias' : 'Recepcion'}
+                            {tab === 'hoy' ? 'Hoy' : tab === 'agenda' ? 'Agenda' : tab === 'ganancias' ? 'Ganancias' : tab === 'recepcion' ? 'Recepción' : 'Toallas'}
                         </button>
                     ))}
                 </div>
@@ -781,6 +787,9 @@ export const EmployeeDashboard = () => {
 
                 {/* RECEPCION */}
                 {activeTab === 'recepcion' && <RecepcionTab />}
+
+                {/* TOALLAS */}
+                {activeTab === 'toallas' && <TowelDeskTab />}
 
             </div>
         </div>

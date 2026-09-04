@@ -24,6 +24,7 @@ const PaymentView = lazy(() => import('./views/PaymentView').then(m => ({ defaul
 const NotificationsView = lazy(() => import('./views/NotificationsView').then(m => ({ default: m.NotificationsView })));
 const TournamentView = lazy(() => import('./views/TournamentView').then(m => ({ default: m.TournamentView })));
 const GuestPassView = lazy(() => import('./views/GuestPassView').then(m => ({ default: m.GuestPassView })));
+const TowelView = lazy(() => import('./views/TowelView').then(m => ({ default: m.TowelView })));
 const WelcomeView = lazy(() => import('./views/WelcomeView').then(m => ({ default: m.WelcomeView })));
 
 function LazyFallback() {
@@ -79,6 +80,7 @@ function App() {
           <Route path="/notifications" element={<NotificationsView />} />
           <Route path="/tournaments" element={<TournamentView />} />
           <Route path="/guests" element={<GuestPassView />} />
+          <Route path="/towels" element={<TowelView />} />
         </Route>
 
         {/* Admin Route - requires administrador role */}
