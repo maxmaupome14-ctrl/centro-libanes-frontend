@@ -129,7 +129,7 @@ export const ProfileView = () => {
                                 <span className="animate-ping" style={{ position: 'absolute', width: '100%', height: '100%', borderRadius: 9999, background: '#34D399', opacity: 0.75 }} />
                                 <span style={{ position: 'relative', borderRadius: 9999, width: 6, height: 6, background: '#34D399' }} />
                             </span>
-                            <span style={{ color: '#34D399', fontSize: 10, fontWeight: 600 }}>{isEmployee ? 'Staff Activo' : 'Membresia Activa'}</span>
+                            <span style={{ color: '#34D399', fontSize: 10, fontWeight: 600 }}>{isEmployee ? 'Staff Activo' : 'Membresía Activa'}</span>
                         </div>
                         {!isEmployee && user.join_date && (
                             <>

@@ -1700,7 +1700,7 @@ export const AdminView = () => {
     if (!user) return null;
 
     return (
-        <div style={{ display: 'flex', height: '100vh', background: '#020617', overflow: 'hidden', color: 'var(--color-text-secondary)' }}>
+        <div data-theme="dark" style={{ display: 'flex', height: '100vh', background: '#020617', overflow: 'hidden', color: 'var(--color-text-secondary)' }}>
 
             {/* ── Sidebar ── */}
             <div style={{ width: 240, background: 'var(--color-surface)', borderRight: '1px solid #1E293B', flexDirection: 'column', flexShrink: 0, display: 'flex' }}>

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, Check, AlertTriangle, Users, RefreshCw, Minus, Plus, Sparkles, Clock } from 'lucide-react';
+import { Search, Loader2, Check, AlertTriangle, Users, RefreshCw, Minus, Plus, Sparkles, Clock, Camera } from 'lucide-react';
 import { api } from '../../services/api';
 import { useToast } from '../ui/Toast';
 import { useAuthStore } from '../../store/authStore';
 import { TowelIcon } from './TowelIcon';
+import { QrScanner } from '../ui/QrScanner';
 
 const f = (delay: number) => ({
     initial: { opacity: 0, y: 12 } as const,
@@ -68,6 +69,7 @@ export const TowelDeskTab = () => {
     const [qty, setQty] = useState(1);
     const [busy, setBusy] = useState<string | null>(null);
     const [laundryQty, setLaundryQty] = useState('');
+    const [scanning, setScanning] = useState(false);
 
     const refresh = useCallback(async () => {
         try {
@@ -156,6 +158,14 @@ export const TowelDeskTab = () => {
 
     return (
         <motion.div {...f(0.08)} style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {scanning && (
+                <QrScanner
+                    title="Control de toallas"
+                    hint="Apunta a la credencial digital del socio"
+                    onScan={c => { setScanning(false); setCode(c); search(c); }}
+                    onClose={() => setScanning(false)}
+                />
+            )}
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(0,122,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -203,6 +213,9 @@ export const TowelDeskTab = () => {
                             style={{ ...inputStyle, paddingLeft: 36 }}
                         />
                     </div>
+                    <button onClick={() => setScanning(true)} aria-label="Escanear QR con la cámara" style={{ width: 46, borderRadius: 12, border: '1px solid var(--color-border)', background: 'var(--color-surface-hover)', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', touchAction: 'manipulation', flexShrink: 0 }}>
+                        <Camera size={18} />
+                    </button>
                     <button onClick={() => search()} disabled={searching || !code.trim()} style={primaryBtn(searching || !code.trim())}>
                         {searching ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : 'Buscar'}
                     </button>

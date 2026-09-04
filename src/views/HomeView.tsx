@@ -59,6 +59,17 @@ export const HomeView = () => {
     const [banners, setBanners] = useState<any[]>([]);
     const [cancelTarget, setCancelTarget] = useState<any>(null);
     const [isCancelling, setIsCancelling] = useState(false);
+    const [towels, setTowels] = useState<{ pending: number; overdue: boolean; due: string | null } | null>(null);
+
+    useEffect(() => {
+        if (!user || user.user_type === 'employee') return;
+        api.get('/towels/my').then(r => {
+            const open = r.data?.open || [];
+            const pending = open.reduce((s: number, l: any) => s + (l.pending || 0), 0);
+            const due = open.length ? open.map((l: any) => l.due_at).sort()[0] : null;
+            setTowels({ pending, overdue: open.some((l: any) => l.overdue), due });
+        }).catch(() => {});
+    }, [user]);
     const { showToast } = useToast();
 
     useEffect(() => {
@@ -346,6 +357,22 @@ export const HomeView = () => {
                             </div>
                         </div>
                     </div>
+                </motion.div>
+            )}
+
+            {/* ═══════════ TOALLAS EN TU PODER ═══════════ */}
+            {!isEmployee && towels && towels.pending > 0 && (
+                <motion.div {...f(0.1)} style={{ padding: '16px 16px 0' }}>
+                    <button onClick={() => navigate('/towels')} className="card-interactive" style={{ width: '100%', padding: 14, display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', touchAction: 'manipulation', textAlign: 'left', border: towels.overdue ? '1px solid rgba(239,68,68,0.35)' : '1px solid rgba(0,122,74,0.25)' }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 12, background: towels.overdue ? 'rgba(239,68,68,0.1)' : 'rgba(0,122,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <TowelIcon size={18} style={{ color: towels.overdue ? '#EF4444' : '#007A4A' }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>{towels.pending} {towels.pending === 1 ? 'toalla' : 'toallas'} en tu poder</p>
+                            <p style={{ fontSize: 11, color: towels.overdue ? '#EF4444' : 'var(--color-text-tertiary)', marginTop: 2 }}>{towels.overdue ? 'Vencidas — devuélvelas hoy en vestidores' : 'Devuélvelas antes de las ' + (towels.due ? new Date(towels.due).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false }) : '22:00') + ' hrs'}</p>
+                        </div>
+                        <ChevronRight size={16} style={{ color: 'var(--color-text-tertiary)' }} />
+                    </button>
                 </motion.div>
             )}
 
